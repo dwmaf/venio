@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('email_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('participant_id')->constrained('participants')->cascadeOnDelete();
-            $table->enum('email_type', ['QR_OFFLINE', 'ZOOM_ONLINE']);
+            
             $table->string('recipient_email');
             $table->string('subject');
             $table->enum('status', ['SENT', 'FAILED']);
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('triggered_by')->nullable();
             $table->timestamps();
 
-            $table->index(['participant_id', 'email_type']);
+            $table->index(['participant_id']);
             $table->index(['status', 'sent_at']);
         });
     }

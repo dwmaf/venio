@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Inertia;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Http\Request;

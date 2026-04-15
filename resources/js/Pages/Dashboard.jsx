@@ -120,7 +120,7 @@ export default function Dashboard({ ongoingEvents = [], historyEvents = [], flas
                                     </div>
                                     <div className="mt-4 flex space-x-2">
                                         <Link 
-                                            href={`/inertia/events/${event.id}`}
+                                            href={route('inertia.events.index', event.id)}
                                             className="flex-1 text-center bg-green-500 hover:bg-green-600 text-white py-2 rounded text-sm font-medium transition"
                                         >
                                             Buka Detail
@@ -162,7 +162,8 @@ export default function Dashboard({ ongoingEvents = [], historyEvents = [], flas
                                                 {event.tanggal_mulai} s/d {event.tanggal_selesai}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm space-x-3">
-                                                <Link href={`/inertia/event/${event.id}`} className="text-blue-600 hover:text-blue-900 font-medium">Buka Detail</Link>
+                                                <Link href={route('inertia.events.index', event.id)} 
+                                                className="text-blue-600 hover:text-blue-900 font-medium">Buka Detail</Link>
                                                 <button onClick={() => openEditModal(event)} className="text-gray-600 hover:text-gray-900 font-medium">Edit</button>
                                             </td>
                                         </tr>

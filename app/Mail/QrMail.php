@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OfflineQrMail extends Mailable
+class QrMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -24,7 +24,7 @@ class OfflineQrMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'QR Check-in Peserta Offline',
+            subject: 'QR Check-in Peserta',
         );
     }
 

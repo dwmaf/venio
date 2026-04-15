@@ -14,39 +14,43 @@ class ParticipantImportController extends Controller
     {
         $request->validate([
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:10240'],
+            'event_id' => ['required', 'exists:events,id'],
         ]);
 
+        $eventId = $request->input('event_id');
         $handle = fopen($request->file('csv_file')->getRealPath(), 'r');
 
         if (! $handle) {
-            return redirect()->route('dashboard')->with('error', 'Gagal membaca file CSV.');
+            return redirect()->route('inertia.dasbor')->with('error', 'Gagal membaca file CSV.');
         }
 
         try {
-            [$inserted, $updated, $skipped] = $this->importFromHandle($handle);
+            [$inserted, $updated, $skipped] = $this->importFromHandle($handle, $eventId);
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('dashboard')->with('error', 'Import gagal: '.$exception->getMessage());
+            return redirect()->route('inertia.dasbor')->with('error', 'Import gagal: '.$exception->getMessage());
         }
 
         fclose($handle);
 
         $message = "Import selesai. Baru: {$inserted}, Diperbarui: {$updated}, Dilewati: {$skipped}.";
 
-        return redirect()->route('dashboard')->with('success', $message);
+        return redirect()->route('inertia.dasbor')->with('success', $message);
     }
 
     public function storeFromSheet(Request $request)
     {
         $validated = $request->validate([
             'sheet_url' => ['nullable', 'url', 'max:2000'],
+            'event_id'  => ['required', 'exists:events,id'],
         ]);
 
         $sourceUrl = trim((string) ($validated['sheet_url'] ?? config('services.google_sheet.url', '')));
+        $eventId = $validated['event_id'];
 
         if ($sourceUrl === '') {
-            return redirect()->route('dashboard')->with('error', 'Link Google Spreadsheet belum diisi.');
+            return redirect()->route('inertia.dasbor')->with('error', 'Link Google Spreadsheet belum diisi.');
         }
 
         $csvUrl = $this->buildCsvUrl($sourceUrl);
@@ -54,43 +58,43 @@ class ParticipantImportController extends Controller
         try {
             $response = Http::timeout((int) config('services.google_sheet.timeout', 20))->get($csvUrl);
         } catch (\Throwable $exception) {
-            return redirect()->route('dashboard')->with('error', 'Gagal mengambil data spreadsheet: '.$exception->getMessage());
+            return redirect()->route('inertia.dasbor')->with('error', 'Gagal mengambil data spreadsheet: '.$exception->getMessage());
         }
 
         if (! $response->successful()) {
-            return redirect()->route('dashboard')->with('error', 'Gagal mengambil spreadsheet. Status HTTP: '.$response->status());
+            return redirect()->route('inertia.dasbor')->with('error', 'Gagal mengambil spreadsheet. Status HTTP: '.$response->status());
         }
 
         $content = $response->body();
         if (trim($content) === '') {
-            return redirect()->route('dashboard')->with('error', 'Spreadsheet kosong atau tidak dapat dibaca sebagai CSV.');
+            return redirect()->route('inertia.dasbor')->with('error', 'Spreadsheet kosong atau tidak dapat dibaca sebagai CSV.');
         }
 
         $handle = fopen('php://temp', 'r+');
 
         if (! $handle) {
-            return redirect()->route('dashboard')->with('error', 'Gagal menyiapkan parser CSV untuk spreadsheet.');
+            return redirect()->route('inertia.dasbor')->with('error', 'Gagal menyiapkan parser CSV untuk spreadsheet.');
         }
 
         fwrite($handle, $content);
         rewind($handle);
 
         try {
-            [$inserted, $updated, $skipped] = $this->importFromHandle($handle);
+            [$inserted, $updated, $skipped] = $this->importFromHandle($handle, $eventId);
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('dashboard')->with('error', 'Import dari spreadsheet gagal: '.$exception->getMessage());
+            return redirect()->route('inertia.dasbor')->with('error', 'Import dari spreadsheet gagal: '.$exception->getMessage());
         }
 
         fclose($handle);
 
         $message = "Import spreadsheet selesai. Baru: {$inserted}, Diperbarui: {$updated}, Dilewati: {$skipped}.";
 
-        return redirect()->route('dashboard')->with('success', $message);
+        return redirect()->route('inertia.dasbor')->with('success', $message);
     }
 
-    private function importFromHandle($handle): array
+    private function importFromHandle($handle, $eventId): array
     {
         $headers = $this->readCsvRow($handle);
 
@@ -110,7 +114,7 @@ class ParticipantImportController extends Controller
                 $rowData[$normalizedHeader] = $row[$index] ?? null;
             }
 
-            $mapped = $this->mapRow($rowData);
+            $mapped = $this->mapRow($rowData, $eventId);
 
             if ($mapped === null) {
                 $skipped++;
@@ -149,7 +153,7 @@ class ParticipantImportController extends Controller
         return $sourceUrl;
     }
 
-    private function mapRow(array $row): ?array
+    private function mapRow(array $row, $eventId): ?array
     {
         $namaLengkap = trim((string) $this->value($row, ['nama lengkap']));
         $emailAddressRaw = trim((string) $this->value($row, ['email address']));
@@ -163,18 +167,16 @@ class ParticipantImportController extends Controller
             return null;
         }
 
-        $metodeRaw = trim((string) $this->value($row, ['metode kehadiran']));
-        $metodeKehadiran = Str::contains(Str::lower($metodeRaw), 'online') ? 'ONLINE' : 'OFFLINE';
-
         $noHpRaw = trim((string) $this->value($row, ['no hp - whatsapp aktif']));
         $noHpNormalized = $this->normalizePhone($noHpRaw);
 
         $consentRaw = Str::lower(trim((string) $this->value($row, ['saya menyatakan data yang diisi sudah benar'])));
         $persetujuanData = Str::contains($consentRaw, 'ya');
 
-        $dedupeKeyHash = hash('sha256', Str::lower($namaLengkap).'|'.$emailPrimary.'|'.$metodeKehadiran);
+        $dedupeKeyHash = hash('sha256', $eventId.'|'.Str::lower($namaLengkap).'|'.$emailPrimary);
 
         return [
+            'event_id' => $eventId,
             'form_timestamp' => $this->parseDate($this->value($row, ['timestamp'])),
             'email_address_raw' => $emailAddressRaw !== '' ? $emailAddressRaw : null,
             'email_active_raw' => $emailAktifRaw !== '' ? $emailAktifRaw : null,
@@ -187,7 +189,6 @@ class ParticipantImportController extends Controller
             'spesialisasi' => $this->nullableTrim($this->value($row, ['spesialisasi (jika ada)'])),
             'instansi' => $this->nullableTrim($this->value($row, ['instansi / tempat kerja'])),
             'alamat_instansi' => $this->nullableTrim($this->value($row, ['alamat instansi'])),
-            'metode_kehadiran' => $metodeKehadiran,
             'kategori_biaya' => $this->nullableTrim($this->value($row, ['kategori biaya'])),
             'payment_proof_url' => $this->nullableTrim($this->value($row, ['upload bukti pembayaran'])),
             'persetujuan_data' => $persetujuanData,

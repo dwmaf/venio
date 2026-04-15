@@ -25,8 +25,7 @@ return new class extends Migration
             $table->string('kategori_peserta')->nullable();
             $table->string('spesialisasi')->nullable();
             $table->string('instansi')->nullable();
-            $table->text('alamat_instansi')->nullable();
-            $table->enum('metode_kehadiran', ['OFFLINE', 'ONLINE'])->default('OFFLINE');
+            $table->text('alamat_instansi')->nullable();            
             $table->string('kategori_biaya')->nullable();
             $table->text('payment_proof_url')->nullable();
             $table->boolean('persetujuan_data')->default(false);
@@ -41,7 +40,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique('qr_token');
-            $table->index(['metode_kehadiran', 'checked_in_at']);
+            $table->index(['checked_in_at']);
             $table->index('email_primary');
             $table->index('no_hp_normalized');
         });

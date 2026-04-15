@@ -27,7 +27,7 @@ class AuthController extends Controller
         ], $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'));
+            return redirect()->intended(route('inertia.dasbor'));
         }
 
         return back()
@@ -59,7 +59,7 @@ class AuthController extends Controller
         $user->save();
 
         return redirect()
-            ->route('dashboard')
+            ->route('inertia.dasbor')
             ->with('success', 'Password berhasil diperbarui.');
     }
 }
