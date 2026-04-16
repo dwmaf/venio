@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/account/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
 
 	Route::get('/events/{event}', [EventController::class, 'show'])->name('events.index');
+	Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 

@@ -60,4 +60,9 @@ class EventController extends Controller
             'stats' => $stats,
         ]);
     }
+
+    public function upcomingEvents(Request $request)
+    {
+        
+    }
 }

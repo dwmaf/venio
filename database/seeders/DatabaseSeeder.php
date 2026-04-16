@@ -31,11 +31,12 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        $ongoingNames = ['Workshop React Hari Ini', 'Seminar AI Live', 'Workshop Vue Live'];
+        // $ongoingNames = ['Workshop React Hari Ini', 'Seminar AI Live', 'Workshop Vue Live'];
+        $ongoingNames = ['Workshop React Hari Ini'];
         foreach ($ongoingNames as $name) {
             Event::create([
                 'nama_event' => $name,
-                'lokasi' => 'Gedung Serbaguna Untan',
+                'lokasi' => 'Konferensi Untan',
                 'tanggal_event' => now()->format('Y-m-d'), // Hari Ini
                 'jam_mulai' => '08:00:00',
                 'jam_selesai' => '17:00:00',
@@ -49,8 +50,9 @@ class DatabaseSeeder extends Seeder
         foreach ($upcomingNames as $name) {
             Event::create([
                 'nama_event' => $name,
-                'lokasi' => $faker->address,
-                'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
+                'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
+                // 'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
+                'tanggal_event' => now(), // Masa Depan
                 'jam_mulai' => '09:00:00',
                 'jam_selesai' => '15:00:00',
                 'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
@@ -63,7 +65,7 @@ class DatabaseSeeder extends Seeder
         foreach ($pastNames as $name) {
             Event::create([
                 'nama_event' => $name,
-                'lokasi' => $faker->address,
+                'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->subDays(rand(5, 120))->format('Y-m-d'), // Masa Lalu
                 'jam_mulai' => '10:00:00',
                 'jam_selesai' => '16:00:00',

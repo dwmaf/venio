@@ -3,6 +3,7 @@ import { Head, useForm, Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import AdminLayout from '@/Layouts/AdminLayout';
 import { formatTanggalSlash, formatJamMenit } from '@/utils/format';
+import Breadcrumb from '@/Components/Breadcrumb';
 import { Icon } from '@iconify/react';
 
 export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
@@ -66,11 +67,16 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
         setEditingEvent(event);
     };
 
+    const breadcrumbs = [
+        { label: 'Home', href: route('dashboard') },
+    ];
+
     return (
-        <AdminLayout>
+        <AdminLayout title="Dashboard">
             <Head title="Dashboard Event" />
 
             <div className="mx-8 flex flex-col gap-8">
+                <Breadcrumb items={breadcrumbs} />
                 {/* 3 statistik */}
                 <div className='flex justify-between gap-4 w-full'>
                     <div className='flex flex-1 justify-between border border-slate-700/30 rounded-2xl p-4'>
@@ -98,59 +104,100 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
                 {/* ongoing events */}
                 <div className='flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar'>
-                    {ongoingEvents.map(event => (
-                    <div key={event.id} className='flex flex-col shrink-0 snap-center min-w-120 justify-between border border-slate-700/30 rounded-2xl p-8 gap-6'>
+                    {/* kalau tak ada ongoing event */}
+                    {ongoingEvents.length === 0 ? (<div className='flex flex-col shrink-0 w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Ongoing Events!</span>
-                        <div className='flex gap-4 items-center'>
-                            <Icon icon="duo-icons:award" width="40" height="40" />
-                            <div className="flex flex-col gap-2.5">
-                                <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">{event.nama_event}</span>
-                                <div className="flex flex-col gap-4">
-                                    <div className='flex gap-2.5'>
-                                        <Icon icon="duo-icons:calendar" width="24" height="24" />
-                                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatTanggalSlash(event.tanggal_event)}</span>
-                                    </div>
-                                    <div className='flex gap-2.5'>
-                                        <Icon icon="duo-icons:clock" width="24" height="24" />
-                                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
-                                    </div>
-                                    <div className='flex gap-2.5'>
-                                        <Icon icon="duo-icons:location" width="24" height="24" />
-                                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{event.lokasi}</span>
+                        <div className='flex gap-4 items-center justify-center h-full'>
+                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
+                        </div>
+                    </div>) : (
+                        <>
+                            {/* kalau ongoing event ada */}
+                            {ongoingEvents.map(event => (
+                                <div key={event.id} className='flex flex-col shrink-0 snap-center min-w-129 justify-between border border-slate-700/30 rounded-2xl p-8 gap-6'>
+                                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Ongoing Events!</span>
+                                    <div className='flex gap-4 items-center'>
+                                        <Icon icon="duo-icons:award" width="40" height="40" />
+                                        <div className="flex flex-col gap-2.5">
+                                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">{event.nama_event}</span>
+                                            <div className="flex flex-col gap-4">
+                                                <div className='flex gap-2.5'>
+                                                    <Icon icon="duo-icons:calendar" width="24" height="24" />
+                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatTanggalSlash(event.tanggal_event)}</span>
+                                                </div>
+                                                <div className='flex gap-2.5'>
+                                                    <Icon icon="duo-icons:clock" width="24" height="24" />
+                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
+                                                </div>
+                                                <div className='flex gap-2.5'>
+                                                    <Icon icon="duo-icons:location" width="24" height="24" />
+                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{event.lokasi}</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    ))}
-                    
+                            ))}
+                            {/* kalau ongoing event cuman 1, kasih tambahan card*/}
+                            {ongoingEvents.length === 1 && (
+                                <div className='flex flex-col shrink-0 min-w-129 min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+                                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Ongoing Events!</span>
+                                    <div className="flex-1 flex items-center justify-center w-full h-full">
+                                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
 
                 {/* upcoming events */}
-                <div className='flex flex-col flex-1 justify-between border border-slate-700/30 rounded-2xl p-8 gap-8'>
-                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Upcoming Events</span>
-                    {upcomingEvents.map(event => (
-                    <div key={event.id} className='flex gap-4 items-center'>
-                        <Icon icon="duo-icons:award" width="40" height="40" />
-                        <div className="flex flex-col gap-2.5">
-                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">{event.nama_event}</span>
-                            <div className="flex gap-4">
-                                <div className='flex gap-2.5'>
-                                    <Icon icon="duo-icons:calendar" width="24" height="24" />
-                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatTanggalSlash(event.tanggal_event)}</span>
-                                </div>
-                                <div className='flex gap-2.5'>
-                                    <Icon icon="duo-icons:clock" width="24" height="24" />
-                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
-                                </div>
-                                <div className='flex gap-2.5'>
-                                    <Icon icon="duo-icons:location" width="24" height="24" />
-                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{event.lokasi}</span>
-                                </div>
-                            </div>
+                <div className='flex flex-col flex-1 min-h-101.75 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+                    <div className='flex justify-between'>
+                        <div className='flex flex-col gap-4'>
+                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Upcoming Events</span>
+                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">Event yang akan berlangsung</span>
                         </div>
+                        <Link href={route('upcoming.events')} className='flex gap-2'>
+                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
+                                Lihat Semua
+                            </span>
+                            <Icon icon="basil:arrow-left-outline" width="24" height="24" rotate={2} className='text-blue-700' />
+                        </Link>
                     </div>
-                    ))}
+                    {upcomingEvents.length === 0 ? (
+                        <div className="flex-1 flex items-center justify-center w-full h-full">
+                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
+                        </div>
+                    ) : (
+                        upcomingEvents.map(event => (
+                            <div key={event.id} className='flex justify-between'>
+                                <div className='flex gap-4 items-center'>
+                                    <Icon icon="duo-icons:award" width="40" height="40" />
+                                    <div className="flex flex-col gap-2.5">
+                                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">{event.nama_event}</span>
+                                        <div className="flex gap-4">
+                                            <div className='flex gap-2.5'>
+                                                <Icon icon="duo-icons:calendar" width="24" height="24" />
+                                                <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatTanggalSlash(event.tanggal_event)}</span>
+                                            </div>
+                                            <div className='flex gap-2.5'>
+                                                <Icon icon="duo-icons:clock" width="24" height="24" />
+                                                <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
+                                            </div>
+                                            <div className='flex gap-2.5'>
+                                                <Icon icon="duo-icons:location" width="24" height="24" />
+                                                <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{event.lokasi}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Link href={route('events.index', event.id)}>
+                                    <Icon icon="eva:external-link-fill" width="24" height="24" className='text-blue-700' />
+                                </Link>
+                            </div>
+                        ))
+                    )}
                 </div>
 
             </div>

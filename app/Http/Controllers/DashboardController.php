@@ -29,6 +29,7 @@ class DashboardController extends Controller
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
             ->where('status', 'BELUM_SELESAI')
             ->orderBy('tanggal_event', 'asc')
+            ->limit(2)
             ->get();
 
         return Inertia::render('Dashboard', [

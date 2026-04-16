@@ -2,15 +2,15 @@ import { useState } from 'react';
 import { Link } from '@inertiajs/react';
 import { Icon } from '@iconify/react';
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout({ children, title }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     return (
         <div className="min-h-screen bg-white flex">
             {/* SIDEBAR */}
             <aside
-                className={`bg-white border-r border-slate-700/30 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-92.5' : 'w-23'
-                    } flex flex-col`}
+                className={`fixed left-0 top-0 z-30 bg-white border-r border-slate-700/30 transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-81.25' : 'w-23'
+                    } flex flex-col h-screen`}
             >
                 <div className="px-4 py-4 flex items-center justify-between border-b border-slate-700/30">
                     <button 
@@ -44,7 +44,7 @@ export default function AdminLayout({ children }) {
                 </nav>
 
 
-                <div className="px-6 py-6 border-t border-slate-700/30">
+                <div className="px-6 py-6 mt-auto">
                     <button className="w-full flex items-center space-x-4">
                         <Icon icon="solar:logout-3-bold" width="30" height="30" rotate={2} className="shrink-0"/>
                         <span className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans'] ${!isSidebarOpen && 'hidden'}`}>Logout</span>
@@ -53,9 +53,11 @@ export default function AdminLayout({ children }) {
             </aside>
 
             {/* MAIN CONTENT AREA */}
-            <div className="flex-1 flex flex-col overflow-hidden">
+            <div className={`flex-1 flex flex-col overflow-hidden ${isSidebarOpen ? 'ml-81.25' : 'ml-23'}`}>
                 <header className="bg-white flex items-center py-5 px-5 border-b border-slate-700/30 justify-between">
-                    <h2 className="font-['Poppins'] font-medium text-[32px] leading-none">Dashboard</h2>
+                    <h2 className="font-['Poppins'] font-medium text-[32px] leading-none">
+                        {typeof title !== 'undefined' ? title : 'Dashboard'}
+                    </h2>
                     <Icon icon="solar:settings-broken" width="32" height="32" className="shrink-0" />
                 </header>
 
