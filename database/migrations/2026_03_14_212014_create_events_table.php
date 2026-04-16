@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('nama_event');
-            $table->date('tanggal_mulai');
-            $table->date('tanggal_selesai');
-            $table->string('status');
+            $table->string('lokasi')->nullable();
+            $table->date('tanggal_event');
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
+            $table->enum('tipe_event', ['OFFLINE', 'ONLINE', 'HYBRID'])->default('OFFLINE'); 
+            $table->enum('status', ['SELESAI','BELUM_SELESAI'])->default('BELUM_SELESAI');
             $table->timestamps();
         });
     }

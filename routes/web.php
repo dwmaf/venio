@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
 	Route::post('/login', [AuthController::class, 'login'])->name('login');
 });
 
-Route::prefix('inertia')->name('inertia.')->middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 	Route::post('/account/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
 
@@ -25,7 +25,7 @@ Route::prefix('inertia')->name('inertia.')->middleware('auth')->group(function (
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 
-	Route::get('/dasbor', [DashboardController::class, 'index'])->name('dasbor');
+	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 	Route::post('/peserta/import', [ParticipantImportController::class, 'store'])->name('peserta.import');
 	Route::post('/peserta/import-sheet', [ParticipantImportController::class, 'storeFromSheet'])->name('peserta.import-sheet');

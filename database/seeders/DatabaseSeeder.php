@@ -3,9 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Participant;
+use App\Models\Event;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Faker\Factory;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,53 +20,74 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Factory::create('id_ID');
+
         User::updateOrCreate(
             ['username' => 'admin'],
             [
                 'name' => 'Administrator',
                 'email' => 'admin@regist.local',
-                'password' => Hash::make('admin12345'),
+                'password' => Hash::make('password'),
             ]
         );
 
-        $event1 = \App\Models\Event::updateOrCreate(
-            ['nama_event' => 'Kalbar Naker Fest'],
-            [
-                'tanggal_mulai' => '2026-05-01',
-                'tanggal_selesai' => '2026-05-03',
-                'status' => 'BERLANGSUNG',
-            ]
-        );
+        $ongoingNames = ['Workshop React Hari Ini', 'Seminar AI Live', 'Workshop Vue Live'];
+        foreach ($ongoingNames as $name) {
+            Event::create([
+                'nama_event' => $name,
+                'lokasi' => 'Gedung Serbaguna Untan',
+                'tanggal_event' => now()->format('Y-m-d'), // Hari Ini
+                'jam_mulai' => '08:00:00',
+                'jam_selesai' => '17:00:00',
+                'tipe_event' => 'HYBRID',
+                'status' => 'BELUM_SELESAI', // Karena masih jalan
+            ]);
+        }
 
-        $event2 = \App\Models\Event::updateOrCreate(
-            ['nama_event' => 'Dies Natalis Untan'],
-            [
-                'tanggal_mulai' => '2026-04-10',
-                'tanggal_selesai' => '2026-04-12',
-                'status' => 'RIWAYAT',
-            ]
-        );
+        // 2. BUAT 4 UPCOMING EVENTS (MENDATANG)
+        $upcomingNames = ['Kalbar Naker Fest 2026', 'Inertia Masterclass', 'Cyber Security Summit', 'Digital Marketing Expo'];
+        foreach ($upcomingNames as $name) {
+            Event::create([
+                'nama_event' => $name,
+                'lokasi' => $faker->address,
+                'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
+                'jam_mulai' => '09:00:00',
+                'jam_selesai' => '15:00:00',
+                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
+                'status' => 'BELUM_SELESAI',
+            ]);
+        }
 
-        $faker = \Faker\Factory::create('id_ID');
-        $events = [$event1, $event2];
+        // 3. BUAT 5 PAST EVENTS (MASA LALU)
+        $pastNames = ['Grebek Pasar Pontianak', 'Tech Talk Vol 1', 'Pelatihan UMKM', 'Webinar Flutter', 'Bootcamp PHP'];
+        foreach ($pastNames as $name) {
+            Event::create([
+                'nama_event' => $name,
+                'lokasi' => $faker->address,
+                'tanggal_event' => now()->subDays(rand(5, 120))->format('Y-m-d'), // Masa Lalu
+                'jam_mulai' => '10:00:00',
+                'jam_selesai' => '16:00:00',
+                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
+                'status' => 'SELESAI', // Sudah beres
+            ]);
+        }
 
-        foreach ($events as $index => $event) {
-            // Kita buat 150 peserta untuk Kalbar Naker Fest, 50 untuk Dies Natalis
-            $totalParticipants = $index === 0 ? 150 : 50; 
-
-            for ($i = 0; $i < $totalParticipants; $i++) {
+        $allEvents = Event::all();
+        foreach ($allEvents as $event) {
+            for ($i = 0; $i < 20; $i++) {
                 $nama = $faker->name();
                 $email = $faker->unique()->safeEmail();
-                
-                \App\Models\Participant::create([
+                $metode = $faker->randomElement(['OFFLINE', 'ONLINE', 'HYBRID']);
+                Participant::create([
                     'event_id' => $event->id,
                     'email_primary' => $email,
                     'nama_lengkap' => $nama,
                     'no_hp_normalized' => '628' . $faker->numerify('##########'),
-                    'metode_kehadiran' => 'OFFLINE',
-                    // 60% chance untuk sudah check-in dengan waktu random
-                    'checked_in_at' => $faker->boolean(60) ? now()->subMinutes(rand(1, 1440)) : null,
-                    'qr_token' => 'OFF-' . strtoupper(\Illuminate\Support\Str::random(12)),
+                    'metode_kehadiran' => $metode,
+                    'checked_in_at' => ($event->status === 'SELESAI')
+                        ? ($faker->boolean(90) ? now()->subHours(rand(1, 8)) : null)
+                        : ($event->tanggal_event === now()->format('Y-m-d') && $faker->boolean(50) ? now() : null),
+                    'qr_token' => 'OFF-' . strtoupper(Str::random(12)),
                     'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|OFFLINE|' . $event->id),
                 ]);
             }
