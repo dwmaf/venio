@@ -56,7 +56,7 @@ class EventController extends Controller
             ->limit(2)
             ->get();
 
-        $pastEvents = Event::where('tanggal_event', '>', $today)
+        $pastEvents = Event::where('tanggal_event', '<', $today)
             ->where('status', 'SELESAI')
             ->orderBy('tanggal_event', 'asc')
             ->limit(2)
@@ -77,7 +77,6 @@ class EventController extends Controller
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
             ->where('status', 'BELUM_SELESAI')
             ->orderBy('tanggal_event', 'asc')
-            ->limit(2)
             ->get();
         return Inertia::render('Events/UpcomingEvents', [
             'upcomingEvents' => $upcomingEvents,
@@ -103,7 +102,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
 
-        $pastEvents = Event::where('tanggal_event', '>', $today)
+        $pastEvents = Event::where('tanggal_event', '<', $today)
             ->where('status', 'SELESAI')
             ->orderBy('tanggal_event', 'asc')
             ->limit(2)

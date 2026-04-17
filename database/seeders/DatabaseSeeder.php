@@ -51,8 +51,8 @@ class DatabaseSeeder extends Seeder
             Event::create([
                 'nama_event' => $name,
                 'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
-                // 'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
-                'tanggal_event' => now(), // Masa Depan
+                'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
+                // 'tanggal_event' => now(), // Masa Kini
                 'jam_mulai' => '09:00:00',
                 'jam_selesai' => '15:00:00',
                 'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
