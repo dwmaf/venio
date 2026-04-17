@@ -8,17 +8,16 @@ export default function Breadcrumb({ items }) {
                 <span key={idx} className="flex items-center gap-2">
                     {item.href ? (
                         idx === 0 ? (
-                            // Hanya icon untuk Home
                             <Link href={item.href} className="flex items-center gap-1">
                                 <Icon icon="hugeicons:home-01" width="24" height="24" />
                             </Link>
                         ) : (
-                            <Link href={item.href} className="flex items-center gap-1">
+                            <Link href={item.href} className="font-['Plus_Jakarta_Sans'] leading-none text-neutral-500 text-[20px] font-normal">
                                 {item.label}
                             </Link>
                         )
                     ) : (
-                        <span className="text-neutral-500 font-medium flex items-center gap-1">
+                        <span className="font-['Plus_Jakarta_Sans'] leading-none text-neutral-500 text-[20px] font-normal ">
                             {item.label}
                         </span>
                     )}

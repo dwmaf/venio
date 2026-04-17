@@ -33,11 +33,11 @@ export default function AdminLayout({ children, title }) {
                         <Icon icon="duo-icons:dashboard" width="30" height="30" className="text-slate-600 shrink-0" />
                         <span className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans'] ${!isSidebarOpen && 'hidden'}`}>Dashboard</span>
                     </Link>
-                    <Link href="/events" className="flex items-center py-3 space-x-4">
+                    <Link href="/all-events" className="flex items-center py-3 space-x-4">
                         <Icon icon="lets-icons:date-fill" width="30" height="30" className="text-slate-600 shrink-0"  />
                         <span className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans'] ${!isSidebarOpen && 'hidden'}`}>Events</span>
                     </Link>
-                    <Link href="/events" className="flex items-center py-3 space-x-4">
+                    <Link href="/all-events" className="flex items-center py-3 space-x-4">
                         <Icon icon="fluent:mail-unread-20-filled" width="30" height="30" className="text-slate-600 shrink-0"/>
                         <span className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans'] ${!isSidebarOpen && 'hidden'}`}>Mail Logs</span>
                     </Link>
@@ -46,7 +46,7 @@ export default function AdminLayout({ children, title }) {
 
                 <div className="px-6 py-6 mt-auto">
                     <button className="w-full flex items-center space-x-4">
-                        <Icon icon="solar:logout-3-bold" width="30" height="30" rotate={2} className="shrink-0"/>
+                        <Icon icon="solar:logout-3-bold" width="30" height="30" rotate={2} className="text-slate-600 shrink-0"/>
                         <span className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans'] ${!isSidebarOpen && 'hidden'}`}>Logout</span>
                     </button>
                 </div>

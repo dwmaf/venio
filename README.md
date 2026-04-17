@@ -1,59 +1,102 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Venio (Web Manajemen Event) - Installation Guide
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Proyek ini adalah aplikasi berbasis Laravel, InertiaJs, dan ReactJs. Ikuti langkah-langkah di bawah ini untuk menjalankan proyek di mesin lokal Anda.
 
-## About Laravel
+## Prasyarat
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Pastikan Anda sudah menginstal:
+- PHP >= 8.2
+- Composer
+- Node.js & pnpm (sangat disarankan untuk menggunakan ppnpm dibanding pnpm karena lebih cepat dan lebih hemat storage, pnpm membuat link jika versi dependansi yg sama berada di direktori yang berbeda, sementara pnpm akan membuat duplikasi walaupun versi dependansinya sama sehingga akan memakan ruang lebih banyak)
+- MySQL/MariaDB/SQLite
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Langkah Instalasi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Clone Repository
+```sh
+git clone https://github.com/dwmaf/venio.git
+cd venio
+```
 
-## Learning Laravel
+### 2. Instal Dependensi PHP
+```sh
+composer install
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 3. Setup File Environment
+Salin file `.env.example` menjadi `.env` dan sesuaikan konfigurasi database Anda.
+```sh
+copy .env.example .env
+```
+*Gunakan `cp` jika menggunakan terminal Git Bash/Linux.*
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+3. **Izin Firewall (Wajib)**:
+   Agar HP bisa memanggil server di laptop, jalankan PowerShell sebagai **Administrator** dan eksekusi perintah berikut satu per satu:
+   ```sh
+   netsh advfirewall firewall add rule name="Laravel App" dir=in action=allow protocol=TCP localport=8000
+   netsh advfirewall firewall add rule name="Laravel Reverb" dir=in action=allow protocol=TCP localport=8081
+   ```
 
-## Laravel Sponsors
+### 5. Generate Application Key
+```sh
+php artisan key:generate
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. Hubungkan Storage ke Public
+Jalankan storage link agar file yang tersimpan di storage bisa diakses:
+```sh
+php artisan storage:link
+```
 
-### Premium Partners
+### 7. Migrasi Database
+Pastikan database sudah dibuat di MySQL, lalu jalankan:
+```sh
+php artisan migrate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 8. Seeding Database
+Data dummy sudah tersedia di databaseseeder, jadi anda bisa seeding data untuk lihat datanya:
+Copy folder files di folder public ke folder storage/app/public
 
-## Contributing
+```sh
+php artisan db:seed
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 9. Instal Dependensi Frontend
+```sh
+pnpm install
+```
 
-## Code of Conduct
+### 10. Menjalankan Aplikasi
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+1. Jalankan server Laravel:
+   ```sh
+   php artisan serve
+   ```
+2. Jalankan pemantau aset Vite (opsional saat pengembangan):
+   ```sh
+   pnpm run dev
+   ```
+3. Atau jika ingin jalankan dengan satu perintah saja untuk menjalankan server laravel dan pemantau aset Vite:
+   ```sh
+   composer run dev
+   ```
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 11. Production
+1. Jalankan build aset:
+    ```sh
+    pnpm run build
+    ```
+2. Kemudian Jalankan server Laravel:
+    ```sh
+    php artisan serve
+    ```
 
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Future Dev
+1. Slicing the design for Pages/Events/OnGoingEvent.jsx based on the design arif made, the controller is EventController.php (the func is ongoingEvents()), the route is /ongoing-events.
+2. Slicing the design for Pages/Events/UpcomingEvent.jsx based on the design arif made, the controller is EventController.php (the func is upcomingEvents()), the route is /upcoming-events.
+3. Slicing the design for Pages/Events/PastEvent.jsx based on the design arif made, the controller is EventController.php (the func is pastEvents()), the route is /past-events.
+4. Slicing the design for Pages/Events/DetailEvent.jsx based on the design arif made, the controller is EventController.php (the func is detailEvents()), the route is /events/{event}.
+5. Slicing the design for Pages/Events/Checkin.jsx based on the design arif made (the design hasn't been made yet), the controller is CheckinController.php (the func is index()), the route is /datang.
+6. Slicing the design for Pages/Login.jsx based on the design arif made, the controller is AuthController.php (the func is showLoginForm()), the route is /login.

@@ -21,8 +21,11 @@ Route::middleware('auth')->group(function () {
 	Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 	Route::post('/account/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
 
-	Route::get('/events/{event}', [EventController::class, 'show'])->name('events.index');
+	Route::get('/all-events', [EventController::class, 'allEvents'])->name('all.events');
+	Route::get('/events/{event}', [EventController::class, 'detailEvent'])->name('events.index');
 	Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
+	Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
+	Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 

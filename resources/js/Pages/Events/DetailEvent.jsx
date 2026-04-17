@@ -1,8 +1,8 @@
 import { useForm, Link, Head, router } from '@inertiajs/react';
 import { useState } from 'react';
-import ImportPeserta from '../Components/ImportPeserta';
-import SendQREmail from '../Components/SendQREmail';
-import SendQRIndividual from '../Components/SendQRIndividual';
+import ImportPeserta from '@/Components/ImportPeserta';
+import SendQREmail from '@/Components/SendQREmail';
+import SendQRIndividual from '@/Components/SendQRIndividual';
 import { route } from 'ziggy-js';
 
 export default function Event({ event, participants, stats }) {
