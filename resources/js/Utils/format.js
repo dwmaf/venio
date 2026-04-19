@@ -1,9 +1,9 @@
-// resources/js/utils/format.js
-
 export function formatTanggalSlash(isoDate) {
   if (!isoDate) return '';
   const [y, m, d] = isoDate.split('-');
-  return `${parseInt(d)}/${parseInt(m)}/${y}`;
+  const day = d.padStart(2, '0');
+  const month = m.padStart(2, '0');
+  return `${day}/${month}/${y}`;
 }
 
 export function formatJamMenit(jam) {

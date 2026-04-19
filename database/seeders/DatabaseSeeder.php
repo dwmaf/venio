@@ -31,25 +31,22 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // $ongoingNames = ['Workshop React Hari Ini', 'Seminar AI Live', 'Workshop Vue Live'];
-        $ongoingNames = ['Workshop React Hari Ini'];
-        foreach ($ongoingNames as $name) {
+        foreach (range(1, 4) as $index) {
             Event::create([
-                'nama_event' => $name,
+                'nama_event' => $faker->company() . ' Event ' . $index,
                 'lokasi' => 'Konferensi Untan',
                 'tanggal_event' => now()->format('Y-m-d'), // Hari Ini
                 'jam_mulai' => '08:00:00',
                 'jam_selesai' => '17:00:00',
                 'tipe_event' => 'HYBRID',
-                'status' => 'BELUM_SELESAI', // Karena masih jalan
+                'status' => 'BELUM_SELESAI',
             ]);
         }
 
         // 2. BUAT 4 UPCOMING EVENTS (MENDATANG)
-        $upcomingNames = ['Kalbar Naker Fest 2026', 'Inertia Masterclass', 'Cyber Security Summit', 'Digital Marketing Expo'];
-        foreach ($upcomingNames as $name) {
+        foreach (range(1, 3) as $index) {
             Event::create([
-                'nama_event' => $name,
+                'nama_event' => $faker->company() . ' Event ' . $index,
                 'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
                 // 'tanggal_event' => now(), // Masa Kini
@@ -61,15 +58,14 @@ class DatabaseSeeder extends Seeder
         }
 
         // 3. BUAT 5 PAST EVENTS (MASA LALU)
-        $pastNames = ['Grebek Pasar Pontianak', 'Tech Talk Vol 1', 'Pelatihan UMKM', 'Webinar Flutter', 'Bootcamp PHP'];
-        foreach ($pastNames as $name) {
+        foreach (range(1, 30) as $index) {
             Event::create([
-                'nama_event' => $name,
+                'nama_event' => $faker->company() . ' Event ' . $index,
                 'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->subDays(rand(5, 120))->format('Y-m-d'), // Masa Lalu
                 'jam_mulai' => '10:00:00',
                 'jam_selesai' => '16:00:00',
-                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
+                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']),
                 'status' => 'SELESAI', // Sudah beres
             ]);
         }

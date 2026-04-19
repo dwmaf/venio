@@ -51,9 +51,8 @@ export default function OngoingEvents({ ongoingEvents = [] }) {
 						))}
 					</div>
 				) : (
-					<div className='flex flex-col w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
-
-						<div className='flex gap-4 items-center justify-center h-full'>
+					<div className='flex flex-col w-full shrink-0 min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+						<div className='flex flex-1 gap-4 items-center justify-center h-full'>
 							<span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event!</span>
 						</div>
 					</div>

@@ -91,9 +91,8 @@ class EventController extends Controller
         $ongoingEvents = Event::where('tanggal_event', $today)
             ->where('status', 'BELUM_SELESAI')
             ->orderBy('jam_mulai', 'asc')
-            ->limit(2)
             ->get();
-        return Inertia::render('Events/OngoingEvents', [
+        return Inertia::render('Events/OnGoingEvents', [
             'ongoingEvents' => $ongoingEvents,
         ]);
     }
@@ -104,9 +103,10 @@ class EventController extends Controller
 
         $pastEvents = Event::where('tanggal_event', '<', $today)
             ->where('status', 'SELESAI')
+            ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
-            ->limit(2)
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
         return Inertia::render('Events/PastEvents', [
             'pastEvents' => $pastEvents,
         ]);

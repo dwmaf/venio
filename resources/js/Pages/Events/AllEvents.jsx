@@ -64,7 +64,7 @@ export default function AllEvents({ ongoingEvents, upcomingEvents, pastEvents })
                             ))}
                             {/* kalau ongoing event cuman 1, kasih tambahan card*/}
                             {ongoingEvents.length === 1 && (
-                                <div className='flex flex-col shrink-0 min-w-129 min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+                                <div className='flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8'>
                                     <div className="flex-1 flex items-center justify-center w-full h-full">
                                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
                                     </div>
@@ -120,7 +120,7 @@ export default function AllEvents({ ongoingEvents, upcomingEvents, pastEvents })
                             ))}
                             {/* kalau upcoming event cuman 1, kasih tambahan card*/}
                             {upcomingEvents.length === 1 && (
-                                <div className='flex flex-col shrink-0 min-w-129 min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+                                <div className='flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8'>
                                     <div className="flex-1 flex items-center justify-center w-full h-full">
                                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
                                     </div>
@@ -175,7 +175,7 @@ export default function AllEvents({ ongoingEvents, upcomingEvents, pastEvents })
                             ))}
                             {/* kalau past event cuman 1, kasih tambahan card*/}
                             {pastEvents.length === 1 && (
-                                <div className='flex flex-col shrink-0 min-w-129 min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
+                                <div className='flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8'>
                                     <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Past Events!</span>
                                     <div className="flex-1 flex items-center justify-center w-full h-full">
                                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>

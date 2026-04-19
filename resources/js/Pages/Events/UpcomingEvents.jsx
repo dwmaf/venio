@@ -6,7 +6,7 @@ import { formatTanggalSlash, formatJamMenit } from '@/utils/format';
 import Breadcrumb from '@/Components/Breadcrumb';
 import { Icon } from '@iconify/react';
 
-export default function AllEvents({ upcomingEvents }) {
+export default function upcomingEvents({ upcomingEvents }) {
     const breadcrumbs = [
         { label: 'Home', href: route('dashboard') },
         { label: 'Events', href: route('all.events') },
