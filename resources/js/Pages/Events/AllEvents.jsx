@@ -14,7 +14,7 @@ export default function AllEvents({ ongoingEvents, upcomingEvents, pastEvents })
 
     return (
         <AdminLayout title="Events">
-            <Head title="Events" />
+            <Head title="Venio | Events" />
 
             <div className="mx-8 flex flex-col gap-8">
                 <Breadcrumb items={breadcrumbs} />

@@ -73,32 +73,32 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
     return (
         <AdminLayout title="Dashboard">
-            <Head title="Dashboard Event" />
+            <Head title="Venio | Dashboard Event" />
 
             <div className="mx-8 flex flex-col gap-8">
                 <Breadcrumb items={breadcrumbs} />
                 {/* 3 statistik */}
                 <div className='flex justify-between gap-4 w-full'>
-                    <div className='flex flex-1 justify-between border border-slate-700/30 rounded-2xl p-4'>
+                    <div className='flex flex-1 justify-between bg-yellow-50 border border-yellow-500/30 rounded-2xl p-4'>
                         <div className='flex flex-col gap-2.5'>
                             <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none">Total Events</span>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{stats.totalEvents} Events</span>
                         </div>
-                        <Icon icon="duo-icons:align-bottom" width="50" height="50" />
+                        <img src="/icons/duo-icons_align-bottom.svg" alt="Total Events"/>
                     </div>
-                    <div className='flex flex-1 justify-between border border-slate-700/30 rounded-2xl p-4'>
+                    <div className='flex flex-1 justify-between bg-teal-50 border border-teal-500/30 rounded-2xl p-4'>
                         <div className='flex flex-col gap-2.5'>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none">Completed Events</span>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{stats.completedEvents} Events</span>
                         </div>
-                        <Icon icon="duo-icons:approved" width="50" height="50" />
+                        <img src="/icons/duo-icons_approved.svg" alt="Total Events"/>
                     </div>
-                    <div className='flex flex-1 justify-between border border-slate-700/30 rounded-2xl p-4'>
+                    <div className='flex flex-1 justify-between bg-purple-50 border border-purple-500/30 rounded-2xl p-4'>
                         <div className='flex flex-col gap-2.5'>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none">Partners</span>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">{stats.partners} Partners</span>
                         </div>
-                        <Icon icon="duo-icons:user" width="50" height="50" />
+                        <img src="/icons/ic_twotone-handshake.svg" alt="Total Events"/>
                     </div>
                 </div>
 
