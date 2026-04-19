@@ -11,9 +11,20 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 
+    --color-bg: oklch(0.997 0 0);
     --color-neutral: oklch(55.6% 0 0);
-    --color-border: oklch(37.3% 0.034 259.733);
+
+    /* buat border, sidebar item */
+    --color-default: oklch(37.3% 0.034 259.733);
+
+    --font-heading: "Poppins", sans-serif;
+    --font-body: "Plus Jakarta Sans", sans-serif;
 }
+
+* {
+    font-family: var(--font-body);
+}
+
 .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome/Safari/Webkit */
 }
