@@ -9,7 +9,7 @@ export default function Breadcrumb({ items }) {
                     {item.href ? (
                         idx === 0 ? (
                             <Link href={item.href} className="flex items-center gap-1">
-                                <Icon icon="hugeicons:home-01" width="24" height="24" />
+                                <Icon icon="hugeicons:home-01" width="18" height="18" />
                             </Link>
                         ) : (
                             <Link href={item.href} className="font-['Plus_Jakarta_Sans'] leading-none text-neutral-500 text-[20px] font-normal">
