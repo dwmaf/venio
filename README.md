@@ -94,9 +94,9 @@ pnpm install
     ```
 
 # Future Dev
-1. Slicing the design for Pages/Events/OnGoingEvent.jsx based on the design arif made, the controller is EventController.php (the func is ongoingEvents()), the route is /ongoing-events.
-2. Slicing the design for Pages/Events/UpcomingEvent.jsx based on the design arif made, the controller is EventController.php (the func is upcomingEvents()), the route is /upcoming-events.
-3. Slicing the design for Pages/Events/PastEvent.jsx based on the design arif made, the controller is EventController.php (the func is pastEvents()), the route is /past-events.
+1. Slicing the design for Pages/Events/OnGoingEvent.jsx based on the design arif made, the controller is EventController.php (the func is ongoingEvents()), the route is /ongoing-events = DONE
+2. Slicing the design for Pages/Events/UpcomingEvent.jsx based on the design arif made, the controller is EventController.php (the func is upcomingEvents()), the route is /upcoming-events = DONE
+3. Slicing the design for Pages/Events/PastEvent.jsx based on the design arif made, the controller is EventController.php (the func is pastEvents()), the route is /past-events = DONE
 4. Slicing the design for Pages/Events/DetailEvent.jsx based on the design arif made, the controller is EventController.php (the func is detailEvents()), the route is /events/{event}.
 5. Slicing the design for Pages/Events/Checkin.jsx based on the design arif made (the design hasn't been made yet), the controller is CheckinController.php (the func is index()), the route is /datang.
 6. Slicing the design for Pages/Login.jsx based on the design arif made, the controller is AuthController.php (the func is showLoginForm()), the route is /login.
