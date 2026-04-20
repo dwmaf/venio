@@ -26,12 +26,22 @@ export default function AllEvents({
                 <Breadcrumb items={breadcrumbs} />
 
                 {/* ongoing events */}
-                <div className="flex justify-between">
-                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
-                        Ongoing Events
-                    </span>
-                    <RouteButton text="Lihat Semua" />
+                <div className="flex justify-between font-body font-medium leading-none">
+                    <span className="text-2xl">Ongoing Events</span>
+                    <Link href={route("ongoing.events")} className="flex gap-2">
+                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
+                            Lihat Semua
+                        </span>
+                        <Icon
+                            icon="basil:arrow-left-outline"
+                            width="24"
+                            height="24"
+                            rotate={2}
+                            className="text-blue-700"
+                        />
+                    </Link>
                 </div>
+
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada ongoing event */}
                     {ongoingEvents.length === 0 ? (
@@ -60,7 +70,21 @@ export default function AllEvents({
                     <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
                         Upcoming Events
                     </span>
-                    <RouteButton text="Lihat Semua" />
+                    <Link
+                        href={route("upcoming.events")}
+                        className="flex gap-2"
+                    >
+                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
+                            Lihat Semua
+                        </span>
+                        <Icon
+                            icon="basil:arrow-left-outline"
+                            width="24"
+                            height="24"
+                            rotate={2}
+                            className="text-blue-700"
+                        />
+                    </Link>
                 </div>
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada upcoming event */}
@@ -90,7 +114,18 @@ export default function AllEvents({
                     <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
                         Past Events
                     </span>
-                    <RouteButton text="Lihat Semua" />
+                    <Link href={route("past.events")} className="flex gap-2">
+                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
+                            Lihat Semua
+                        </span>
+                        <Icon
+                            icon="basil:arrow-left-outline"
+                            width="24"
+                            height="24"
+                            rotate={2}
+                            className="text-blue-700"
+                        />
+                    </Link>
                 </div>
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada past event */}
