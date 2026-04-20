@@ -21,18 +21,19 @@ export default function AllEvents({
     return (
         <AdminLayout title="Events">
             <Head title="Venio | Events" />
-
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-6 lg:gap-8">
                 <Breadcrumb items={breadcrumbs} />
 
                 {/* ongoing events */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="flex justify-between font-body font-medium leading-none">
-                        <span className="text-2xl">Ongoing Events</span>
+                        <span className="text-base lg:text-2xl">
+                            Ongoing Events
+                        </span>
                         <RouteButton text="Lihat Semua" />
                     </div>
 
-                    <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
                             <NoEvent />
@@ -57,13 +58,15 @@ export default function AllEvents({
                 </div>
 
                 {/* upcoming events */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="flex justify-between font-body font-medium leading-none">
-                        <span className="text-2xl">Upcoming Events</span>
+                        <span className="text-base lg:text-2xl">
+                            Upcoming Events
+                        </span>
                         <RouteButton text="Lihat Semua" />
                     </div>
 
-                    <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                         {/* kalau tak ada upcoming event */}
                         {upcomingEvents.length === 0 ? (
                             <NoEvent />
@@ -88,13 +91,15 @@ export default function AllEvents({
                 </div>
 
                 {/* past events */}
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col  gap-4 lg:gap-6">
                     <div className="flex justify-between font-body font-medium leading-none">
-                        <span className="text-2xl">Past Events</span>
+                        <span className="text-base lg:text-2xl">
+                            Past Events
+                        </span>
                         <RouteButton text="Lihat Semua" />
                     </div>
 
-                    <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                         {/* kalau tak ada past event */}
                         {pastEvents.length === 0 ? (
                             <NoEvent />
