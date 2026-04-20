@@ -16,10 +16,12 @@ return new class extends Migration
             $table->string('nama_event');
             $table->string('lokasi')->nullable();
             $table->date('tanggal_event');
-            $table->time('jam_mulai')->nullable();
-            $table->time('jam_selesai')->nullable();
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->enum('tipe_event', ['OFFLINE', 'ONLINE', 'HYBRID'])->default('OFFLINE'); 
             $table->enum('status', ['SELESAI','BELUM_SELESAI'])->default('BELUM_SELESAI');
+            $table->integer('quota')->nullable();
+            $table->json('partners')->nullable();
             $table->timestamps();
         });
     }

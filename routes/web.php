@@ -8,6 +8,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ParticipantImportController;
 use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\PartnerController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => Auth::check() ? redirect()->route('inertia.dasbor') : redirect()->route('login'));
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
 	Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
 	Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
 	Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
+	Route::get('/create-events', [EventController::class, 'create'])->name('create.events');
+	Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
+	Route::get('/edit-events', [EventController::class, 'edit'])->name('edit.events');
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 

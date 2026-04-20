@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Participant;
+use App\Models\Partner;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Carbon\Carbon;
@@ -13,15 +14,42 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_event'      => ['required', 'string', 'max:255'],
-            'tanggal_mulai'   => ['required', 'date'],
-            'tanggal_selesai' => ['required', 'date', 'after_or_equal:tanggal_mulai'],
-            'status'          => ['required', 'in:BERLANGSUNG,RIWAYAT'],
+            'nama_event'    => 'required|string',
+            'tipe_event'    => 'required|in:OFFLINE,ONLINE,HYBRID',
+            'lokasi'        => 'required_if:tipe_event,OFFLINE,HYBRID',
+            'tanggal_event' => 'required|date',
+            'jam_mulai'     => 'required',
+            'jam_selesai'   => 'required',
+            'quota'         => 'nullable|integer',
+            'partners' => 'nullable|array',
+            'partners.*' => 'string'
         ]);
 
-        Event::create($validated);
+        $event = Event::create([
+            'nama_event'    => $validated['nama_event'],
+            'tipe_event'    => $validated['tipe_event'],
+            'lokasi'        => $validated['lokasi'] ?? null,
+            'tanggal_event' => $validated['tanggal_event'],
+            'jam_mulai'     => $validated['jam_mulai'],
+            'jam_selesai'   => $validated['jam_selesai'],
+            'quota'         => $validated['quota'],
+            'status'        => 'BELUM_SELESAI',
+        ]);
 
-        return redirect()->back()->with('success', 'Event berhasil ditambahkan.');
+        if (!empty($validated['partners'])) {
+            $partnerIds = [];
+            foreach ($validated['partners'] as $partnerName) {
+                // firstOrCreate akan mencari partner berdasarkan nama. 
+                // Jika ada, kembalikan object. Jika belum, buat baru di tabel partners.
+                $partner = Partner::firstOrCreate(['nama' => $partnerName]);
+                $partnerIds[] = $partner->id;
+            }
+
+            // Simpan ke tabel pivot event_partner
+            $event->partners()->sync($partnerIds);
+        }
+
+        return redirect()->route('all.events')->with('success', 'Event Berhasil Dibuat');
     }
 
     public function update(Request $request, Event $event)
@@ -132,6 +160,12 @@ class EventController extends Controller
             'participants' => $participants,
             'stats' => $stats,
         ]);
-
     }
+
+    public function create()
+    {
+        return Inertia::render('Events/AddEvents');
+    }
+
+    public function edit() {}
 }
