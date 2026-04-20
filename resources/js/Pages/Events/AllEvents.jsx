@@ -5,6 +5,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { Icon } from "@iconify/react";
+import { NoEvent, EventCard } from "@/Components/EventCard";
 
 export default function AllEvents({
     ongoingEvents,
@@ -44,85 +45,22 @@ export default function AllEvents({
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada ongoing event */}
                     {ongoingEvents.length === 0 ? (
-                        <div className="flex flex-col shrink-0 w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                            <div className="flex gap-4 items-center justify-center h-full">
-                                <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                    No Event
-                                </span>
-                            </div>
-                        </div>
+                        <NoEvent />
                     ) : (
                         <>
                             {/* kalau ongoing event ada */}
                             {ongoingEvents.map((event) => (
-                                <div
+                                <EventCard
                                     key={event.id}
-                                    className="flex flex-col shrink-0 snap-center min-w-129 justify-between border border-slate-700/30 rounded-2xl p-8 gap-6"
-                                >
-                                    <div className="flex gap-4 items-center">
-                                        <Icon
-                                            icon="duo-icons:award"
-                                            width="40"
-                                            height="40"
-                                        />
-                                        <div className="flex flex-col gap-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">
-                                                {event.nama_event}
-                                            </span>
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:calendar"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatTanggalSlash(
-                                                            event.tanggal_event,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:clock"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatJamMenit(
-                                                            event.jam_mulai,
-                                                        )}{" "}
-                                                        -{" "}
-                                                        {formatJamMenit(
-                                                            event.jam_selesai,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:location"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {event.lokasi}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    name={event.nama_event}
+                                    date={event.tanggal_event}
+                                    timeStart={event.jam_mulai}
+                                    timeEnd={event.jam_selesai}
+                                    location={event.lokasi}
+                                />
                             ))}
                             {/* kalau ongoing event cuman 1, kasih tambahan card*/}
-                            {ongoingEvents.length === 1 && (
-                                <div className="flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                                    <div className="flex-1 flex items-center justify-center w-full h-full">
-                                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                            No Event
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
+                            {ongoingEvents.length === 1 && <NoEvent />}
                         </>
                     )}
                 </div>
@@ -151,85 +89,22 @@ export default function AllEvents({
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada upcoming event */}
                     {upcomingEvents.length === 0 ? (
-                        <div className="flex flex-col shrink-0 w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                            <div className="flex gap-4 items-center justify-center h-full">
-                                <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                    No Event
-                                </span>
-                            </div>
-                        </div>
+                        <NoEvent />
                     ) : (
                         <>
                             {/* kalau upcoming event ada */}
                             {upcomingEvents.map((event) => (
-                                <div
+                                <EventCard
                                     key={event.id}
-                                    className="flex flex-col shrink-0 snap-center min-w-129 justify-between border border-slate-700/30 rounded-2xl p-8 gap-6"
-                                >
-                                    <div className="flex gap-4 items-center">
-                                        <Icon
-                                            icon="duo-icons:award"
-                                            width="40"
-                                            height="40"
-                                        />
-                                        <div className="flex flex-col gap-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">
-                                                {event.nama_event}
-                                            </span>
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:calendar"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatTanggalSlash(
-                                                            event.tanggal_event,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:clock"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatJamMenit(
-                                                            event.jam_mulai,
-                                                        )}{" "}
-                                                        -{" "}
-                                                        {formatJamMenit(
-                                                            event.jam_selesai,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:location"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {event.lokasi}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    name={event.nama_event}
+                                    date={event.tanggal_event}
+                                    timeStart={event.jam_mulai}
+                                    timeEnd={event.jam_selesai}
+                                    location={event.lokasi}
+                                />
                             ))}
                             {/* kalau upcoming event cuman 1, kasih tambahan card*/}
-                            {upcomingEvents.length === 1 && (
-                                <div className="flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                                    <div className="flex-1 flex items-center justify-center w-full h-full">
-                                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                            No Event
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
+                            {upcomingEvents.length === 1 && <NoEvent />}
                         </>
                     )}
                 </div>
@@ -255,88 +130,22 @@ export default function AllEvents({
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada past event */}
                     {pastEvents.length === 0 ? (
-                        <div className="flex flex-col shrink-0 w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                            <div className="flex gap-4 items-center justify-center h-full">
-                                <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                    No Event
-                                </span>
-                            </div>
-                        </div>
+                        <NoEvent />
                     ) : (
                         <>
                             {/* kalau past event ada */}
                             {pastEvents.map((event) => (
-                                <div
+                                <EventCard
                                     key={event.id}
-                                    className="flex flex-col shrink-0 snap-center min-w-129 justify-between border border-slate-700/30 rounded-2xl p-8 gap-6"
-                                >
-                                    <div className="flex gap-4 items-center">
-                                        <Icon
-                                            icon="duo-icons:award"
-                                            width="40"
-                                            height="40"
-                                        />
-                                        <div className="flex flex-col gap-2.5">
-                                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-dark">
-                                                {event.nama_event}
-                                            </span>
-                                            <div className="flex flex-col gap-4">
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:calendar"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatTanggalSlash(
-                                                            event.tanggal_event,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:clock"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {formatJamMenit(
-                                                            event.jam_mulai,
-                                                        )}{" "}
-                                                        -{" "}
-                                                        {formatJamMenit(
-                                                            event.jam_selesai,
-                                                        )}
-                                                    </span>
-                                                </div>
-                                                <div className="flex gap-2.5">
-                                                    <Icon
-                                                        icon="duo-icons:location"
-                                                        width="24"
-                                                        height="24"
-                                                    />
-                                                    <span className="font-['Plus_Jakarta_Sans'] font-normal text-[20px] leading-none text-neutral-500">
-                                                        {event.lokasi}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    name={event.nama_event}
+                                    date={event.tanggal_event}
+                                    timeStart={event.jam_mulai}
+                                    timeEnd={event.jam_selesai}
+                                    location={event.lokasi}
+                                />
                             ))}
                             {/* kalau past event cuman 1, kasih tambahan card*/}
-                            {pastEvents.length === 1 && (
-                                <div className="flex flex-col shrink-0 min-w-129 min-h-50.75 border border-slate-700/30 rounded-2xl p-8 gap-8">
-                                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
-                                        Past Events!
-                                    </span>
-                                    <div className="flex-1 flex items-center justify-center w-full h-full">
-                                        <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">
-                                            No Event
-                                        </span>
-                                    </div>
-                                </div>
-                            )}
+                            {pastEvents.length === 1 && <NoEvent />}
                         </>
                     )}
                 </div>
