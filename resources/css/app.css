@@ -21,10 +21,6 @@
     --font-body: "Plus Jakarta Sans", sans-serif;
 }
 
-* {
-    font-family: var(--font-body);
-}
-
 .hide-scrollbar::-webkit-scrollbar {
     display: none; /* Chrome/Safari/Webkit */
 }

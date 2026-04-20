@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 export default function Breadcrumb({ items }) {
     return (
         <nav
-            className="flex gap-2 items-center text-neutral"
+            className="flex gap-2 items-center text-neutral font-body"
             aria-label="Breadcrumb"
         >
             {items.map((item, idx) => (
