@@ -25,10 +25,8 @@ export default function AllEvents({
                 <Breadcrumb items={breadcrumbs} />
 
                 {/* ongoing events */}
-                <div className="flex justify-between">
-                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
-                        Ongoing Events
-                    </span>
+                <div className="flex justify-between font-body font-medium leading-none">
+                    <span className="text-2xl">Ongoing Events</span>
                     <Link href={route("ongoing.events")} className="flex gap-2">
                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
                             Lihat Semua
@@ -42,6 +40,7 @@ export default function AllEvents({
                         />
                     </Link>
                 </div>
+
                 <div className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
                     {/* kalau tak ada ongoing event */}
                     {ongoingEvents.length === 0 ? (
@@ -66,10 +65,8 @@ export default function AllEvents({
                 </div>
 
                 {/* upcoming events */}
-                <div className="flex justify-between">
-                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
-                        Upcoming Events
-                    </span>
+                <div className="flex justify-between font-body font-medium leading-none">
+                    <span className="text-2xl">Upcoming Events</span>
                     <Link
                         href={route("upcoming.events")}
                         className="flex gap-2"
@@ -110,10 +107,8 @@ export default function AllEvents({
                 </div>
 
                 {/* past events */}
-                <div className="flex justify-between">
-                    <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">
-                        Past Events
-                    </span>
+                <div className="flex justify-between font-body font-medium leading-none">
+                    <span className="text-2xl">Past Events</span>
                     <Link href={route("past.events")} className="flex gap-2">
                         <span className="font-['Plus_Jakarta_Sans'] font-medium text-[20px] leading-none text-blue-700">
                             Lihat Semua
