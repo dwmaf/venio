@@ -140,7 +140,7 @@ class EventController extends Controller
         ]);
     }
 
-    public function detailEvents(Request $request, Event $event)
+    public function detailEvent(Request $request, Event $event)
     {
         $participants = $event->participants()
             ->orderByDesc('id')
@@ -148,11 +148,30 @@ class EventController extends Controller
             ->withQueryString();
         $totalCount = $event->participants()->count();
         $checkedInCount = $event->participants()->whereNotNull('checked_in_at')->count();
+        // Statistik Offline/Online
+        $offlineCount = $event->participants()->where('metode_kehadiran', 'OFFLINE')->count();
+        $onlineCount = $event->participants()->where('metode_kehadiran', 'ONLINE')->count();
 
+        // Statistik Tambahan
+        $offlineCheckedIn = $event->participants()
+            ->where('metode_kehadiran', 'OFFLINE')
+            ->whereNotNull('checked_in_at')
+            ->count();
+
+        $onlineZoomFilled = $event->participants()
+            ->where('metode_kehadiran', 'ONLINE')
+            ->whereNotNull('zoom_link')
+            ->count();
         $stats = [
             'total' => $totalCount,
             'checked_in' => $checkedInCount,
             'not_checked_in' => max(0, $totalCount - $checkedInCount),
+            'offline' => $offlineCount,
+            'online' => $onlineCount,
+            'offline_checked_in' => $offlineCheckedIn,
+            'offline_not_checked_in' => max(0, $offlineCount - $offlineCheckedIn),
+            'online_zoom_filled' => $onlineZoomFilled,
+            'online_zoom_empty' => max(0, $onlineCount - $onlineZoomFilled),
         ];
 
         return Inertia::render('Events/DetailEvent', [

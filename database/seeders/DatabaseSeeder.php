@@ -75,7 +75,14 @@ class DatabaseSeeder extends Seeder
             for ($i = 0; $i < 20; $i++) {
                 $nama = $faker->name();
                 $email = $faker->unique()->safeEmail();
-                $metode = $faker->randomElement(['OFFLINE', 'ONLINE', 'HYBRID']);
+
+                // Logika metode kehadiran dinamis berdasarkan tipe event
+                if ($event->tipe_event === 'HYBRID') {
+                    $metode = $faker->randomElement(['OFFLINE', 'ONLINE']);
+                } else {
+                    $metode = $event->tipe_event; // OFFLINE atau ONLINE sesuai eventnya
+                }
+
                 Participant::create([
                     'event_id' => $event->id,
                     'email_primary' => $email,
@@ -85,8 +92,8 @@ class DatabaseSeeder extends Seeder
                     'checked_in_at' => ($event->status === 'SELESAI')
                         ? ($faker->boolean(90) ? now()->subHours(rand(1, 8)) : null)
                         : ($event->tanggal_event === now()->format('Y-m-d') && $faker->boolean(50) ? now() : null),
-                    'qr_token' => 'OFF-' . strtoupper(Str::random(12)),
-                    'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|OFFLINE|' . $event->id),
+                    'qr_token' => ($metode === 'OFFLINE' ? 'OFF-' : 'ONL-') . strtoupper(Str::random(12)),
+                    'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|' . $metode . '|' . $event->id),
                 ]);
             }
         }

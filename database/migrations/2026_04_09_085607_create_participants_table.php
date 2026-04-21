@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('instansi')->nullable();
             $table->text('alamat_instansi')->nullable();            
             $table->string('kategori_biaya')->nullable();
-            $table->enum('metode_kehadiran', ['OFFLINE', 'ONLINE', 'HYBRID'])->default('OFFLINE'); 
+            $table->enum('metode_kehadiran', ['OFFLINE', 'ONLINE'])->default('OFFLINE'); 
             $table->text('payment_proof_url')->nullable();
             $table->boolean('persetujuan_data')->default(false);
             $table->text('zoom_link')->nullable();
