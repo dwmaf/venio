@@ -3,7 +3,7 @@ import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 
 export function NoEvent() {
     return (
-        <div className="min-h-42.5 lg:min-h-full flex flex-col items-center justify-center md:flex-1 border border-default/30 rounded-2xl p-4 lg:p-8 gap-8 font-heading text-neutral font-medium text-xl lg:text-2xl leading-none">
+        <div className="min-h-42.5 lg:min-h-56 flex flex-col items-center justify-center md:flex-1 border border-default/30 rounded-2xl p-4 lg:p-8 gap-8 font-heading text-neutral font-medium text-xl lg:text-2xl leading-none">
             <span>No Event!</span>
         </div>
     );
