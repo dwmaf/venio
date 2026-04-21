@@ -11,7 +11,7 @@ use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\PartnerController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => Auth::check() ? redirect()->route('inertia.dasbor') : redirect()->route('login'));
+Route::get('/', fn () => Auth::check() ? redirect()->route('dashboard') : redirect()->route('login'));
 
 Route::middleware('guest')->group(function () {
 	Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
