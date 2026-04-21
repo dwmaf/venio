@@ -1,19 +1,31 @@
 import { Icon } from "@iconify/react";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 
-export function NoEvent() {
+export function NoEvent({ inner = false }) {
     return (
-        <div className="min-h-42.5 lg:min-h-56 flex flex-col items-center justify-center md:flex-1 border border-default/30 rounded-2xl p-4 lg:p-8 gap-8 font-heading text-neutral font-medium text-xl lg:text-2xl leading-none">
+        <div
+            className={`min-h-42.5 max-w-screen lg:min-h-56 flex flex-col items-center justify-center md:flex-1 gap-8 font-heading text-neutral font-medium text-xl lg:text-2xl leading-none ${!inner && "border border-default/30 rounded-2xl p-4 lg:p-8"}`}
+        >
             <span>No Event!</span>
         </div>
     );
 }
 
-export function EventCard({ id, name, date, timeStart, timeEnd, location }) {
+export function EventCard({
+    id,
+    name,
+    date,
+    timeStart,
+    timeEnd,
+    location,
+    snap = false,
+    inner = false,
+    row = false,
+}) {
     return (
         <div
             key={id}
-            className="flex flex-col flex-1 snap-center justify-between border border-default/30 rounded-2xl p-4 lg:p-8 gap-6 font-body text-neutral text-base"
+            className={`flex flex-col ${!row && "flex-1"} snap-center justify-between gap-6 font-body text-neutral text-base ${snap && "snap-center min-w-75.75 lg:min-w-100 min-h-42"} ${!inner && "border border-default/30 rounded-2xl p-4 lg:p-8"}`}
         >
             <div className="h-full flex gap-4 items-center text-default">
                 <Icon icon="duo-icons:award" width="40" height="40" />
@@ -21,7 +33,9 @@ export function EventCard({ id, name, date, timeStart, timeEnd, location }) {
                     <span className="font-medium text-base lg:text-xl leading-6 text-black text-pretty">
                         {name}
                     </span>
-                    <div className="flex flex-col gap-2 lg:gap-4">
+                    <div
+                        className={`flex ${row ? "flex-row" : "flex-col"} gap-2 lg:gap-4`}
+                    >
                         <div className="flex gap-1 lg:gap-2 items-center">
                             <Icon
                                 icon="duo-icons:calendar"
