@@ -40,8 +40,8 @@ Route::middleware('auth')->group(function () {
 	Route::post('/peserta/send-qr-bulk', [SendEmailController::class, 'sendQrBulk'])->name('peserta.send-qr-bulk');
 	Route::post('/peserta/{participant}/send-qr', [SendEmailController::class, 'sendQr'])->name('peserta.send-qr');
 
-	Route::get('/datang', [CheckinController::class, 'index'])->name('datang.index');
-	Route::post('/datang/scan', [CheckinController::class, 'scan'])->name('datang.scan');
+	Route::get('/datang/{event}', [CheckinController::class, 'index'])->name('datang.index');
+	Route::post('/datang/{event}/scan', [CheckinController::class, 'scan'])->name('datang.scan');
 
 	Route::get('/ekspor/wa', [ExportController::class, 'download'])->name('ekspor.wa');
 	Route::get('/ekspor/recap', [ExportController::class, 'downloadRecap'])->name('ekspor.recap');
