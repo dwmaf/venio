@@ -1,9 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import axios from 'axios';
+import AdminLayout from '@/Layouts/AdminLayout';
+import Breadcrumb from '@/Components/Breadcrumb';
 import { Html5Qrcode } from 'html5-qrcode';
+import { Icon } from "@iconify/react";
+import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 
 export default function Checkin({ event }) {
+    const today = new Date().toISOString().split('T')[0];
+    let eventCategoryLabel = '';
+    let eventCategoryRoute = '';
+
+    if (event.status === 'SELESAI') {
+        eventCategoryLabel = 'Past Events';
+        eventCategoryRoute = route('past.events');
+    } else {
+        if (event.tanggal_event === today) {
+            eventCategoryLabel = 'Ongoing Events';
+            eventCategoryRoute = route('ongoing.events');
+        } else {
+            eventCategoryLabel = 'Upcoming Events';
+            eventCategoryRoute = route('upcoming.events');
+        }
+    }
+    const breadcrumbs = [
+        { label: 'Home', href: route('dashboard') },
+        { label: 'Events', href: route('all.events') },
+        { label: eventCategoryLabel, href: eventCategoryRoute },
+        { label: event.nama_event || 'Detail Event', href: route('events.index', event.id) },
+        { label: 'Scan QR', href: route('datang.index', event.id) },
+    ];
+
     const [manualToken, setManualToken] = useState('');
     const [statusText, setStatusText] = useState('Menyiapkan kamera...');
     const [statusTone, setStatusTone] = useState('loading'); // loading, ready, warning, error
@@ -29,9 +57,9 @@ export default function Checkin({ event }) {
             (decodedText) => processToken(decodedText),
             () => { }
         ).then(() => {
-            showStatus('Siap scan berikutnya. Arahkan kamera ke QR.', 'ready');
+            showStatus('Scanner aktif. Arahkan kamera ke QR.', 'ready');
         }).catch((err) => {
-            showStatus('Gagal mengakses kamera. Cek izin browser dan koneksi HTTPS. Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Gunakan input manual token.', 'error');
+            showStatus('Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Gunakan input manual token.', 'error');
         });
 
         return () => {
@@ -53,7 +81,7 @@ export default function Checkin({ event }) {
 
         try {
             // Gunakan Axios agar CSRF Token Laravel ditambahkan otomatis 
-            const response = await axios.post(route('inertia.datang.scan'), {
+            const response = await axios.post(route('datang.scan'), {
                 token: cleanToken,
                 scanner_info: navigator.userAgent
             });
@@ -90,125 +118,145 @@ export default function Checkin({ event }) {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-            <Head title={`Scan Page - ${event.nama_event}`} />
-            {/* Header / Hero */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6 flex justify-between items-center flex-wrap gap-4">
-                <div>
-                    {/* Jika props event ada, tampilkan nama_event, jika tidak tampilkan default fallback */}
-                    <h1 className="text-2xl font-bold text-gray-800">
-                        {event ? event.nama_event : 'Scanner QR Check-in Offline'}
-                    </h1>
-                    <p className="text-sm text-gray-500">Arahkan kamera ke QR peserta atau gunakan input manual.</p>
-                </div>
+        <AdminLayout title="Events">
+            <div className="flex flex-col gap-4">
+                <Head title={`Scan Page - ${event.nama_event}`} />
+                <Breadcrumb items={breadcrumbs} />
 
-                <div className="flex space-x-3">
-                    {event ? (
-                        <>
-                            {/* Tombol kembali ke Daftar Peserta Event */}
-                            <Link
-                                href={route('inertia.events.index', event.id)}
-                                className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition text-sm shadow-sm"
-                            >
-                                Daftar Peserta
-                            </Link>
+                <h2 className="font-['Plus_Jakarta_Sans'] font-medium text-2xl leading-none">{event.nama_event}</h2>
 
-                            {/* Indikator Active (Scanner) */}
-                            <span className="bg-blue-50 text-blue-700 border border-blue-200 px-4 py-2 rounded-lg font-medium text-sm cursor-default">
-                                Scanner Aktif
+                <div className="flex gap-8">
+                    <div className="flex gap-2.5 items-center">
+                        <Icon
+                            icon="duo-icons:calendar"
+                            width="24"
+                            height="24"
+                            className='text-neutral'
+                        />
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatTanggalSlash(event.tanggal_event)}</span>
+                    </div>
+                    <div className="flex gap-2.5 items-center">
+                        <Icon
+                            icon="duo-icons:clock"
+                            width="24"
+                            height="24"
+                            className='text-neutral'
+                        />
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
+                    </div>
+                    <div className="flex gap-2.5 items-center">
+                        <Icon
+                            icon="duo-icons:location"
+                            width="24"
+                            height="24"
+                            className='text-neutral'
+                        />
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{event.lokasi}</span>
+                    </div>
+                    {event.partners && event.partners.length > 0 && (
+                        <div className="flex gap-2.5 items-center">
+                            <Icon
+                                icon="pepicons-print:handshake"
+                                width="24"
+                                height="24"
+                                className='text-neutral'
+                            />
+                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">
+                                {event.partners.map(partner => partner.nama).join(', ')}
                             </span>
-                        </>
-                    ) : (
-                        <span className="px-3 py-1 bg-gray-100 border border-gray-300 rounded-full text-xs font-semibold text-gray-700">
-                            Mode Petugas Registrasi
-                        </span>
+                        </div>
                     )}
                 </div>
-            </div>
-
-            {/* Header / Hero */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6 flex justify-between items-center flex-wrap gap-4">
-                <div>
-                    <h2 className="text-xl font-bold text-gray-800">Scanner QR Check-in Offline</h2>
-                    <p className="text-sm text-gray-500">Arahkan kamera ke QR peserta atau gunakan input manual.</p>
-                </div>
-                <span className="px-3 py-1 bg-gray-100 border border-gray-300 rounded-full text-xs font-semibold text-gray-700">
-                    Mode Petugas Registrasi
-                </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Kamera Section */}
-                <div className="lg:col-span-2 space-y-4">
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <div className="flex justify-between items-center mb-4">
-                            <h3 className="font-semibold text-gray-800">Area Scanner</h3>
-                            <span className={`px-3 py-1 text-xs font-bold rounded-full ${statusTone === 'ready' ? 'bg-green-100 text-green-800 border border-green-200' :
-                                    statusTone === 'loading' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                                        statusTone === 'warning' ? 'bg-yellow-100 text-yellow-800 border border-yellow-200' :
-                                            'bg-red-100 text-red-800 border border-red-200'
+                <div className="flex flex-col gap-12">
+                    <div className="flex justify-between">
+                        <div className="flex flex-col gap-2">
+                            <h2 className="font-['Poppins'] font-medium text-2xl leading-none">Scanner QR Check-in Offline</h2>
+                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">Arahkan kamera ke QR peserta atau gunakan input token manual jika kamera tidak tersedia.</span>
+                        </div>
+                        {/* status kamera */}
+                        {statusTone !== 'error' && (
+                            <span className={`self-start px-2 py-1 text-xs leading-none font-medium font-['Plus_Jakarta_Sans'] rounded-2xl ${statusTone === 'ready' ? 'bg-lime-50 text-lime-700' :
+                                statusTone === 'loading' ? 'bg-blue-50 text-blue-700 ' :
+                                    statusTone === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                                        'bg-red-100 text-red-800 border border-red-200'
                                 }`}>
                                 {statusText}
                             </span>
-                        </div>
-
-                        <div className="bg-blue-50/50 border border-blue-100 p-3 rounded-2xl">
-                            <div id="reader" className="min-h-75 w-full rounded-xl overflow-hidden bg-white"></div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Sidebar (Manual & Result) */}
-                <div className="space-y-6">
-                    {/* Manual Form */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="font-semibold text-gray-800 mb-4">Input Manual Token</h3>
-                        <form onSubmit={handleManualSubmit} className="flex flex-col gap-3">
-                            <input
-                                type="text"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                value={manualToken}
-                                onChange={(e) => setManualToken(e.target.value)}
-                                placeholder="Masukkan kode manual..."
-                                required
-                            />
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition"
-                            >
-                                Proses Manual
-                            </button>
-                        </form>
-                    </div>
-
-                    {/* Last Result Box */}
-                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h3 className="font-semibold text-gray-800 mb-4">Hasil Terakhir</h3>
-                        {!lastResult ? (
-                            <p className="text-sm text-gray-500">Belum ada scan diproses.</p>
-                        ) : (
-                            <div className="text-sm">
-                                <div className={`font-bold mb-2 ${lastResult.status === 'VALID' ? 'text-green-600' : lastResult.status === 'DUPLICATE' ? 'text-yellow-600' : 'text-red-600'}`}>
-                                    {lastResult.status}
-                                </div>
-                                {lastResult.participant_name && <p className="text-gray-700">Nama: <span className="font-medium">{lastResult.participant_name}</span></p>}
-                                {lastResult.event_name && <p className="text-gray-700">Event: <span className="font-medium">{lastResult.event_name}</span></p>}
-                                {lastResult.checked_in_at && <p className="text-gray-700">Waktu: <span className="font-medium">{lastResult.checked_in_at}</span></p>}
-                                {lastResult.status === 'INVALID' && <p className="text-gray-700">Ket: {lastResult.message}</p>}
-                            </div>
                         )}
-                    </div>
 
-                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                        <h2 class="font-semibold text-gray-800 mb-4">Panduan Cepat</h2>
-                        <ol class="text-sm text-gray-500">
-                            <li>Pastikan pencahayaan cukup agar QR mudah terbaca.</li>
-                            <li>Arahkan QR tepat di area kamera sampai muncul notifikasi.</li>
-                            <li>Jika QR tidak terbaca, minta token lalu gunakan input manual.</li>
-                        </ol>
+                    </div>
+                    <div className="flex gap-12 lg:pr-12 lg:pl-8">
+                        {/* kamera */}
+                        <div className="w-full relative flex items-center justify-center bg-gray-100 min-h-75 overflow-hidden">
+                            {(statusTone === 'loading' || statusTone === 'error') && (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-2 p-4">
+                                    <Icon icon="ph:camera-slash-duotone" width="50" height="50" className="text-neutral" />
+                                    {statusTone === 'error' && (
+                                        <span className="font-['Plus_Jakarta_Sans'] text-sm text-red-600 font-medium mx-auto text-center leading-5">
+                                            {statusText}
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                            <div
+                                id="reader"
+                                className="w-full h-full"
+                            ></div>
+                        </div>
+                        {/* bagian kanan */}
+                        <div className="flex flex-col gap-4">
+                            {/* panduan */}
+                            <div className="flex flex-col border border-neutral/30 rounded-xl p-4 gap-3">
+                                <span className="font-['Plus_Jakarta_Sans'] font-medium text-xl leading-none">Panduan Cepat</span>
+                                <ol className="font-['Plus_Jakarta_Sans'] font-normal text-base text-neutral gap-2">
+                                    <li>1. Pastikan pencahayaan cukup agar QR mudah terbaca.</li>
+                                    <li>2. Arahkan QR tepat di area kamera sampai muncul notifikasi.</li>
+                                    <li>3. Jika QR tidak terbaca, minta token lalu gunakan input manual.</li>
+                                </ol>
+                            </div>
+                            {/* input */}
+                            <div className="flex flex-col border border-neutral/30 p-4 gap-3 rounded-xl">
+                                <h3 className="font-['Plus_Jakarta_Sans'] font-medium text-xl leading-none">Input Manual Token</h3>
+                                <form onSubmit={handleManualSubmit} className="flex flex-col gap-3">
+                                    <input
+                                        type="text"
+                                        className="w-full p-3 border border-neutral/30 rounded-lg font-['Plus_Jakarta_Sans'] text-base placeholder:text-neutral leading-none"
+                                        value={manualToken}
+                                        onChange={(e) => setManualToken(e.target.value)}
+                                        placeholder="Masukkan token QR"
+                                        required
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="w-full bg-blue-50 text-blue-700 font-medium p-3 border border-blue-700/30 rounded-lg transition cursor-pointer"
+                                    >
+                                        Proses Token
+                                    </button>
+                                </form>
+                            </div>
+                            {/* hasil terakhir */}
+                            <div className="flex flex-col border border-neutral/30 p-4 gap-3 rounded-xl">
+                                <h3 className="font-['Plus_Jakarta_Sans'] font-medium text-xl leading-none">Hasil Terakhir</h3>
+                                {!lastResult ? (
+                                    <p className="font-['Plus_Jakarta_Sans'] font-normal text-base text-neutral leading-none">Belum ada scan</p>
+                                ) : (
+                                    <div className="font-['Plus_Jakarta_Sans'] text-base">
+                                        <div className={`font-bold mb-2 ${lastResult.status === 'VALID' ? 'text-green-600' : lastResult.status === 'DUPLICATE' ? 'text-yellow-600' : 'text-red-600'}`}>
+                                            {lastResult.status}
+                                        </div>
+                                        {lastResult.participant_name && <p className="text-gray-700">Nama: <span className="font-medium">{lastResult.participant_name}</span></p>}
+                                        {lastResult.event_name && <p className="text-gray-700">Event: <span className="font-medium">{lastResult.event_name}</span></p>}
+                                        {lastResult.checked_in_at && <p className="text-gray-700">Waktu: <span className="font-medium">{lastResult.checked_in_at}</span></p>}
+                                        {lastResult.status === 'INVALID' && <p className="text-gray-700">Ket: {lastResult.message}</p>}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
             </div>
-        </div>
+        </AdminLayout>
     );
 }
