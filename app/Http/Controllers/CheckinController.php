@@ -4,28 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\CheckinScan;
 use App\Models\Participant;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CheckinController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Event $event)
     {
-        $event = null;
-        
-        // Jika ada query ?event_id=... di URL, ambil data event-nya
-        if ($request->has('event_id')) {
-            $event = \App\Models\Event::find($request->event_id);
+        if ($event->tipe_event === 'ONLINE') {
+            return redirect()
+                ->back(fallback: route('all.events')) 
+                ->with('error', 'Event Online tidak memiliki fitur Check-in QR Scanner.');
         }
-
-        return Inertia::render('Checkin', [
+        $event->load('partners');
+        return Inertia::render('Events/Checkin', [
             'event' => $event
         ]);
     }
 
-    public function scan(Request $request)
+    public function scan(Request $request, Event $event)
     {
+        if ($event->tipe_event === 'ONLINE') {
+            return response()->json([
+                'status' => 'INVALID',
+                'message' => 'Event Online tidak mendukung Check-in QR.',
+            ], 403);
+        }
+
         $validated = $request->validate([
             'token' => ['required', 'string', 'max:120'],
             'scanner_info' => ['nullable', 'string', 'max:255'],
