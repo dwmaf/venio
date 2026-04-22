@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
+import { Link } from "@inertiajs/react";
 
 export function NoEvent({ inner = false }) {
     return (
@@ -18,12 +19,17 @@ export function EventCard({
     timeStart,
     timeEnd,
     location,
+    href,
     snap = false,
     inner = false,
     row = false,
 }) {
+
+    const Component = href ? Link : "div";
+
     return (
-        <div
+        <Component
+            href={href}
             key={id}
             className={`flex flex-col ${!row && "flex-1"} snap-center justify-between gap-6 font-body text-neutral text-base ${snap && "snap-center min-w-75.75 lg:min-w-100 min-h-42"} ${!inner && "border border-default/30 rounded-2xl p-4 lg:p-8"}`}
         >
@@ -67,6 +73,6 @@ export function EventCard({
                     </div>
                 </div>
             </div>
-        </div>
+        </Component>
     );
 }

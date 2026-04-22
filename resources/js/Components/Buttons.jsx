@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 export function RouteButton({ text, href }) {
     return (
         <Link
-            href={route("ongoing.events")}
+            href={href}
             className="flex gap-0.5 lg:gap-2 items-center font-body font-medium text-blue-700 text-sm lg:text-lg leading-none hover:underline mt-1"
         >
             <span>{text}</span>

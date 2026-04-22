@@ -40,7 +40,7 @@ class CheckinController extends Controller
 
         $token = trim($validated['token']);
 
-        $participant = Participant::with('event')->where('qr_token', $token)->first();
+        $participant = Participant::with('event')->where('qr_token', $token)->where('event_id', $event->id)->first();
 
         if (! $participant) {
             CheckinScan::create([
@@ -54,7 +54,7 @@ class CheckinController extends Controller
 
             return response()->json([
                 'status' => 'INVALID',
-                'message' => 'QR tidak dikenal.',
+                'message' => 'QR tidak valid atau bukan untuk event ini.',
             ]);
         }
 
