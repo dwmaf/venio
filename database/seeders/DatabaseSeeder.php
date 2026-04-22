@@ -83,11 +83,13 @@ class DatabaseSeeder extends Seeder
                     $metode = $event->tipe_event; // OFFLINE atau ONLINE sesuai eventnya
                 }
 
+                $daftarProfesi = ['Mahasiswa', 'Dosen/Guru', 'Aparatur Sipil Negara (ASN)', 'Karyawan Swasta', 'Wirausaha', 'Pelajar', 'Umum'];
                 Participant::create([
                     'event_id' => $event->id,
                     'email_primary' => $email,
                     'nama_lengkap' => $nama,
                     'no_hp_normalized' => '628' . $faker->numerify('##########'),
+                    'kategori_peserta' => $faker->randomElement($daftarProfesi),
                     'metode_kehadiran' => $metode,
                     'checked_in_at' => ($event->status === 'SELESAI')
                         ? ($faker->boolean(90) ? now()->subHours(rand(1, 8)) : null)

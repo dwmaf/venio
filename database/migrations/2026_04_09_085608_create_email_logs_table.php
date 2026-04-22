@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('email_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('participant_id')->constrained('participants')->cascadeOnDelete();
-            
+            $table->string('email_type'); 
             $table->string('recipient_email');
             $table->string('subject');
             $table->enum('status', ['SENT', 'FAILED']);

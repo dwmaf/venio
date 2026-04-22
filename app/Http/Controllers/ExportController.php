@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
+use App\Models\Event;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -10,38 +11,79 @@ use Illuminate\Support\Str;
 
 class ExportController extends Controller
 {
-    public function download()
+    public function download(Event $event)
     {
-        $this->ensureQrTokens();
-
-        $participants = Participant::orderBy('nama_lengkap')
-            ->get(['nama_lengkap', 'no_hp_normalized', 'qr_token']);
+        $this->ensureQrTokens($event);
 
         $spreadsheet = new Spreadsheet();
+        // Hapus sheet default yang kosong
+        $spreadsheet->removeSheetByIndex(0);
 
-        $sheet = $spreadsheet->getActiveSheet();
-        $sheet->setTitle('Daftar Peserta');
-        $sheet->fromArray(['Nama Peserta', 'No WhatsApp', 'Link WhatsApp', 'Kode QR', 'Foto QR'], null, 'A1');
+        $participants = Participant::where('event_id', $event->id)
+            ->orderBy('nama_lengkap')
+            ->get(['nama_lengkap', 'no_hp_normalized', 'qr_token', 'zoom_link', 'metode_kehadiran']);
 
-        $row = 2;
-        foreach ($participants as $participant) {
-            $waNumber = $this->formatWhatsAppNumber($participant->no_hp_normalized);
-            $waLink = $this->buildWhatsAppLink($participant->no_hp_normalized);
-            $qrImageUrl = $this->buildQrImageUrl($participant->qr_token);
+        
 
-            $sheet->setCellValue("A{$row}", $participant->nama_lengkap);
-            $sheet->setCellValueExplicit("B{$row}", (string) $waNumber, DataType::TYPE_STRING);
-            $sheet->setCellValue("C{$row}", $waLink);
-            $sheet->setCellValue("D{$row}", $participant->qr_token);
-            $sheet->setCellValue("E{$row}", $qrImageUrl);
-            $row++;
+        // Jika event OFFLINE atau HYBRID, buat sheet Offline
+        if (in_array($event->tipe_event, ['OFFLINE', 'HYBRID'])) {
+            $offlineSheet = $spreadsheet->createSheet();
+            $offlineSheet->setTitle('Peserta Offline');
+            $offlineSheet->fromArray(['Nama Peserta', 'No WhatsApp', 'Link WhatsApp', 'Kode QR', 'Foto QR'], null, 'A1');
+
+            $offlineParticipants = $participants->where('metode_kehadiran', 'OFFLINE');
+            $row = 2;
+            foreach ($offlineParticipants as $participant) {
+                $waNumber = $this->formatWhatsAppNumber($participant->no_hp_normalized);
+                $waLink = $this->buildWhatsAppLink($participant->no_hp_normalized);
+                $qrImageUrl = $this->buildQrImageUrl($participant->qr_token);
+
+                $offlineSheet->setCellValue("A{$row}", $participant->nama_lengkap);
+                $offlineSheet->setCellValueExplicit("B{$row}", (string) $waNumber, DataType::TYPE_STRING);
+                $offlineSheet->setCellValue("C{$row}", $waLink);
+                $offlineSheet->setCellValue("D{$row}", $participant->qr_token);
+                $offlineSheet->setCellValue("E{$row}", $qrImageUrl);
+                $row++;
+            }
+
+            foreach (range('A', 'E') as $column) {
+                $offlineSheet->getColumnDimension($column)->setAutoSize(true);
+            }
         }
 
-        foreach (range('A', 'E') as $column) {
-            $sheet->getColumnDimension($column)->setAutoSize(true);
+        // Jika event ONLINE atau HYBRID, buat sheet Online
+        if (in_array($event->tipe_event, ['ONLINE', 'HYBRID'])) {
+            // Jika ini sheet pertama yang dibuat (karena eventnya murni ONLINE), id indexnya 0
+            $onlineSheet = $spreadsheet->createSheet();
+            $onlineSheet->setTitle('Peserta Online');
+            $onlineSheet->fromArray(['Nama Peserta', 'No WhatsApp', 'Link WhatsApp', 'Link Zoom'], null, 'A1');
+
+            $onlineParticipants = $participants->where('metode_kehadiran', 'ONLINE');
+            $row = 2;
+            foreach ($onlineParticipants as $participant) {
+                $waNumber = $this->formatWhatsAppNumber($participant->no_hp_normalized);
+                $waLink = $this->buildWhatsAppLink($participant->no_hp_normalized);
+
+                $onlineSheet->setCellValue("A{$row}", $participant->nama_lengkap);
+                $onlineSheet->setCellValueExplicit("B{$row}", (string) $waNumber, DataType::TYPE_STRING);
+                $onlineSheet->setCellValue("C{$row}", $waLink);
+                $onlineSheet->setCellValue("D{$row}", $participant->zoom_link ?? '-');
+                $row++;
+            }
+
+            foreach (range('A', 'D') as $column) {
+                $onlineSheet->getColumnDimension($column)->setAutoSize(true);
+            }
         }
 
-        $fileName = 'export_wa_'.now()->format('Ymd_His').'.xlsx';
+        // Set sheet pertama menjadi aktif agar saat dibuka tidak di sheet kosong
+        $spreadsheet->setActiveSheetIndex(0);
+
+        // Format Nama File sesuai request
+        $safeEventName = Str::slug($event->nama_event);
+        $tipeEvent = strtolower($event->tipe_event);
+        $date = now()->format('Ymd_His');
+        $fileName = "export_wa_{$safeEventName}_{$tipeEvent}_{$date}.xlsx";
         $tempFile = tempnam(sys_get_temp_dir(), 'wa_export_');
 
         $writer = new Xlsx($spreadsheet);
@@ -50,14 +92,15 @@ class ExportController extends Controller
         return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 
-    public function downloadRecap()
+    public function downloadRecap(Event $event)
     {
-        $this->ensureQrTokens();
+        $this->ensureQrTokens($event);
 
-        $allParticipants = Participant::query()
+        $allParticipants = Participant::where('event_id', $event->id)
             ->orderBy('nama_lengkap')
             ->get([
                 'nama_lengkap',
+                'metode_kehadiran',
                 'kategori_peserta',
                 'email_primary',
                 'no_hp_normalized',
@@ -65,7 +108,7 @@ class ExportController extends Controller
                 'qr_token',
             ]);
 
-        $attendedParticipants = Participant::query()
+        $attendedParticipants = Participant::where('event_id', $event->id)
             ->whereNotNull('checked_in_at')
             ->orderBy('checked_in_at')
             ->get([
@@ -80,7 +123,7 @@ class ExportController extends Controller
 
         $recapSheet = $spreadsheet->getActiveSheet();
         $recapSheet->setTitle('Rekap Registrasi');
-        $recapSheet->fromArray(['Nama Peserta', 'Kategori', 'Email', 'No WhatsApp', 'Status Kehadiran', 'Waktu Check-in (WIB)'], null, 'A1');
+        $recapSheet->fromArray(['Nama Peserta', 'Metode', 'Kategori', 'Email', 'No WhatsApp', 'Status Kehadiran', 'Waktu Check-in (WIB)'], null, 'A1');
 
         $row = 2;
         foreach ($allParticipants as $participant) {
@@ -125,7 +168,10 @@ class ExportController extends Controller
             $attendedSheet->getColumnDimension($column)->setAutoSize(true);
         }
 
-        $fileName = 'rekap_registrasi_'.now()->format('Ymd_His').'.xlsx';
+        $safeEventName = Str::slug($event->nama_event);
+        $tipeEvent = strtolower($event->tipe_event);
+        $date = now()->format('Ymd_His');
+        $fileName = "rekap_registrasi_{$safeEventName}_{$tipeEvent}_{$date}.xlsx";
         $tempFile = tempnam(sys_get_temp_dir(), 'rekap_export_');
 
         $writer = new Xlsx($spreadsheet);

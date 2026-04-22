@@ -1,8 +1,10 @@
 import { useForm, Link, Head, router } from '@inertiajs/react';
 import { useState } from 'react';
 import ImportPeserta from '@/Components/ImportPeserta';
-import SendQREmail from '@/Components/SendQREmail';
+import SendQRBulk from '@/Components/SendQRBulk';
+import SendZoomBulk from '@/Components/SendZoomBulk';
 import SendQRIndividual from '@/Components/SendQRIndividual';
+import SendZoomIndividual from '@/Components/SendZoomIndividual';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Breadcrumb from '@/Components/Breadcrumb';
 import Pagination from '@/Components/Pagination';
@@ -12,9 +14,11 @@ import { Icon } from "@iconify/react";
 
 export default function Event({ event, participants, stats }) {
     // State untuk modal/form Single Action
-    const [selectedParticipant, setSelectedParticipant] = useState(null);
+    const [selectedParticipantQR, setSelectedParticipantQR] = useState(null);
+    const [selectedParticipantZoom, setSelectedParticipantZoom] = useState(null);
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isSendQRBulkOpen, setIsSendQRBulkOpen] = useState(false);
+    const [isSendZoomBulkOpen, setIsSendZoomBulkOpen] = useState(false);
     const today = new Date().toISOString().split('T')[0];
     let eventCategoryLabel = '';
     let eventCategoryRoute = '';
@@ -131,7 +135,7 @@ export default function Event({ event, participants, stats }) {
                                     <Icon icon="mingcute:file-import-fill" width="20" height="20" className='text-blue-700' />
                                     <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-blue-700">Import Peserta</span>
                                 </button>
-                                <a href={route('ekspor.wa')} className="flex items-center rounded-lg bg-lime-100 p-3 gap-2">
+                                <a href={route('ekspor.wa', event.id)} className="flex items-center rounded-lg bg-lime-100 p-3 gap-2">
                                     <Icon icon="ri:whatsapp-fill" width="20" height="20" className='text-lime-700' />
                                     <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-lime-700">Export WA</span>
                                 </a>
@@ -145,7 +149,7 @@ export default function Event({ event, participants, stats }) {
                             </button>
                             <div className='flex gap-2'>
                                 {event.tipe_event !== 'OFFLINE' && (
-                                    <button className="flex items-center rounded-lg border border-neutral/30 p-3 gap-2 cursor-pointer">
+                                    <button onClick={() => setIsSendZoomBulkOpen(true)} className="flex items-center rounded-lg border border-neutral/30 p-3 gap-2 cursor-pointer">
                                         <Icon icon="hugeicons:zoom" width="20" height="20" className='text-blue-700' />
                                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none ">Zoom Bulk</span>
                                     </button>
@@ -156,7 +160,7 @@ export default function Event({ event, participants, stats }) {
                                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none ">QR Bulk</span>
                                     </button>
                                 )}
-                                <a href={route('ekspor.wa')} className="flex items-center rounded-lg border border-neutral/30 p-3 gap-2">
+                                <a href={route('ekspor.recap', event.id)} className="flex items-center rounded-lg border border-neutral/30 p-3 gap-2">
                                     <Icon icon="basil:document-outline" width="20" height="20" className='text-blue-700' />
                                     <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none">Rekap Hadir</span>
                                 </a>
@@ -211,12 +215,14 @@ export default function Event({ event, participants, stats }) {
                                         </td>
                                         <td className="p-5">
                                             {participant.metode_kehadiran === 'OFFLINE' ? (
-                                                <button onClick={() => setIsImportModalOpen(true)} className="flex items-center rounded-lg bg-teal-50 p-3 gap-2 cursor-pointer">
+                                                <button 
+                                                onClick={() => setSelectedParticipantQR(participant)}
+                                                className="flex items-center rounded-lg bg-teal-50 p-3 gap-2 cursor-pointer">
                                                     <Icon icon="material-symbols-light:qr-code-rounded" width="20" height="20" className='text-teal-500' />
                                                     <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-teal-500 whitespace-nowrap">Kirim Email QR</span>
                                                 </button>
                                             ) : (
-                                                <button onClick={() => setIsImportModalOpen(true)} className="flex items-center rounded-lg bg-blue-50 p-3 gap-2 cursor-pointer">
+                                                <button onClick={() => setSelectedParticipantZoom(participant)} className="flex items-center rounded-lg bg-blue-50 p-3 gap-2 cursor-pointer">
                                                     <Icon icon="hugeicons:zoom" width="20" height="20" className='text-blue-500' />
                                                     <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-blue-500 whitespace-nowrap">Kirim Link Zoom</span>
                                                 </button>
@@ -236,14 +242,27 @@ export default function Event({ event, participants, stats }) {
             </div>
 
             <SendQRIndividual
-                participant={selectedParticipant}
-                onClose={() => setSelectedParticipant(null)}
+                participant={selectedParticipantQR}
+                onClose={() => setSelectedParticipantQR(null)}
             />
 
-            <SendQREmail
+            <SendZoomIndividual
+                participant={selectedParticipantZoom}
+                onClose={() => setSelectedParticipantZoom(null)}
+            />
+
+            <SendQRBulk
                 isOpen={isSendQRBulkOpen}
                 onClose={() => setIsSendQRBulkOpen(false)}
                 eventId={event.id}
+                offline={stats.offline}
+            />
+
+            <SendZoomBulk
+                isOpen={isSendZoomBulkOpen}
+                onClose={() => setIsSendZoomBulkOpen(false)}
+                eventId={event.id}
+                online={stats.online}
             />
 
             <ImportPeserta

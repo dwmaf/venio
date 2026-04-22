@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Mail\QrMail;
+use App\Mail\OnlineZoomMail;
 use App\Models\EmailLog;
+use App\Models\Event;
 use App\Models\Participant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -16,9 +18,13 @@ class SendEmailController extends Controller
 {
     public function sendQr(Participant $participant)
     {
+        if ($participant->metode_kehadiran !== 'OFFLINE') {
+            return redirect()->route('events.index', $participant->event_id)
+                ->with('error', 'Gagal mengirim QR. Peserta ini mendaftar dengan metode kehadiran ' . $participant->metode_kehadiran . ' (Bukan OFFLINE).');
+        }
 
         if (! $participant->email_primary) {
-            return redirect()->route('inertia.events.index')->with('error', 'Peserta ini belum memiliki email utama yang valid.');
+            return redirect()->route('events.index', $participant->event->id)->with('error', 'Peserta ini belum memiliki email utama yang valid.');
         }
 
         $actor = $this->actorName();
@@ -28,27 +34,22 @@ class SendEmailController extends Controller
         } catch (\Throwable $exception) {
             $this->logEmailFailure($participant, 'QR_EVENT', 'QR Check-in Peserta', $actor, $exception->getMessage());
 
-            return redirect()->route('inertia.events.index')->with('error', $this->buildMailErrorMessage($exception, 'QR'));
+            return redirect()->route('events.index', $participant->event->id)->with('error', $this->buildMailErrorMessage($exception, 'QR'));
         }
 
-        return redirect()->route('inertia.events.index')->with('success', 'Email QR berhasil dikirim ke '.$participant->nama_lengkap.'.');
+        return redirect()->route('events.index', $participant->event->id)->with('success', 'Email QR berhasil dikirim ke '.$participant->nama_lengkap.'.');
     }
 
-    public function sendQrBulk(Request $request)
+    public function sendQrBulk(Request $request, Event $event)
     {
-        $validated = $request->validate([
-            'event_id' => ['required', 'exists:events,id'],
-        ]);
-
-        $eventId = $validated['event_id'];
-
         $actor = $this->actorName();
         $total = 0;
         $sent = 0;
         $failed = 0;
         $skipped = 0;
 
-        Participant::where('event_id', $eventId)
+        Participant::where('event_id', $event->id)
+            ->where('metode_kehadiran', 'OFFLINE')
             ->orderBy('id')
             ->chunkById(100, function ($participants) use (&$total, &$sent, &$failed, &$skipped, $actor): void {
                 foreach ($participants as $participant) {
@@ -70,7 +71,7 @@ class SendEmailController extends Controller
                 }
             });
 
-        return redirect()->route('inertia.events.index')->with(
+        return redirect()->route('events.index', $event->id)->with(
             'success',
             "Bulk kirim QR selesai. Target: {$total}, Berhasil: {$sent}, Gagal: {$failed}, Dilewati: {$skipped}."
         );
@@ -87,7 +88,7 @@ class SendEmailController extends Controller
                 $participant->save();
             }
 
-            Mail::to($participant->email_primary)->send(new QrMail($participant->fresh()));
+            Mail::to($participant->email_primary)->queue(new QrMail($participant->fresh()));
 
             $participant->qr_sent_at = Carbon::now();
             $participant->save();
@@ -97,6 +98,107 @@ class SendEmailController extends Controller
                 'email_type' => 'QR_EVENT',
                 'recipient_email' => $participant->email_primary,
                 'subject' => 'QR Check-in Peserta',
+                'status' => 'SENT',
+                'sent_at' => now(),
+                'triggered_by' => $triggeredBy,
+            ]);
+        });
+    }
+
+    public function sendZoom(Request $request, Participant $participant)
+    {
+        $request->validate([
+            'zoom_link' => 'required|url'
+        ]);
+        $zoomLink = $request->input('zoom_link');
+        if ($participant->metode_kehadiran !== 'ONLINE') {
+            return redirect()->route('events.index', $participant->event_id)
+                ->with('error', 'Gagal mengirim Link Zoom. Peserta ini mendaftar dengan metode kehadiran ' . $participant->metode_kehadiran . ' (Bukan ONLINE).');
+        }
+
+        if (! $participant->email_primary) {
+            return redirect()->route('events.index', $participant->event_id)->with('error', 'Peserta ini belum memiliki email utama yang valid.');
+        }
+
+        $participant->update([
+            'zoom_link' => $zoomLink
+        ]);
+
+        $actor = $this->actorName();
+
+        try {
+            $this->dispatchZoomEmail($participant, $actor);
+        } catch (\Throwable $exception) {
+            $this->logEmailFailure($participant, 'ZOOM_EVENT', 'Link Zoom Peserta', $actor, $exception->getMessage());
+
+            return redirect()->route('events.index', $participant->event_id)->with('error', $this->buildMailErrorMessage($exception, 'Zoom'));
+        }
+
+        return redirect()->route('events.index', $participant->event_id)->with('success', 'Email Link Zoom berhasil dikirim ke '.$participant->nama_lengkap.'.');
+    }
+
+    public function sendZoomBulk(Request $request, Event $event)
+    {
+        $request->validate([
+            'zoom_link' => 'required|url'
+        ]);
+
+        $zoomLink = $request->input('zoom_link');
+        $actor = $this->actorName();
+        $total = 0;
+        $sent = 0;
+        $failed = 0;
+        $skipped = 0;
+
+        Participant::where('event_id', $event->id)
+            ->where('metode_kehadiran', 'ONLINE')
+            ->orderBy('id')
+            ->chunkById(100, function ($participants) use (&$total, &$sent, &$failed, &$skipped, $actor, $zoomLink): void {
+                foreach ($participants as $participant) {
+                    $total++;
+
+                    if (! $participant->email_primary) {
+                        $skipped++;
+                        $this->logEmailFailure($participant, 'ZOOM_EVENT', 'Link Zoom Peserta Event', $actor, 'Email utama tidak tersedia.');
+                        continue;
+                    }
+
+                    $participant->update(['zoom_link' => $zoomLink]);
+
+                    try {
+                        $this->dispatchZoomEmail($participant, $actor);
+                        $sent++;
+                    } catch (\Throwable $exception) {
+                        $failed++;
+                        $this->logEmailFailure($participant, 'ZOOM_EVENT', 'Link Zoom Peserta Event', $actor, $exception->getMessage());
+                    }
+                }
+            });
+
+        return redirect()->route('events.index', $event->id)->with(
+            'success',
+            "Bulk kirim Zoom selesai. Target: {$total}, Berhasil: {$sent}, Gagal: {$failed}, Dilewati: {$skipped}."
+        );
+    }
+
+    private function dispatchZoomEmail(Participant $participant, string $triggeredBy): void
+    {
+        DB::transaction(function () use ($participant, $triggeredBy): void {
+            $participant->refresh();
+
+            // Kirim email Zoom (Meneruskan participant dan string zoom_link ke konstruktor)
+            Mail::to($participant->email_primary)->queue(new OnlineZoomMail($participant, $participant->zoom_link));
+
+            // Perbarui waktu pengiriman
+            $participant->zoom_sent_at = Carbon::now();
+            $participant->save();
+
+            // Catat ke email_logs
+            EmailLog::create([
+                'participant_id' => $participant->id,
+                'email_type' => 'ZOOM_EVENT',
+                'recipient_email' => $participant->email_primary,
+                'subject' => 'Link Zoom Peserta Online',
                 'status' => 'SENT',
                 'sent_at' => now(),
                 'triggered_by' => $triggeredBy,

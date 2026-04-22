@@ -37,12 +37,14 @@ Route::middleware('auth')->group(function () {
 
 	Route::post('/peserta/import', [ParticipantImportController::class, 'store'])->name('peserta.import');
 	Route::post('/peserta/import-sheet', [ParticipantImportController::class, 'storeFromSheet'])->name('peserta.import-sheet');
-	Route::post('/peserta/send-qr-bulk', [SendEmailController::class, 'sendQrBulk'])->name('peserta.send-qr-bulk');
+	Route::post('/event/{event}/send-qr-bulk', [SendEmailController::class, 'sendQrBulk'])->name('peserta.send-qr-bulk');
 	Route::post('/peserta/{participant}/send-qr', [SendEmailController::class, 'sendQr'])->name('peserta.send-qr');
+	Route::post('/event/{event}/send-zoom-bulk', [SendEmailController::class, 'sendZoomBulk'])->name('peserta.send-zoom-bulk');
+	Route::post('/peserta/{participant}/send-zoom', [SendEmailController::class, 'sendZoom'])->name('peserta.send-zoom');
 
 	Route::get('/datang/{event}', [CheckinController::class, 'index'])->name('datang.index');
 	Route::post('/datang/{event}/scan', [CheckinController::class, 'scan'])->name('datang.scan');
 
-	Route::get('/ekspor/wa', [ExportController::class, 'download'])->name('ekspor.wa');
-	Route::get('/ekspor/recap', [ExportController::class, 'downloadRecap'])->name('ekspor.recap');
+	Route::get('/ekspor/{event}/wa', [ExportController::class, 'download'])->name('ekspor.wa');
+	Route::get('/ekspor/{event}/recap', [ExportController::class, 'downloadRecap'])->name('ekspor.recap');
 });
