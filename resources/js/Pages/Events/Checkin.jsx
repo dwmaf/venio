@@ -36,6 +36,7 @@ export default function Checkin({ event }) {
     const [statusText, setStatusText] = useState('Menyiapkan kamera...');
     const [statusTone, setStatusTone] = useState('loading'); // loading, ready, warning, error
     const [lastResult, setLastResult] = useState(null);
+    const [isCameraBlocked, setIsCameraBlocked] = useState(false);
 
     const scanLockRef = useRef(false);
     const lastTokenRef = useRef('');
@@ -57,9 +58,11 @@ export default function Checkin({ event }) {
             (decodedText) => processToken(decodedText),
             () => { }
         ).then(() => {
+            setIsCameraBlocked(false);
             showStatus('Scanner aktif. Arahkan kamera ke QR.', 'ready');
         }).catch((err) => {
-            showStatus('Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Gunakan input manual token.', 'error');
+            setIsCameraBlocked(true);
+            showStatus('Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Atau gunakan input manual token.', 'error');
         });
 
         return () => {
@@ -81,7 +84,7 @@ export default function Checkin({ event }) {
 
         try {
             // Gunakan Axios agar CSRF Token Laravel ditambahkan otomatis 
-            const response = await axios.post(route('datang.scan'), {
+            const response = await axios.post(route('datang.scan', event.id), {
                 token: cleanToken,
                 scanner_info: navigator.userAgent
             });
@@ -106,7 +109,11 @@ export default function Checkin({ event }) {
         } finally {
             setTimeout(() => {
                 scanLockRef.current = false;
-                showStatus('Siap scan berikutnya. Arahkan kamera ke QR.', 'ready');
+                if (!isCameraBlocked) { 
+                    showStatus('Siap scan berikutnya. Arahkan kamera ke QR.', 'ready');
+                } else {
+                    showStatus('Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Gunakan input manual token.', 'error');
+                }
             }, 1500);
         }
     };

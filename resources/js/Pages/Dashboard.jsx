@@ -143,6 +143,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
+                                            href={route("events.index", event.id)}
                                             location={event.lokasi}
                                             snap={true}
                                         />
