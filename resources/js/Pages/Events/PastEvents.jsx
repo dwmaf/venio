@@ -1,75 +1,92 @@
-import { useState } from 'react';
-import { Head, useForm, Link } from '@inertiajs/react';
-import { route } from 'ziggy-js';
-import AdminLayout from '@/Layouts/AdminLayout';
-import { formatTanggalSlash, formatJamMenit } from '@/utils/format';
-import Breadcrumb from '@/Components/Breadcrumb';
-import Pagination from '@/Components/Pagination';
-import { Icon } from '@iconify/react';
+import { Head } from "@inertiajs/react";
+import { route } from "ziggy-js";
+import AdminLayout from "@/Layouts/AdminLayout";
+import { formatTanggalSlash } from "@/utils/format";
+import Breadcrumb from "@/Components/Breadcrumb";
+import Pagination from "@/Components/Pagination";
+import { NoEvent } from "@/Components/EventCard";
 
-export default function pastEvents({ pastEvents }) {
+export default function PastEvents({ pastEvents }) {
     const breadcrumbs = [
-        { label: 'Home', href: route('dashboard') },
-        { label: 'Events', href: route('all.events') },
-        { label: 'Past Events', href: route('past.events') },
+        { label: "Home", href: route("dashboard") },
+        { label: "Events", href: route("all.events") },
+        { label: "Past Events", href: route("past.events") },
     ];
 
-    const tipeColors = {
-        ONLINE: 'bg-amber-100 text-amber-700',
-        HYBRID: 'bg-blue-100 text-blue-700',
-        OFFLINE: 'bg-lime-100 text-lime-700',
+    const eventTypeColors = {
+        ONLINE: "bg-amber-100 text-amber-700",
+        HYBRID: "bg-blue-100 text-blue-700",
+        OFFLINE: "bg-lime-100 text-lime-700",
     };
+
+    const shownCount = pastEvents.data.length;
 
     return (
         <AdminLayout title="Events">
-            <Head title="Events" />
+            <Head title="Venio | Past Events" />
 
-            <div className="mx-8 flex flex-col gap-8">
+            <div className="flex flex-col gap-6 lg:gap-8">
                 <Breadcrumb items={breadcrumbs} />
 
-                {/* past events */}
-                <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none">Past Events</span>
-                <div className='w-full overflow-x-auto'>
-                    {/* kalau tak ada past event */}
-                    {pastEvents.data.length === 0 ? (<div className='flex flex-col w-full min-h-64.25 border border-slate-700/30 rounded-2xl p-8 gap-8'>
-                        <div className='flex gap-4 items-center justify-center h-full'>
-                            <span className="font-['Plus_Jakarta_Sans'] font-medium text-[24px] leading-none text-neutral-500">No Event</span>
-                        </div>
-                    </div>) : (
-                        <table className="w-full text-left border-collapse">
+                <div className="flex flex-col gap-4 lg:gap-6">
+                    <span className="font-body font-medium text-base lg:text-2xl leading-none">
+                        Past Events
+                    </span>
+
+                    <div className="w-full overflow-x-auto">
+                        {pastEvents.data.length === 0 ? (
+                            <NoEvent />
+                        ) : (
+                            <table className="w-full min-w-172 text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-neutral-400">
-                                    <th className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[20px] leading-none text-black">Nama Event</th>
-                                    <th className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[20px] leading-none text-black">Tanggal</th>
-                                    <th className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[20px] leading-none text-black">Total Peserta</th>
-                                    <th className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[20px] leading-none text-black">Tipe</th>
+                                    <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        Nama Event
+                                    </th>
+                                    <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        Tanggal
+                                    </th>
+                                    <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        Total Peserta
+                                    </th>
+                                    <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        Tipe
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {pastEvents.data.map(event => (
-                                    <tr key={event.id} className="border-b border-neutral-400 ">
-                                        <td className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[16px] leading-none text-black">
+                                {pastEvents.data.map((event) => (
+                                    <tr key={event.id} className="border-b border-neutral-400">
+                                        <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
                                             {event.nama_event}
                                         </td>
-                                        <td className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[16px] leading-none text-black">
+                                        <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
                                             {formatTanggalSlash(event.tanggal_event)}
                                         </td>
-                                        <td className="p-5 font-normal font-['Plus_Jakarta_Sans'] text-[16px] leading-none text-black">
+                                        <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
                                             {event.participants_count} Peserta
                                         </td>
-                                        <td className="p-5 font-medium font-['Plus_Jakarta_Sans'] text-[12px] leading-none capitalize">
-                                            <div className={`${tipeColors[event.tipe_event] || 'bg-gray-100 text-gray-700'} py-1 rounded-xl max-w-14 text-center max-auto`}>
+                                        <td className="p-4 lg:p-5 font-medium font-body text-xs leading-none capitalize">
+                                            <div
+                                                className={`${eventTypeColors[event.tipe_event] || "bg-gray-100 text-gray-700"} inline-flex items-center justify-center min-w-18 py-1 rounded-xl`}
+                                            >
                                                 {event.tipe_event.toLowerCase()}
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
-                    )}
-                    <div className="mt-8 flex justify-between flex-col md:flex-row">
-                        <span className="font-normal font-['Plus_Jakarta_Sans'] text-[16px] leading-none text-gray-500">Menampilkan {pastEvents.data.length} dari {pastEvents.total} data</span>
-                        <Pagination links={pastEvents.links} />
+                            </table>
+                        )}
+
+                        {shownCount > 0 && (
+                            <div className="mt-6 lg:mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                <span className="font-normal font-body text-sm lg:text-base leading-none text-gray-500">
+                                    Menampilkan {shownCount} dari {pastEvents.total} data
+                                </span>
+                                <Pagination links={pastEvents.links} />
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
