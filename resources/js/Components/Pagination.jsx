@@ -1,88 +1,131 @@
-import { Link } from '@inertiajs/react';
-import { Icon } from '@iconify/react';
+import { Link } from "@inertiajs/react";
+import { Icon } from "@iconify/react";
 
-export default function Pagination({ links }) {
-    if (links.length <= 3) {
-        return (
-            <div className="flex justify-between w-full">
-                {links[0].url ? (
-                    <Link
-                        href={links[0].url}
-                        className="px-4 py-2 text-sm font-bold flex items-center dark:text-gray-100 text-gray-700 justify-center border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                        <span>Previous</span>
-                    </Link>
-                ) : (
-                    <div />
-                )}
-                
-                {links[links.length - 1].url ? (
-                    <Link
-                        href={links[links.length - 1].url}
-                        className="px-4 py-2 text-sm font-bold flex items-center dark:text-gray-100 text-gray-700 justify-center border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                        <span>Next</span>
-                    </Link>
-                ) : (
-                    <div />
-                )}
-            </div>
-        );
+function cleanLabel(label = "") {
+    return label
+        .replace(/&laquo;|&raquo;/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\u2026/g, "...")
+        .replace(/<[^>]*>/g, "")
+        .trim();
+}
+
+function pageNumberFromLabel(label = "") {
+    const parsed = Number(cleanLabel(label));
+    return Number.isInteger(parsed) ? parsed : null;
+}
+
+export default function Pagination({ links = [] }) {
+    if (links.length === 0) return null;
+
+    const MAX_VISIBLE_PAGES = 5;
+    const prevLink = links[0];
+    const nextLink = links[links.length - 1];
+    const pageLinks = links.slice(1, -1).filter((link) => pageNumberFromLabel(link.label) !== null);
+
+    if (pageLinks.length === 0) return null;
+
+    const activePage =
+        pageNumberFromLabel(pageLinks.find((link) => link.active)?.label) ?? 1;
+    const totalPages =
+        pageNumberFromLabel(pageLinks[pageLinks.length - 1]?.label) ?? pageLinks.length;
+
+    let startPage = 1;
+    let endPage = totalPages;
+
+    if (totalPages > MAX_VISIBLE_PAGES) {
+        const halfWindow = Math.floor(MAX_VISIBLE_PAGES / 2);
+        startPage = activePage - halfWindow;
+        endPage = activePage + halfWindow;
+
+        if (startPage < 1) {
+            endPage += 1 - startPage;
+            startPage = 1;
+        }
+
+        if (endPage > totalPages) {
+            startPage -= endPage - totalPages;
+            endPage = totalPages;
+        }
+
+        if (startPage < 1) {
+            startPage = 1;
+        }
     }
 
+    const visiblePageLinks = pageLinks.filter((link) => {
+        const pageNumber = pageNumberFromLabel(link.label);
+        return pageNumber !== null && pageNumber >= startPage && pageNumber <= endPage;
+    });
+
     return (
-        <div className="inline-flex items-stretch border border-gray-300 dark:border-gray-600 divide-x-2 divide-gray-300 dark:divide-gray-600 rounded-lg overflow-hidden">
-            {links.map((link, key) => {
-                // Tombol First (Previous Arrow)
-                if (key === 0 && link.url) {
+        <nav className="inline-flex items-stretch overflow-hidden rounded-lg border border-gray-300 divide-x-2 divide-gray-300">
+            {prevLink?.url ? (
+                <Link
+                    href={prevLink.url}
+                    className="flex items-center justify-center px-2 py-2 text-gray-700 hover:bg-gray-100"
+                    aria-label="Previous page"
+                >
+                    <Icon icon="lucide:chevron-left" className="h-4 w-4" />
+                </Link>
+            ) : (
+                <span
+                    className="flex items-center justify-center px-2 py-2 text-gray-300"
+                    aria-hidden="true"
+                >
+                    <Icon icon="lucide:chevron-left" className="h-4 w-4" />
+                </span>
+            )}
+
+            {visiblePageLinks.map((link, index) => {
+                const label = cleanLabel(link.label);
+
+                if (!label) {
+                    return null;
+                }
+
+                if (link.url === null) {
                     return (
-                        <Link
-                            key={key}
-                            href={link.url ?? '#'}
-                            className="px-2 py-2 text-sm font-bold flex items-center dark:text-gray-100 text-gray-700 justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
+                        <span
+                            key={`${label}-${index}`}
+                            className="px-3 py-2 text-sm font-semibold text-gray-400"
+                            aria-current={link.active ? "page" : undefined}
                         >
-                            <Icon icon="lucide:chevron-left" className="w-4 h-4" />
-                        </Link>
+                            {label}
+                        </span>
                     );
                 }
 
-                // Tombol Last (Next Arrow)
-                if (key === links.length - 1 && link.url) {
-                    return (
-                        <Link
-                            key={key}
-                            href={link.url ?? '#'}
-                            className="px-2 py-2 text-sm font-bold flex items-center dark:text-gray-100 text-gray-700 justify-center hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                            <Icon icon="lucide:chevron-right" className="w-4 h-4" />
-                        </Link>
-                    );
-                }
-
-                // Angka Halaman
-                if (key !== 0 && key !== links.length - 1) {
-                    return link.url === null ? (
-                        <div
-                            key={key}
-                            className="px-3 py-2 text-sm text-gray-500"
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
-                    ) : (
-                        <Link
-                            key={key}
-                            className={`px-3 py-2 text-sm font-bold hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                                link.active
-                                    ? 'text-indigo-700 dark:text-indigo-400'
-                                    : 'dark:text-white text-gray-700'
-                            }`}
-                            href={link.url}
-                            dangerouslySetInnerHTML={{ __html: link.label }}
-                        />
-                    );
-                }
-
-                return null;
+                return (
+                    <Link
+                        key={`${label}-${index}`}
+                        href={link.url}
+                        className={`px-3 py-2 text-sm font-semibold hover:bg-gray-100 ${
+                            link.active ? "text-indigo-700" : "text-gray-700"
+                        }`}
+                        aria-current={link.active ? "page" : undefined}
+                    >
+                        {label}
+                    </Link>
+                );
             })}
-        </div>
+
+            {nextLink?.url ? (
+                <Link
+                    href={nextLink.url}
+                    className="flex items-center justify-center px-2 py-2 text-gray-700 hover:bg-gray-100"
+                    aria-label="Next page"
+                >
+                    <Icon icon="lucide:chevron-right" className="h-4 w-4" />
+                </Link>
+            ) : (
+                <span
+                    className="flex items-center justify-center px-2 py-2 text-gray-300"
+                    aria-hidden="true"
+                >
+                    <Icon icon="lucide:chevron-right" className="h-4 w-4" />
+                </span>
+            )}
+        </nav>
     );
 }
