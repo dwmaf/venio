@@ -143,7 +143,10 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route("events.index", event.id)}
+                                            href={route(
+                                                "events.index",
+                                                event.id,
+                                            )}
                                             location={event.lokasi}
                                             snap={true}
                                         />
@@ -209,7 +212,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     timeEnd={event.jam_selesai}
                                     location={event.lokasi}
                                     inner={true}
-                                    row={true}
+                                    col={true}
                                 />
 
                                 <Redirect

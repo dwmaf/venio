@@ -30,7 +30,10 @@ export default function AllEvents({
                         <span className="text-base lg:text-2xl">
                             Ongoing Events
                         </span>
-                        <RouteButton href={route("ongoing.events")} text="Lihat Semua" />
+                        <RouteButton
+                            href={route("ongoing.events")}
+                            text="Lihat Semua"
+                        />
                     </div>
 
                     <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
@@ -49,6 +52,7 @@ export default function AllEvents({
                                         timeEnd={event.jam_selesai}
                                         href={route("events.index", event.id)}
                                         location={event.lokasi}
+                                        col={true}
                                     />
                                 ))}
                                 {/* kalau ongoing event cuman 1, kasih tambahan card*/}
@@ -64,7 +68,10 @@ export default function AllEvents({
                         <span className="text-base lg:text-2xl">
                             Upcoming Events
                         </span>
-                        <RouteButton href={route("upcoming.events")} text="Lihat Semua" />
+                        <RouteButton
+                            href={route("upcoming.events")}
+                            text="Lihat Semua"
+                        />
                     </div>
 
                     <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
@@ -83,6 +90,7 @@ export default function AllEvents({
                                         timeEnd={event.jam_selesai}
                                         href={route("events.index", event.id)}
                                         location={event.lokasi}
+                                        col={true}
                                     />
                                 ))}
                                 {/* kalau upcoming event cuman 1, kasih tambahan card*/}
@@ -98,7 +106,10 @@ export default function AllEvents({
                         <span className="text-base lg:text-2xl">
                             Past Events
                         </span>
-                        <RouteButton href={route("past.events")} text="Lihat Semua" />
+                        <RouteButton
+                            href={route("past.events")}
+                            text="Lihat Semua"
+                        />
                     </div>
 
                     <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
@@ -117,6 +128,7 @@ export default function AllEvents({
                                         timeEnd={event.jam_selesai}
                                         href={route("events.index", event.id)}
                                         location={event.lokasi}
+                                        col={true}
                                     />
                                 ))}
                                 {/* kalau past event cuman 1, kasih tambahan card*/}
