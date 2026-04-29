@@ -9,10 +9,14 @@ export function TextInput({
     value,
     onChange,
     text,
+    errors,
 }) {
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor={htmlFor} className="text-base font-medium">
+            <label
+                htmlFor={htmlFor}
+                className="text-sm lg:text-base font-medium"
+            >
                 {text}
             </label>
             <input
@@ -44,7 +48,10 @@ export function PasswordInput({
     const [showPassword, setShowPassword] = useState(false);
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor={htmlFor} className="text-base font-medium">
+            <label
+                htmlFor={htmlFor}
+                className="text-sm lg:text-base font-medium"
+            >
                 {text}
             </label>
             <div className="relative flex items-center justify-between">
@@ -77,13 +84,14 @@ export function PasswordInput({
 }
 
 export function Checkbox({ name, checked, onChange }) {
+    console.log(checked);
     return (
         <input
             type="checkbox"
             name={name}
             checked={checked}
             onChange={onChange}
-            className="h-4 w-4 rounded checked:bg-blue-500 checked:border-blue-500 focus:ring-blue-500 cursor-pointer"
+            className="w-4 h-4 mt-0.5 aspect-square rounded checked:bg-blue-500 checked:border-blue-500 focus:ring-blue-500 cursor-pointer text-blue-500 accent-blue-500"
         />
     );
 }
