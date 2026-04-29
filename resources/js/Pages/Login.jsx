@@ -20,7 +20,7 @@ export default function Login() {
             <Head title="Login" />
 
             <div className="min-h-screen bg-bg flex items-center justify-center px-4 font-body">
-                <div className="w-full max-w-1/4 rounded-2xl bg-white p-6 shadow-2xl space-y-8">
+                <div className="w-full sm:max-w-2/3 md:max-w-1/2 lg:max-w-1/3 xl:max-w-1/4 rounded-2xl bg-white p-6 shadow-2xl space-y-8">
                     <div className="mb-6 flex items-center justify-center gap-2">
                         <img
                             src="/venio-icon.png"
@@ -33,11 +33,11 @@ export default function Login() {
                     </div>
 
                     <div className="flex flex-col gap-2 items-center">
-                        <h1 className="text-[32px] font-semibold leading-none font-heading">
+                        <h1 className="text-2xl sm:text-[32px] font-semibold leading-none font-heading">
                             Selamat Datang!
                         </h1>
-                        <p className="text-base text-neutral">
-                            Silahkan isi untuk masuk ke halaman admin
+                        <p className="text-sm text-center lg:text-base text-neutral">
+                            Silahkan isi untuk melanjutkan
                         </p>
                     </div>
 
@@ -69,7 +69,7 @@ export default function Login() {
                             onChange={(e) =>
                                 setData("password", e.target.value)
                             }
-                            placeholder="*****"
+                            placeholder="•••••"
                             required
                             text="Password"
                         />
@@ -77,7 +77,7 @@ export default function Login() {
                         <div className="pt-1">
                             <label
                                 htmlFor="remember"
-                                className="flex items-center gap-1.5 text-base text-neutral"
+                                className="flex items-center gap-1.5 text-sm lg:text-base text-neutral"
                             >
                                 <Checkbox
                                     name="remember"
@@ -86,7 +86,7 @@ export default function Login() {
                                         setData("remember", e.target.checked)
                                     }
                                 />
-                                Ingat Saya
+                                <p>Ingat Saya</p>
                             </label>
                         </div>
 
