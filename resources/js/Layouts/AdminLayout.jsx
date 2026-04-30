@@ -22,12 +22,17 @@ export default function AdminLayout({ children, title }) {
             text: "Dashboard",
         },
         {
-            icon: "lets-icons:date-fill",
+            icon: "duo-icons:calendar",
             page: "/all-events",
             text: "Events",
         },
         {
-            icon: "fluent:mail-unread-20-filled",
+            icon: "duo-icons:add-circle",
+            page: "/create-events",
+            text: "Add Event",
+        },
+        {
+            icon: "duo-icons:clipboard",
             page: "#",
             text: "Mail Logs",
         },

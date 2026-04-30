@@ -22,26 +22,28 @@ export function EventCard({
     href,
     snap = false,
     inner = false,
-    row = false,
+    col = false,
 }) {
-
     const Component = href ? Link : "div";
 
     return (
         <Component
             href={href}
             key={id}
-            className={`flex flex-col ${!row && "flex-1"} snap-center justify-between gap-6 font-body text-neutral text-base ${snap && "snap-center min-w-75.75 lg:min-w-100 min-h-42"} ${!inner && "border border-default/30 rounded-2xl p-4 lg:p-8"}`}
+            className={`flex flex-col ${col && "flex-1"} snap-center justify-between gap-6 font-body text-neutral text-base ${snap && "snap-center min-w-75.75 lg:min-w-100 min-h-42"} ${!inner && "border border-default/30 rounded-2xl p-4 lg:p-8"}`}
         >
             <div className="h-full flex gap-4 items-center text-default">
-                <Icon icon="duo-icons:award" width="40" height="40" />
+                <Icon
+                    icon="duo-icons:award"
+                    className="w-8 h-8 lg:w-6 lg:h-6"
+                />
+
                 <div className="flex flex-col gap-3 lg:gap-5">
-                    <span className="font-medium text-base lg:text-xl leading-6 text-black text-pretty">
+                    <span className="font-medium text-base lg:text-xl leading-6 text-pretty">
                         {name}
                     </span>
-                    <div
-                        className={`flex ${row ? "flex-row" : "flex-col"} gap-2 lg:gap-4`}
-                    >
+
+                    <div className={`flex ${col && "flex-col"} gap-2 lg:gap-4`}>
                         <div className="flex gap-1 lg:gap-2 items-center">
                             <Icon
                                 icon="duo-icons:calendar"
@@ -51,6 +53,7 @@ export function EventCard({
                                 {formatTanggalSlash(date)}
                             </span>
                         </div>
+
                         <div className="flex gap-1 lg:gap-2 items-center">
                             <Icon
                                 icon="duo-icons:clock"
