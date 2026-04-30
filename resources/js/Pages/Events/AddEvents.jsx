@@ -1,4 +1,3 @@
-import React from "react";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { useForm, Head } from "@inertiajs/react";
@@ -14,7 +13,7 @@ const AddEvents = () => {
 
     const { data, setData, post, processing, errors } = useForm({
         nama_event: "",
-        tipe_event: "offline",
+        tipe_event: "OFFLINE",
         lokasi: "",
         tanggal_event: "",
         jam_mulai: "",
@@ -22,21 +21,6 @@ const AddEvents = () => {
         quota: "",
         partners: [],
     });
-
-    const handleAddPartner = () => {
-        setData("partners", [...data.partners, { name: "" }]);
-    };
-
-    const handleRemovePartner = (index) => {
-        const newPartners = data.partners.filter((_, i) => i !== index);
-        setData("partners", newPartners);
-    };
-
-    const handlePartnerChange = (index, value) => {
-        const newPartners = [...data.partners];
-        newPartners[index].name = value;
-        setData("partners", newPartners);
-    };
 
     const submit = (e) => {
         e.preventDefault();
@@ -84,9 +68,9 @@ const AddEvents = () => {
                                     setData("tipe_event", e.target.value)
                                 }
                             >
-                                <option value="offline">Offline</option>
-                                <option value="online">Online</option>
-                                <option value="hybrid">Hybrid</option>
+                                <option value="OFFLINE">Offline</option>
+                                <option value="ONLINE">Online</option>
+                                <option value="HYBRID">Hybrid</option>
                             </select>
                         </div>
 
@@ -139,8 +123,8 @@ const AddEvents = () => {
 
                     <div className="grid grid-cols-2 gap-6">
                         {/* Lokasi (Dinamis) */}
-                        {(data.tipe_event === "offline" ||
-                            data.tipe_event === "hybrid") && (
+                        {(data.tipe_event === "OFFLINE" ||
+                            data.tipe_event === "HYBRID") && (
                             <div className="space-y-2">
                                 <label className="block text-base lg:text-xl leading-none">
                                     Lokasi
@@ -219,6 +203,7 @@ const AddEvents = () => {
 
                     <div className="flex justify-end">
                         <button
+                            type="submit"
                             disabled={processing}
                             className="flex items-center gap-1.5 lg:gap-2.5 bg-blue-50 font-bold py-3 px-3 lg:px-4 rounded-xl cursor-pointer"
                         >
