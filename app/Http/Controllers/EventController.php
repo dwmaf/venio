@@ -53,18 +53,47 @@ class EventController extends Controller
     }
 
     public function update(Request $request, Event $event)
-    {
-        $validated = $request->validate([
-            'nama_event'      => ['required', 'string', 'max:255'],
-            'tanggal_mulai'   => ['required', 'date'],
-            'tanggal_selesai' => ['required', 'date', 'after_or_equal:tanggal_mulai'],
-            'status'          => ['required', 'in:BERLANGSUNG,RIWAYAT'],
-        ]);
+{
+    $validated = $request->validate([
+    'nama_event'    => 'required|string|max:255',
+    'tipe_event'    => 'required|in:OFFLINE,ONLINE,HYBRID',
+    'tanggal_event' => 'required|date',
+    'jam_mulai'     => 'required',
+    'jam_selesai'   => 'required',
+    'lokasi'        => 'required_if:tipe_event,OFFLINE,HYBRID|nullable|string|max:255',
+    'quota'         => 'nullable|integer|min:1',
+    'partners'      => 'nullable|array',
+    'partners.*'    => 'string',
+]);
 
-        $event->update($validated);
+    $event->update([
+    'nama_event'    => $validated['nama_event'],
+    'tipe_event'    => $validated['tipe_event'],
+    'tanggal_event' => $validated['tanggal_event'],
+    'jam_mulai'     => $validated['jam_mulai'],
+    'jam_selesai'   => $validated['jam_selesai'],
+    'lokasi'        => $validated['lokasi'] ?? null,
+    'quota'         => $validated['quota'] ?? null,
+]);
 
-        return redirect()->back()->with('success', 'Event berhasil diperbarui.');
+    $partnerIds = [];
+
+    if (!empty($validated['partners'])) {
+        foreach ($validated['partners'] as $partnerName) {
+            $partner = Partner::firstOrCreate([
+                'nama' => $partnerName,
+            ]);
+
+            $partnerIds[] = $partner->id;
+        }
     }
+
+    $event->partners()->sync($partnerIds);
+
+    return redirect()
+        ->route('events.index', $event->id)
+        ->with('success', 'Event berhasil diperbarui.');
+}
 
     public function allEvents(Request $request, Event $event)
     {
@@ -186,5 +215,12 @@ class EventController extends Controller
         return Inertia::render('Events/AddEvents');
     }
 
-    public function edit() {}
+    public function edit(Event $event)
+{
+    $event->load('partners');
+
+    return Inertia::render('Events/EditEvent', [
+        'event' => $event,
+    ]);
+}
 }

@@ -23,15 +23,21 @@ Route::middleware('auth')->group(function () {
 	Route::post('/account/password', [AuthController::class, 'updatePassword'])->name('account.password.update');
 
 	Route::get('/all-events', [EventController::class, 'allEvents'])->name('all.events');
-	Route::get('/events/{event}', [EventController::class, 'detailEvent'])->name('events.index');
-	Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
-	Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
-	Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
-	Route::get('/create-events', [EventController::class, 'create'])->name('create.events');
-	Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
-	Route::get('/edit-events', [EventController::class, 'edit'])->name('edit.events');
+
+Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
+Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
+Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
+
+Route::get('/create-events', [EventController::class, 'create'])->name('create.events');
+Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
+Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+
+Route::get('/events/{event}', [EventController::class, 'detailEvent'])->name('events.index');
+
+Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
-	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

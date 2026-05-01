@@ -166,6 +166,16 @@ export default function Event({ event, participants, stats }) {
                                     text="Export WA"
                                     href={route("ekspor.wa", event.id)}
                                 />
+
+                                <Link
+                                    href={route("events.edit", event.id)}
+                                    className="flex items-center justify-center rounded-lg bg-yellow-100 hover:bg-yellow-200 transition px-5 py-3 lg:px-5 lg:py-2"
+                                >
+                                    <Icon
+                                        icon="solar:pen-bold-duotone"
+                                        className="w-5 h-5 text-yellow-500"
+                                    />
+                                </Link>
                             </div>
                         </div>
 
