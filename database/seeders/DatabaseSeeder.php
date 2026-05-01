@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                     'checked_in_at' => ($event->status === 'SELESAI')
                         ? ($faker->boolean(90) ? now()->subHours(rand(1, 8)) : null)
                         : ($event->tanggal_event === now()->format('Y-m-d') && $faker->boolean(50) ? now() : null),
-                    'qr_token' => ($metode === 'OFFLINE' ? 'OFF-' : 'ONL-') . strtoupper(Str::random(12)),
+                    'qr_token' => 'OFF' . strtoupper(Str::random(12)),
                     'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|' . $metode . '|' . $event->id),
                 ]);
             }

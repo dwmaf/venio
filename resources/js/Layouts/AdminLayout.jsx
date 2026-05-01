@@ -1,9 +1,21 @@
 import { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { Icon } from "@iconify/react";
 import NavItems from "@/Components/NavItems";
+import Toast from "@/Components/Toast";
 
 export default function AdminLayout({ children, title }) {
+    const { flash } = usePage().props;
+    const [toast, setToast] = useState(null);
+
+    useEffect(() => {
+        if (flash.success) {
+            setToast({ message: flash.success, type: "success" });
+        } else if (flash.error) {
+            setToast({ message: flash.error, type: "error" });
+        }
+    }, [flash]);
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
         const sidebarOpen = localStorage.getItem("sidebarOpen");
         return sidebarOpen === "true";
@@ -43,6 +55,13 @@ export default function AdminLayout({ children, title }) {
 
     return (
         <div className="min-h-screen bg-white flex">
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
             {/* SIDEBAR */}
             <aside
                 className={`hidden lg:flex fixed left-0 top-0 z-30 bg-white border-r border-default/30 transition-all duration-300 ${sidebarWidth} lg:translate-x-0 flex flex-col h-screen`}

@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\Middleware\RateLimited;
 
 class QrMail extends Mailable
 {
@@ -36,5 +37,16 @@ class QrMail extends Mailable
         return new Content(
             view: 'emails.offline_qr',
         );
+    }
+
+    /**
+     * Get the middleware the job should pass through.
+     *
+     * @return array<int, object>
+     */
+    public function middleware(): array
+    {
+        // Sebutkan nama rate limiter yang dibuat di AppServiceProvider
+        return [new RateLimited('emails')];
     }
 }
