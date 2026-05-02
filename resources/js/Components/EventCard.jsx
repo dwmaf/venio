@@ -49,7 +49,7 @@ export function EventCard({
                                 icon="duo-icons:calendar"
                                 className="w-5 h-5 lg:w-6 lg:h-6"
                             />
-                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0">
+                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-default">
                                 {formatTanggalSlash(date)}
                             </span>
                         </div>

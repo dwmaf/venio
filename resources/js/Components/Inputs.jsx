@@ -95,3 +95,31 @@ export function Checkbox({ name, checked, onChange }) {
         />
     );
 }
+
+export function SearchInput({
+    id,
+    name,
+    placeholder = "Cari...",
+    value,
+    onChange,
+}) {
+    return (
+        <div className="relative flex items-center w-full mt-1">
+            {/* Menambahkan Ikon Kaca Pembesar (opsional tapi bagus untuk visual) */}
+            <Icon
+                icon="lets-icons:search-alt"
+                className="absolute left-4 w-5 h-5 text-neutral"
+            />
+            <input
+                id={id}
+                name={name}
+                placeholder={placeholder}
+                type="text"
+                value={value}
+                onChange={onChange}
+                // Bebas dari autoFocus dan required
+                className="border border-default/30 placeholder:text-neutral font-body py-3 pl-11 pr-4 text-sm w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+            />
+        </div>
+    );
+}

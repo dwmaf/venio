@@ -1,9 +1,21 @@
 import { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { Icon } from "@iconify/react";
 import NavItems from "@/Components/NavItems";
+import Toast from "@/Components/Toast";
 
 export default function AdminLayout({ children, title }) {
+    const { flash } = usePage().props;
+    const [toast, setToast] = useState(null);
+
+    useEffect(() => {
+        if (flash.success) {
+            setToast({ message: flash.success, type: "success" });
+        } else if (flash.error) {
+            setToast({ message: flash.error, type: "error" });
+        }
+    }, [flash]);
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
         const sidebarOpen = localStorage.getItem("sidebarOpen");
         return sidebarOpen === "true";
@@ -43,6 +55,13 @@ export default function AdminLayout({ children, title }) {
 
     return (
         <div className="min-h-screen bg-white flex">
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
             {/* SIDEBAR */}
             <aside
                 className={`hidden lg:flex fixed left-0 top-0 z-30 bg-white border-r border-default/30 transition-all duration-300 ${sidebarWidth} lg:translate-x-0 flex flex-col h-screen`}
@@ -88,7 +107,7 @@ export default function AdminLayout({ children, title }) {
                 <div className="p-4 mt-auto flex items-center">
                     <NavItems
                         icon="solar:logout-3-bold"
-                        page="#"
+                        page="/logout"
                         text="Logout"
                         rotate={2}
                         logout={true}
@@ -131,7 +150,7 @@ export default function AdminLayout({ children, title }) {
                         >
                             <Icon
                                 icon="duo-icons:dashboard"
-                                className="text-slate-600 shrink-0 w-6 h-6"
+                                className="text-default shrink-0 w-6 h-6"
                             />
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
@@ -144,8 +163,8 @@ export default function AdminLayout({ children, title }) {
                             className="flex items-center space-x-2 p-2"
                         >
                             <Icon
-                                icon="lets-icons:date-fill"
-                                className="text-slate-600 shrink-0 w-6 h-6"
+                                icon="duo-icons:calendar"
+                                className="text-default shrink-0 w-6 h-6"
                             />
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
@@ -154,17 +173,47 @@ export default function AdminLayout({ children, title }) {
                             </span>
                         </Link>
                         <Link
+                            href="/create-events"
+                            className="flex items-center space-x-2 p-2"
+                        >
+                            <Icon
+                                icon="duo-icons:add-circle"
+                                className="text-default shrink-0 w-6 h-6"
+                            />
+                            <span
+                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                            >
+                                Add Events
+                            </span>
+                        </Link>
+                        <Link
                             href="/all-events"
                             className="flex items-center space-x-2 p-2"
                         >
                             <Icon
                                 icon="fluent:mail-unread-20-filled"
-                                className="text-slate-600 shrink-0 w-6 h-6"
+                                className="text-default shrink-0 w-6 h-6"
                             />
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
                                 Mail Logs
+                            </span>
+                        </Link>
+                        <Link
+                            href="/logout"
+                            method="post" 
+                            as="button" 
+                            className="flex items-center space-x-2 p-2"
+                        >
+                            <Icon
+                                icon="solar:logout-3-bold" rotate={2}
+                                className="text-default shrink-0 w-6 h-6"
+                            />
+                            <span
+                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                            >
+                                Logout
                             </span>
                         </Link>
                     </nav>

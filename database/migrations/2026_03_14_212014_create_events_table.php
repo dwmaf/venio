@@ -19,7 +19,6 @@ return new class extends Migration
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->enum('tipe_event', ['OFFLINE', 'ONLINE', 'HYBRID'])->default('OFFLINE'); 
-            $table->enum('status', ['SELESAI','BELUM_SELESAI'])->default('BELUM_SELESAI');
             $table->integer('quota')->nullable();
             $table->json('partners')->nullable();
             $table->timestamps();
