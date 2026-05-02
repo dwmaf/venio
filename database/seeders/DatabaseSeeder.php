@@ -39,11 +39,10 @@ class DatabaseSeeder extends Seeder
                 'jam_mulai' => '08:00:00',
                 'jam_selesai' => '17:00:00',
                 'tipe_event' => 'HYBRID',
-                'status' => 'BELUM_SELESAI',
             ]);
         }
 
-        // 2. BUAT 4 UPCOMING EVENTS (MENDATANG)
+        // 2. BUAT 3 UPCOMING EVENTS (MENDATANG)
         foreach (range(1, 3) as $index) {
             Event::create([
                 'nama_event' => $faker->company() . ' Event ' . $index,
@@ -53,11 +52,10 @@ class DatabaseSeeder extends Seeder
                 'jam_mulai' => '09:00:00',
                 'jam_selesai' => '15:00:00',
                 'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
-                'status' => 'BELUM_SELESAI',
             ]);
         }
 
-        // 3. BUAT 5 PAST EVENTS (MASA LALU)
+        // 3. BUAT 30 PAST EVENTS (MASA LALU)
         foreach (range(1, 30) as $index) {
             Event::create([
                 'nama_event' => $faker->company() . ' Event ' . $index,
@@ -66,7 +64,6 @@ class DatabaseSeeder extends Seeder
                 'jam_mulai' => '10:00:00',
                 'jam_selesai' => '16:00:00',
                 'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']),
-                'status' => 'SELESAI', // Sudah beres
             ]);
         }
 
@@ -84,6 +81,18 @@ class DatabaseSeeder extends Seeder
                 }
 
                 $daftarProfesi = ['Mahasiswa', 'Dosen/Guru', 'Aparatur Sipil Negara (ASN)', 'Karyawan Swasta', 'Wirausaha', 'Pelajar', 'Umum'];
+                $checkedInAt = null;
+                $todayDate = now()->format('Y-m-d');
+                if ($metode === 'OFFLINE') {
+                    if ($event->tanggal_event < $todayDate) {
+                        // Event masa lalu: 90% kemungkinan hadir
+                        $checkedInAt = $faker->boolean(90) ? now()->subHours(rand(1, 8)) : null;
+                    } elseif ($event->tanggal_event === $todayDate) {
+                        // Event hari ini: 50% kemungkinan sudah hadir
+                        $checkedInAt = $faker->boolean(50) ? now() : null;
+                    }
+                    // Jika event masa depan (> $todayDate), biarkan null
+                }
                 Participant::create([
                     'event_id' => $event->id,
                     'email_primary' => $email,
@@ -91,10 +100,8 @@ class DatabaseSeeder extends Seeder
                     'no_hp_normalized' => '628' . $faker->numerify('##########'),
                     'kategori_peserta' => $faker->randomElement($daftarProfesi),
                     'metode_kehadiran' => $metode,
-                    'checked_in_at' => ($event->status === 'SELESAI')
-                        ? ($faker->boolean(90) ? now()->subHours(rand(1, 8)) : null)
-                        : ($event->tanggal_event === now()->format('Y-m-d') && $faker->boolean(50) ? now() : null),
-                    'qr_token' => 'OFF' . strtoupper(Str::random(12)),
+                    'checked_in_at' => $checkedInAt,
+                    'qr_token' => 'OFF-' . strtoupper(Str::random(12)),
                     'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|' . $metode . '|' . $event->id),
                 ]);
             }

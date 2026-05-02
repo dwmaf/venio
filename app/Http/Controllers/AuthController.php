@@ -21,8 +21,12 @@ class AuthController extends Controller
             'password' => ['required', 'string', 'max:255'],
         ]);
 
+        $loginField = filter_var($credentials['username'], FILTER_VALIDATE_EMAIL) 
+            ? 'email' 
+            : 'username';
+
         if (Auth::attempt([
-            'username' => $credentials['username'],
+            $loginField => $credentials['username'],
             'password' => $credentials['password'],
         ], $request->boolean('remember'))) {
             $request->session()->regenerate();
@@ -31,8 +35,8 @@ class AuthController extends Controller
         }
 
         return back()
-            ->withErrors(['username' => 'Username atau password salah.'])
-            ->onlyInput('username');
+            ->withErrors(['username' => 'Username/Email atau password salah.'])
+            ->withInput();
     }
 
     public function logout(Request $request)

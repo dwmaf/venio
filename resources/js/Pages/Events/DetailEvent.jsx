@@ -1,5 +1,5 @@
 import { useForm, Link, Head, router } from "@inertiajs/react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ImportPeserta from "@/Components/ImportPeserta";
 import SendQRBulk from "@/Components/SendQRBulk";
 import SendZoomBulk from "@/Components/SendZoomBulk";
@@ -14,13 +14,17 @@ import {
     WAButton,
     ActionButton,
     SendButton,
+    FilterDropdownButton
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
 import { Icon } from "@iconify/react";
 import Metadata from "@/Components/Metadata";
-import { TableHead, TableData, TableRow } from "@/Components/Tables";
+import { TableHead, TableData, TableRow, CopyableText } from "@/Components/Tables";
+import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
+import { SearchInput } from "@/Components/Inputs";
 
 export default function Event({ event, participants, stats }) {
+    
     // State untuk modal/form Single Action
     const [selectedParticipantQR, setSelectedParticipantQR] = useState(null);
     const [selectedParticipantZoom, setSelectedParticipantZoom] =
@@ -28,21 +32,25 @@ export default function Event({ event, participants, stats }) {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isSendQRBulkOpen, setIsSendQRBulkOpen] = useState(false);
     const [isSendZoomBulkOpen, setIsSendZoomBulkOpen] = useState(false);
-    const today = new Date().toISOString().split("T")[0];
+    const urlParams = new URLSearchParams(window.location.search);
+    const activeFilter = urlParams.get('filter') || '';
+    const activeSearch = urlParams.get('search') || '';
+    const [search, setSearch] = useState(activeSearch);
+    // console.log("Data Partners:");
+    const d = new Date();
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     let eventCategoryLabel = "";
     let eventCategoryRoute = "";
 
-    if (event.status === "SELESAI") {
+    if (event.tanggal_event < today) {
         eventCategoryLabel = "Past Events";
         eventCategoryRoute = route("past.events");
+    } else if (event.tanggal_event === today) {
+        eventCategoryLabel = "Ongoing Events";
+        eventCategoryRoute = route("ongoing.events");
     } else {
-        if (event.tanggal_event === today) {
-            eventCategoryLabel = "Ongoing Events";
-            eventCategoryRoute = route("ongoing.events");
-        } else {
-            eventCategoryLabel = "Upcoming Events";
-            eventCategoryRoute = route("upcoming.events");
-        }
+        eventCategoryLabel = "Upcoming Events";
+        eventCategoryRoute = route("upcoming.events");
     }
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
@@ -54,6 +62,28 @@ export default function Event({ event, participants, stats }) {
         },
     ];
 
+    useEffect(() => {
+        if (search === activeSearch) return; // Mencegah request berulang saat baru dirender
+
+        const delayDebounceFn = setTimeout(() => {
+            router.get(
+                route("events.index", event.id),
+                { filter: activeFilter, search: search },
+                { preserveState: true, replace: true }
+            );
+        }, 800);
+
+        return () => clearTimeout(delayDebounceFn);
+    }, [search, activeFilter, event.id, activeSearch]);
+
+    const handleFilter = (val) => {
+        router.get(
+            route("events.index", event.id),
+            { filter: val },
+            { preserveState: true, replace: true }
+        );
+    };
+
     return (
         <AdminLayout title="Events">
             <Head title={`Detail Event - ${event.nama_event}`} />
@@ -63,15 +93,67 @@ export default function Event({ event, participants, stats }) {
 
                 <div className="flex flex-col gap-6">
                     <div className="flex justify-between">
-                        <h2 className="font-body font-medium text-base lg:text-2xl leading-none">
-                            {event.nama_event}
-                        </h2>
+                        <div className="flex gap-3 items-center">
+                            <h2 className="font-body font-medium text-base lg:text-2xl leading-none">
+                                {event.nama_event}
+                            </h2>
+                            <span
+                                className={`px-3 py-1 rounded-full text-xs font-semibold tracking-wider ${event.tipe_event === 'ONLINE' ? 'bg-amber-100 text-amber-700' :
+                                    event.tipe_event === 'OFFLINE' ? 'bg-lime-100 text-lime-700' :
+                                        'bg-blue-100 text-blue-700'
+                                    }`}
+                            >
+                                {event.tipe_event}
+                            </span>
+                        </div>
 
                         {event.tipe_event !== "ONLINE" && (
                             <RouteButton
                                 text="Scan QR"
                                 href={route("datang.index", event.id)}
                             />
+                        )}
+                    </div>
+                    <div className={`flex gap-2 lg:gap-4`}>
+                        <div className="flex gap-1 lg:gap-2 items-center">
+                            <Icon
+                                icon="duo-icons:calendar"
+                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
+                            />
+                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral ">
+                                {formatTanggalSlash(event.tanggal_event)}
+                            </span>
+                        </div>
+
+                        <div className="flex gap-1 lg:gap-2 items-center">
+                            <Icon
+                                icon="duo-icons:clock"
+                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
+                            />
+                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
+                                {formatJamMenit(event.jam_mulai)} -{" "}
+                                {formatJamMenit(event.jam_selesai)}
+                            </span>
+                        </div>
+                        <div className="flex gap-1 lg:gap-2 items-center">
+                            <Icon
+                                icon="duo-icons:location"
+                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
+                            />
+                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
+                                {event.lokasi}
+                            </span>
+                        </div>
+                        {event.partners && event.partners.length > 0 && (
+                            <div className="flex gap-1 lg:gap-2 items-center">
+                                <Icon
+                                    icon="pepicons-print:handshake"
+                                    className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
+                                />
+                                <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
+                                    {event.partners.map(p => p.nama).join(', ')}
+                                </span>
+                            </div>
                         )}
                     </div>
 
@@ -107,14 +189,14 @@ export default function Event({ event, participants, stats }) {
 
                         {(event.tipe_event === "HYBRID" ||
                             event.tipe_event === "OFFLINE") && (
-                            <Metadata
-                                icon="solar:qr-code-bold-duotone"
-                                title="Sudah Scan QR"
-                                data={stats.offline_checked_in}
-                                className="bg-teal-50 border border-teal-500/30"
-                                textColor="text-teal-500"
-                            />
-                        )}
+                                <Metadata
+                                    icon="solar:qr-code-bold-duotone"
+                                    title="Sudah Scan QR"
+                                    data={stats.offline_checked_in}
+                                    className="bg-teal-50 border border-teal-500/30"
+                                    textColor="text-teal-500"
+                                />
+                            )}
 
                         {event.tipe_event === "ONLINE" && (
                             <Metadata
@@ -128,18 +210,18 @@ export default function Event({ event, participants, stats }) {
 
                         {(event.tipe_event === "ONLINE" ||
                             event.tipe_event === "OFFLINE") && (
-                            <Metadata
-                                icon="duo-icons:user"
-                                title={
-                                    event.tipe_event === "ONLINE"
-                                        ? "Zoom Belum Terisi"
-                                        : "Belum Hadir"
-                                }
-                                data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
-                                className="bg-yellow-50 border border-yellow-500/30"
-                                textColor="text-yellow-500"
-                            />
-                        )}
+                                <Metadata
+                                    icon="duo-icons:user"
+                                    title={
+                                        event.tipe_event === "ONLINE"
+                                            ? "Zoom Belum Terisi"
+                                            : "Belum Hadir"
+                                    }
+                                    data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
+                                    className="bg-yellow-50 border border-yellow-500/30"
+                                    textColor="text-yellow-500"
+                                />
+                            )}
                     </div>
 
                     {/* button" fungsional */}
@@ -181,15 +263,11 @@ export default function Event({ event, participants, stats }) {
 
                         {/* zoom, QR, rekap */}
                         <div className="flex justify-between">
-                            <button className="flex gap-2 items-center border border-neutral/30 rounded-lg lg:rounded-xl p-3 lg:px-4 lg:py-2">
-                                <Icon
-                                    icon="lsicon:filter-outline"
-                                    className="text-neutral w-5 h-5 aspect-square"
-                                />
-                                <span className="hidden lg:flex font-body font-normal text-sm lg:text-base leading-none text-neutral max-w-[5ch] lg:max-w-fit truncate">
-                                    Filter Metode Kehadiran
-                                </span>
-                            </button>
+                            <FilterDropdownButton
+                                tipeEvent={event.tipe_event}
+                                activeFilter={activeFilter}
+                                onFilter={handleFilter}
+                            />
 
                             <div className="flex gap-2">
                                 {event.tipe_event !== "OFFLINE" && (
@@ -218,6 +296,16 @@ export default function Event({ event, participants, stats }) {
                                     label="Rekap Hadir"
                                 />
                             </div>
+                        </div>
+
+                        <div className="w-full lg:w-1/3 ml-auto">
+                            <SearchInput
+                                id="search"
+                                name="search"
+                                placeholder="Cari Nama, Email, atau No. HP..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                         </div>
                     </div>
 
@@ -260,37 +348,25 @@ export default function Event({ event, participants, stats }) {
 
                                                     {participant.metode_kehadiran ===
                                                         "OFFLINE" && (
-                                                        <div
-                                                            className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
-                                                        >
-                                                            {participant.checked_in_at
-                                                                ? "Sudah Hadir"
-                                                                : "Belum Hadir"}
-                                                        </div>
-                                                    )}
+                                                            <div
+                                                                className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
+                                                            >
+                                                                {participant.checked_in_at
+                                                                    ? "Sudah Hadir"
+                                                                    : "Belum Hadir"}
+                                                            </div>
+                                                        )}
                                                 </div>
-                                                <span className="font-body text-xs leading-none text-neutral whitespace-nowrap">
-                                                    {participant.metode_kehadiran ===
-                                                    "OFFLINE" ? (
-                                                        <>
-                                                            QR:{" "}
-                                                            {participant.qr_token ||
-                                                                "Belum Terisi"}
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            Zoom:{" "}
-                                                            {participant.zoom_link ||
-                                                                "Belum Terisi"}
-                                                        </>
-                                                    )}
-                                                </span>
+                                                <CopyableText 
+                                                    label={participant.metode_kehadiran === "OFFLINE" ? "QR" : "Zoom"}
+                                                    textToCopy={participant.metode_kehadiran === "OFFLINE" ? participant.qr_token : participant.zoom_link}
+                                                />
                                             </div>
                                         </td>
 
                                         <td className="p-5">
                                             {participant.metode_kehadiran ===
-                                            "OFFLINE" ? (
+                                                "OFFLINE" ? (
                                                 <SendButton
                                                     onClick={() =>
                                                         setSelectedParticipantQR(

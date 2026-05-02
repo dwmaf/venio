@@ -10,17 +10,15 @@ const EditEvent = ({ event }) => {
     let eventCategoryLabel = "";
     let eventCategoryRoute = "";
 
-    if (event.status === "SELESAI") {
+    if (event.tanggal_event < today) {
         eventCategoryLabel = "Past Events";
         eventCategoryRoute = route("past.events");
+    } else if (event.tanggal_event === today) {
+        eventCategoryLabel = "Ongoing Events";
+        eventCategoryRoute = route("ongoing.events");
     } else {
-        if (event.tanggal_event === today) {
-            eventCategoryLabel = "Ongoing Events";
-            eventCategoryRoute = route("ongoing.events");
-        } else {
-            eventCategoryLabel = "Upcoming Events";
-            eventCategoryRoute = route("upcoming.events");
-        }
+        eventCategoryLabel = "Upcoming Events";
+        eventCategoryRoute = route("upcoming.events");
     }
 
     const breadcrumbs = [
@@ -63,7 +61,7 @@ const EditEvent = ({ event }) => {
             <div className="min-h-[calc(100vh-180px)] w-full flex justify-center items-center py-20 font-body">
                 <form
                     onSubmit={submit}
-                    className="w-full max-w-[424px] space-y-6"
+                    className="w-full max-w-106 space-y-6"
                 >
                     {/* Nama Event */}
                     <div className="space-y-2">

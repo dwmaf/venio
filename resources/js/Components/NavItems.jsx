@@ -33,7 +33,8 @@ export default function NavItems({
     } ${!isSidebarOpen ? "hidden" : ""}`;
 
     return (
-        <Link href={page} className={linkClasses}>
+        <Link href={page} className={linkClasses} method={logout ? "post" : "get"} 
+        as={logout ? "button" : "a"}>
             <Icon
                 icon={icon}
                 rotate={rotate}

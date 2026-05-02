@@ -33,7 +33,6 @@ class EventController extends Controller
             'jam_mulai'     => $validated['jam_mulai'],
             'jam_selesai'   => $validated['jam_selesai'],
             'quota'         => $validated['quota'],
-            'status'        => 'BELUM_SELESAI',
         ]);
 
         if (!empty($validated['partners'])) {
@@ -53,47 +52,47 @@ class EventController extends Controller
     }
 
     public function update(Request $request, Event $event)
-{
-    $validated = $request->validate([
-    'nama_event'    => 'required|string|max:255',
-    'tipe_event'    => 'required|in:OFFLINE,ONLINE,HYBRID',
-    'tanggal_event' => 'required|date',
-    'jam_mulai'     => 'required',
-    'jam_selesai'   => 'required',
-    'lokasi'        => 'required_if:tipe_event,OFFLINE,HYBRID|nullable|string|max:255',
-    'quota'         => 'nullable|integer|min:1',
-    'partners'      => 'nullable|array',
-    'partners.*'    => 'string',
-]);
+    {
+        $validated = $request->validate([
+            'nama_event'    => 'required|string|max:255',
+            'tipe_event'    => 'required|in:OFFLINE,ONLINE,HYBRID',
+            'tanggal_event' => 'required|date',
+            'jam_mulai'     => 'required',
+            'jam_selesai'   => 'required',
+            'lokasi'        => 'required_if:tipe_event,OFFLINE,HYBRID|nullable|string|max:255',
+            'quota'         => 'nullable|integer|min:1',
+            'partners'      => 'nullable|array',
+            'partners.*'    => 'string',
+        ]);
 
-    $event->update([
-    'nama_event'    => $validated['nama_event'],
-    'tipe_event'    => $validated['tipe_event'],
-    'tanggal_event' => $validated['tanggal_event'],
-    'jam_mulai'     => $validated['jam_mulai'],
-    'jam_selesai'   => $validated['jam_selesai'],
-    'lokasi'        => $validated['lokasi'] ?? null,
-    'quota'         => $validated['quota'] ?? null,
-]);
+        $event->update([
+            'nama_event'    => $validated['nama_event'],
+            'tipe_event'    => $validated['tipe_event'],
+            'tanggal_event' => $validated['tanggal_event'],
+            'jam_mulai'     => $validated['jam_mulai'],
+            'jam_selesai'   => $validated['jam_selesai'],
+            'lokasi'        => $validated['lokasi'] ?? null,
+            'quota'         => $validated['quota'] ?? null,
+        ]);
 
-    $partnerIds = [];
+        $partnerIds = [];
 
-    if (!empty($validated['partners'])) {
-        foreach ($validated['partners'] as $partnerName) {
-            $partner = Partner::firstOrCreate([
-                'nama' => $partnerName,
-            ]);
+        if (!empty($validated['partners'])) {
+            foreach ($validated['partners'] as $partnerName) {
+                $partner = Partner::firstOrCreate([
+                    'nama' => $partnerName,
+                ]);
 
-            $partnerIds[] = $partner->id;
+                $partnerIds[] = $partner->id;
+            }
         }
+
+        $event->partners()->sync($partnerIds);
+
+        return redirect()
+            ->route('events.index', $event->id)
+            ->with('success', 'Event berhasil diperbarui.');
     }
-
-    $event->partners()->sync($partnerIds);
-
-    return redirect()
-        ->route('events.index', $event->id)
-        ->with('success', 'Event berhasil diperbarui.');
-}
 
     public function allEvents(Request $request, Event $event)
     {
@@ -101,21 +100,18 @@ class EventController extends Controller
         // 2. FILTER EVENT BERDASARKAN WAKTU
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('jam_mulai', 'asc')
             ->limit(2)
             ->get();
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('tanggal_event', 'asc')
             ->limit(2)
             ->get();
 
         $pastEvents = Event::where('tanggal_event', '<', $today)
-            ->where('status', 'SELESAI')
-            ->orderBy('tanggal_event', 'asc')
+            ->orderBy('tanggal_event', 'desc')
             ->limit(2)
             ->get();
 
@@ -132,7 +128,6 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('tanggal_event', 'asc')
             ->get();
         return Inertia::render('Events/UpcomingEvents', [
@@ -143,10 +138,7 @@ class EventController extends Controller
     public function ongoingEvents(Request $request)
     {
         $today = Carbon::today()->format('Y-m-d');
-        // 2. FILTER EVENT BERDASARKAN WAKTU
-        // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('jam_mulai', 'asc')
             ->get();
         return Inertia::render('Events/OnGoingEvents', [
@@ -157,24 +149,61 @@ class EventController extends Controller
     public function pastEvents(Request $request)
     {
         $today = Carbon::today()->format('Y-m-d');
+        $query = Event::where('tanggal_event', '<', $today);
 
-        $pastEvents = Event::where('tanggal_event', '<', $today)
-            ->where('status', 'SELESAI')
-            ->withCount('participants')
-            ->orderBy('tanggal_event', 'asc')
+        // Tambahkan filter search jika ada
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nama_event', 'like', '%' . $request->search . '%');
+        }
+        $pastEvents = $query->withCount('participants')
+            ->orderBy('tanggal_event', 'desc')
             ->paginate(5)
             ->withQueryString();
         return Inertia::render('Events/PastEvents', [
             'pastEvents' => $pastEvents,
+            'filters'    => $request->only(['search']),
         ]);
     }
 
     public function detailEvent(Request $request, Event $event)
     {
-        $participants = $event->participants()
-            ->orderByDesc('id')
-            ->paginate(25)
-            ->withQueryString();
+        $event->load('partners');
+        $participantsQuery = $event->participants()->orderByDesc('id');
+
+        if ($request->has('filter') && $request->filter != '') {
+            $filter = $request->filter;
+
+            switch ($filter) {
+                case 'ONLINE':
+                case 'OFFLINE':
+                    $participantsQuery->where('metode_kehadiran', $filter);
+                    break;
+                case 'QR_FILLED':
+                    $participantsQuery->whereNotNull('qr_token');
+                    break;
+                case 'QR_EMPTY':
+                    $participantsQuery->whereNull('qr_token');
+                    break;
+                case 'ZOOM_FILLED':
+                    $participantsQuery->whereNotNull('zoom_link');
+                    break;
+                case 'ZOOM_EMPTY':
+                    $participantsQuery->whereNull('zoom_link');
+                    break;
+            }
+        }
+
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $participantsQuery->where(function ($query) use ($search) {
+                $query->where('nama_lengkap', 'like', '%' . $search . '%')
+                      ->orWhere('email_primary', 'like', '%' . $search . '%')
+                      ->orWhere('no_hp_normalized', 'like', '%' . $search . '%');
+            });
+        }
+
+        // 2. Paginate query yang sudah difilter
+        $participants = $participantsQuery->paginate(25)->withQueryString();
         $totalCount = $event->participants()->count();
         $checkedInCount = $event->participants()->whereNotNull('checked_in_at')->count();
         // Statistik Offline/Online
@@ -216,11 +245,11 @@ class EventController extends Controller
     }
 
     public function edit(Event $event)
-{
-    $event->load('partners');
+    {
+        $event->load('partners');
 
-    return Inertia::render('Events/EditEvent', [
-        'event' => $event,
-    ]);
-}
+        return Inertia::render('Events/EditEvent', [
+            'event' => $event,
+        ]);
+    }
 }

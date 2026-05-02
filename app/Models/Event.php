@@ -13,15 +13,10 @@ class Event extends Model
         'jam_mulai',
         'jam_selesai',
         'tipe_event',
-        'status',
         'quota',
-        'partners'
     ];
 
-    protected $casts = [
-        'partners' => 'array',
-        
-    ];
+    
 
     public function participants()
     {

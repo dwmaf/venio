@@ -16,18 +16,16 @@ class DashboardController extends Controller
 
         // 1. DATA UNTUK STATISTIK
         $totalEventsCount = Event::count();
-        $completedEventsCount = Event::where('status', 'SELESAI')->count();
+        $completedEventsCount = Event::where('tanggal_event', '<', $today)->count();
         
         // 2. FILTER EVENT BERDASARKAN WAKTU
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
-            ->where('status', 'BELUM_SELESAI')
             ->orderBy('tanggal_event', 'asc')
             // ->limit(2)
             ->get();
