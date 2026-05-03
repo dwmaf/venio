@@ -1,4 +1,4 @@
-import { Icon } from "@iconify/react";
+import { IconoirEyeClosed, IconoirEyeSolid, IconLetsSearchAlt } from "@/Components/Icons";
 import { useState } from "react";
 
 export function TextInput({
@@ -73,9 +73,9 @@ export function PasswordInput({
                     tabIndex={-1}
                 >
                     {showPassword ? (
-                        <Icon icon="iconoir:eye-closed" className="w-5 h-5" />
+                        <IconoirEyeClosed className="w-5 h-5"/>
                     ) : (
-                        <Icon icon="iconoir:eye-solid" className="w-5 h-5" />
+                        <IconoirEyeSolid className="w-5 h-5" />
                     )}
                 </button>
             </div>
@@ -106,10 +106,7 @@ export function SearchInput({
     return (
         <div className="relative flex items-center w-full mt-1">
             {/* Menambahkan Ikon Kaca Pembesar (opsional tapi bagus untuk visual) */}
-            <Icon
-                icon="lets-icons:search-alt"
-                className="absolute left-4 w-5 h-5 text-neutral"
-            />
+            <IconLetsSearchAlt className="absolute left-4 w-5 h-5 text-neutral" />
             <input
                 id={id}
                 name={name}

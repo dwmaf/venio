@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
 import NavItems from "@/Components/NavItems";
 import Toast from "@/Components/Toast";
+import { IconSidebarMinimalisticLinear, IconSolarLogout3Bold, IconJamMenu, IconDuoDashboard, IconDuoCalendar, IconDuoAddCircle, IconFluentMailUnread20Filled, IconSolarSettingsBroken } from "@/Components/Icons";
 
 export default function AdminLayout({ children, title }) {
     const { flash } = usePage().props;
@@ -29,22 +29,22 @@ export default function AdminLayout({ children, title }) {
 
     const navLinks = [
         {
-            icon: "duo-icons:dashboard",
+            icon: IconDuoDashboard,
             page: "/dashboard",
             text: "Dashboard",
         },
         {
-            icon: "duo-icons:calendar",
+            icon: IconDuoCalendar,
             page: "/all-events",
             text: "Events",
         },
         {
-            icon: "duo-icons:add-circle",
+            icon: IconDuoAddCircle,
             page: "/create-events",
             text: "Add Event",
         },
         {
-            icon: "duo-icons:clipboard",
+            icon: IconFluentMailUnread20Filled,
             page: "#",
             text: "Mail Logs",
         },
@@ -86,10 +86,7 @@ export default function AdminLayout({ children, title }) {
                     </button>
                     {isSidebarOpen && (
                         <button onClick={() => setIsSidebarOpen(false)}>
-                            <Icon
-                                icon="solar:sidebar-minimalistic-linear"
-                                className="text-default w-6 h-6 cursor-pointer"
-                            />
+                            <IconSidebarMinimalisticLinear className="text-default w-6 h-6 cursor-pointer"/>
                         </button>
                     )}
                 </div>
@@ -106,7 +103,7 @@ export default function AdminLayout({ children, title }) {
 
                 <div className="p-4 mt-auto flex items-center">
                     <NavItems
-                        icon="solar:logout-3-bold"
+                        icon={IconSolarLogout3Bold}
                         page="/logout"
                         text="Logout"
                         rotate={2}
@@ -131,12 +128,7 @@ export default function AdminLayout({ children, title }) {
                         <button
                             onClick={() => setIsHamMenuOpen(!isHamMenuOpen)}
                         >
-                            <Icon
-                                icon="jam:menu"
-                                width="32"
-                                height="32"
-                                className="shrink-0"
-                            />
+                            <IconJamMenu className="w-8 h-8 shrink-0"/>
                         </button>
                     </div>
 
@@ -148,10 +140,7 @@ export default function AdminLayout({ children, title }) {
                             href="/dashboard"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <Icon
-                                icon="duo-icons:dashboard"
-                                className="text-default shrink-0 w-6 h-6"
-                            />
+                            <IconDuoDashboard className="text-default shrink-0 w-6 h-6"/>
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
@@ -162,10 +151,7 @@ export default function AdminLayout({ children, title }) {
                             href="/all-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <Icon
-                                icon="duo-icons:calendar"
-                                className="text-default shrink-0 w-6 h-6"
-                            />
+                            <IconDuoCalendar className="text-default shrink-0 w-6 h-6"/>
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
@@ -176,10 +162,7 @@ export default function AdminLayout({ children, title }) {
                             href="/create-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <Icon
-                                icon="duo-icons:add-circle"
-                                className="text-default shrink-0 w-6 h-6"
-                            />
+                            <IconDuoAddCircle className="text-default shrink-0 w-6 h-6"/>
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
@@ -190,10 +173,7 @@ export default function AdminLayout({ children, title }) {
                             href="/all-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <Icon
-                                icon="fluent:mail-unread-20-filled"
-                                className="text-default shrink-0 w-6 h-6"
-                            />
+                            <IconFluentMailUnread20Filled className="text-default shrink-0 w-6 h-6"/>
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
@@ -206,10 +186,7 @@ export default function AdminLayout({ children, title }) {
                             as="button" 
                             className="flex items-center space-x-2 p-2"
                         >
-                            <Icon
-                                icon="solar:logout-3-bold" rotate={2}
-                                className="text-default shrink-0 w-6 h-6"
-                            />
+                            <IconSolarLogout3Bold className="text-default shrink-0 w-6 h-6 rotate-180"/>
                             <span
                                 className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
                             >
@@ -224,12 +201,7 @@ export default function AdminLayout({ children, title }) {
                     <h2 className="font-heading font-medium text-[32px] leading-none">
                         {title ?? "Dashboard"}
                     </h2>
-                    <Icon
-                        icon="solar:settings-broken"
-                        width="32"
-                        height="32"
-                        className="shrink-0"
-                    />
+                    <IconSolarSettingsBroken className="shrink-0 w-8 h-8"/>
                 </header>
 
                 <main className="flex-1 overflow-y-auto pt-20 pb-4 px-4 md:px-6 md:pb-6 lg:p-8">

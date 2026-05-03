@@ -4,7 +4,7 @@ import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
-import { Icon } from "@iconify/react";
+import { IconDuoApproved, IconDuoAlignBottom, IconTwotoneHandshake } from "@/Components/Icons";
 import Metadata from "@/Components/Metadata";
 import { NoEvent, EventCard } from "@/Components/EventCard";
 import { RouteButton, Redirect } from "@/Components/Buttons";
@@ -88,7 +88,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 {/* 3 statistik */}
                 <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">
                     <Metadata
-                        icon="duo-icons:align-bottom"
+                        icon={IconDuoAlignBottom}
                         title="Total Events"
                         data={`${stats.totalEvents} Events`}
                         className="bg-yellow-50 border border-yellow-500/30"
@@ -96,7 +96,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     />
 
                     <Metadata
-                        icon="duo-icons:approved"
+                        icon={IconDuoApproved}
                         title="Completed Events"
                         data={`${stats.completedEvents} Events`}
                         className="bg-teal-50 border border-teal-500/30"
@@ -104,7 +104,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     />
 
                     <Metadata
-                        icon="ic:twotone-handshake"
+                        icon={IconTwotoneHandshake}
                         title="Partners"
                         data={`${stats.completedEvents} Partners`}
                         className="bg-purple-50 border border-purple-500/30"

@@ -17,14 +17,14 @@ import {
     FilterDropdownButton
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
-import { Icon } from "@iconify/react";
+import { IconMaterialSymLightQrCodeRounded, IconBasilDocOutline, IconHugeZoom, IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPepHandshakePrint, IconSolarPenBoldDuotone, IconSolarUsersGroupBoldDuotone, IconDuoApproved, IconDuoUser, IconQrCodeBoldDuotone } from '@/Components/Icons';
 import Metadata from "@/Components/Metadata";
 import { TableHead, TableData, TableRow, CopyableText } from "@/Components/Tables";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { SearchInput } from "@/Components/Inputs";
 
 export default function Event({ event, participants, stats }) {
-    
+
     // State untuk modal/form Single Action
     const [selectedParticipantQR, setSelectedParticipantQR] = useState(null);
     const [selectedParticipantZoom, setSelectedParticipantZoom] =
@@ -116,40 +116,29 @@ export default function Event({ event, participants, stats }) {
                     </div>
                     <div className={`flex gap-2 lg:gap-4`}>
                         <div className="flex gap-1 lg:gap-2 items-center">
-                            <Icon
-                                icon="duo-icons:calendar"
-                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
-                            />
+                            <IconDuoCalendar className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
                             <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral ">
                                 {formatTanggalSlash(event.tanggal_event)}
                             </span>
                         </div>
 
                         <div className="flex gap-1 lg:gap-2 items-center">
-                            <Icon
-                                icon="duo-icons:clock"
-                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
-                            />
+                            <IconDuoClock className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
                             <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
                                 {formatJamMenit(event.jam_mulai)} -{" "}
                                 {formatJamMenit(event.jam_selesai)}
                             </span>
                         </div>
                         <div className="flex gap-1 lg:gap-2 items-center">
-                            <Icon
-                                icon="duo-icons:location"
-                                className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
-                            />
+                            <IconDuoLocation className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
+
                             <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
                                 {event.lokasi}
                             </span>
                         </div>
                         {event.partners && event.partners.length > 0 && (
                             <div className="flex gap-1 lg:gap-2 items-center">
-                                <Icon
-                                    icon="pepicons-print:handshake"
-                                    className="w-5 h-5 lg:w-6 lg:h-6 text-neutral"
-                                />
+                                <IconPepHandshakePrint className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
                                 <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
                                     {event.partners.map(p => p.nama).join(', ')}
                                 </span>
@@ -160,7 +149,7 @@ export default function Event({ event, participants, stats }) {
                     {/* 3 statistik */}
                     <div className="flex flex-col lg:flex-row justify-between gap-4 w-full">
                         <Metadata
-                            icon="solar:users-group-rounded-bold-duotone"
+                            icon={IconSolarUsersGroupBoldDuotone}
                             title="Total Peserta"
                             data={`${stats.total} Peserta`}
                             className="bg-purple-50 border border-purple-500/30"
@@ -170,7 +159,7 @@ export default function Event({ event, participants, stats }) {
                         {event.tipe_event === "HYBRID" && (
                             <>
                                 <Metadata
-                                    icon="duo-icons:approved"
+                                    icon={IconDuoApproved}
                                     title="Peserta Offline"
                                     data={`${stats.offline} Peserta`}
                                     className="bg-blue-50 border border-blue-500/30"
@@ -178,7 +167,7 @@ export default function Event({ event, participants, stats }) {
                                 />
 
                                 <Metadata
-                                    icon="duo-icons:user"
+                                    icon={IconDuoUser}
                                     title="Peserta Online"
                                     data={`${stats.online} Peserta`}
                                     className="bg-yellow-50 border border-yellow-500/30"
@@ -190,7 +179,7 @@ export default function Event({ event, participants, stats }) {
                         {(event.tipe_event === "HYBRID" ||
                             event.tipe_event === "OFFLINE") && (
                                 <Metadata
-                                    icon="solar:qr-code-bold-duotone"
+                                    icon={IconQrCodeBoldDuotone}
                                     title="Sudah Scan QR"
                                     data={stats.offline_checked_in}
                                     className="bg-teal-50 border border-teal-500/30"
@@ -200,7 +189,7 @@ export default function Event({ event, participants, stats }) {
 
                         {event.tipe_event === "ONLINE" && (
                             <Metadata
-                                icon="hugeicons:zoom"
+                                icon={IconHugeZoom}
                                 title="Link Zoom Terisi"
                                 data={stats.online_zoom_filled}
                                 className="bg-blue-50 border border-blue-500/30"
@@ -211,7 +200,7 @@ export default function Event({ event, participants, stats }) {
                         {(event.tipe_event === "ONLINE" ||
                             event.tipe_event === "OFFLINE") && (
                                 <Metadata
-                                    icon="duo-icons:user"
+                                    icon={IconDuoUser}
                                     title={
                                         event.tipe_event === "ONLINE"
                                             ? "Zoom Belum Terisi"
@@ -253,10 +242,7 @@ export default function Event({ event, participants, stats }) {
                                     href={route("events.edit", event.id)}
                                     className="flex items-center justify-center rounded-lg bg-yellow-100 hover:bg-yellow-200 transition px-5 py-3 lg:px-5 lg:py-2"
                                 >
-                                    <Icon
-                                        icon="solar:pen-bold-duotone"
-                                        className="w-5 h-5 text-yellow-500"
-                                    />
+                                    <IconSolarPenBoldDuotone className="w-5 h-5 text-yellow-500" />
                                 </Link>
                             </div>
                         </div>
@@ -275,7 +261,7 @@ export default function Event({ event, participants, stats }) {
                                         onClick={() =>
                                             setIsSendZoomBulkOpen(true)
                                         }
-                                        icon="hugeicons:zoom"
+                                        icon={IconHugeZoom}
                                         label="Zoom Bulk"
                                     />
                                 )}
@@ -285,20 +271,20 @@ export default function Event({ event, participants, stats }) {
                                         onClick={() =>
                                             setIsSendQRBulkOpen(true)
                                         }
-                                        icon="material-symbols-light:qr-code-rounded"
+                                        icon={IconMaterialSymLightQrCodeRounded}
                                         label="QR Bulk"
                                     />
                                 )}
 
                                 <ActionButton
                                     href={route("ekspor.recap", event.id)}
-                                    icon="basil:document-outline"
+                                    icon={IconBasilDocOutline}
                                     label="Rekap Hadir"
                                 />
                             </div>
                         </div>
 
-                        <div className="w-full lg:w-1/3 ml-auto">
+                        <div className="w-full lg:w-1/3 max-w-md ml-auto">
                             <SearchInput
                                 id="search"
                                 name="search"
@@ -357,7 +343,7 @@ export default function Event({ event, participants, stats }) {
                                                             </div>
                                                         )}
                                                 </div>
-                                                <CopyableText 
+                                                <CopyableText
                                                     label={participant.metode_kehadiran === "OFFLINE" ? "QR" : "Zoom"}
                                                     textToCopy={participant.metode_kehadiran === "OFFLINE" ? participant.qr_token : participant.zoom_link}
                                                 />
@@ -373,7 +359,7 @@ export default function Event({ event, participants, stats }) {
                                                             participant,
                                                         )
                                                     }
-                                                    icon="material-symbols-light:qr-code-rounded"
+                                                    icon={IconMaterialSymLightQrCodeRounded}
                                                     text="Kirim QR"
                                                     textClass="text-teal-500"
                                                     buttonClass="bg-teal-50"
@@ -385,7 +371,7 @@ export default function Event({ event, participants, stats }) {
                                                             participant,
                                                         )
                                                     }
-                                                    icon="hugeicons:zoom"
+                                                    icon={IconHugeZoom}
                                                     text="Kirim Link Zoom"
                                                     textClass="text-blue-500"
                                                     buttonClass="bg-blue-50"

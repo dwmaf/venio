@@ -4,7 +4,7 @@ import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Breadcrumb from '@/Components/Breadcrumb';
 import { Html5Qrcode } from 'html5-qrcode';
-import { Icon } from "@iconify/react";
+import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone } from '@/Components/Icons';
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 
 export default function Checkin({ event }) {
@@ -134,40 +134,21 @@ export default function Checkin({ event }) {
 
                 <div className="flex gap-8">
                     <div className="flex gap-2.5 items-center">
-                        <Icon
-                            icon="duo-icons:calendar"
-                            width="24"
-                            height="24"
-                            className='text-neutral'
-                        />
+                        <IconDuoCalendar className='w-6 h-6 text-neutral'/>
+                        
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatTanggalSlash(event.tanggal_event)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <Icon
-                            icon="duo-icons:clock"
-                            width="24"
-                            height="24"
-                            className='text-neutral'
-                        />
+                        <IconDuoClock className='w-6 h-6 text-neutral'/>
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <Icon
-                            icon="duo-icons:location"
-                            width="24"
-                            height="24"
-                            className='text-neutral'
-                        />
+                        <IconDuoLocation className='w-6 h-6 text-neutral'/>
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{event.lokasi}</span>
                     </div>
                     {event.partners && event.partners.length > 0 && (
                         <div className="flex gap-2.5 items-center">
-                            <Icon
-                                icon="pepicons-print:handshake"
-                                width="24"
-                                height="24"
-                                className='text-neutral'
-                            />
+                            <IconPepHandshakePrint className='w-6 h-6 text-neutral'/>
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">
                                 {event.partners.map(partner => partner.nama).join(', ')}
                             </span>
@@ -197,7 +178,7 @@ export default function Checkin({ event }) {
                         <div className="w-full relative flex items-center justify-center bg-gray-100 min-h-75 overflow-hidden">
                             {(statusTone === 'loading' || statusTone === 'error') && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-2 p-4">
-                                    <Icon icon="ph:camera-slash-duotone" width="50" height="50" className="text-neutral" />
+                                    <IconPhCameraSlashDuotone className='w-12.5 h-12.5 text-neutral'/>
                                     {statusTone === 'error' && (
                                         <span className="font-['Plus_Jakarta_Sans'] text-sm text-red-600 font-medium mx-auto text-center leading-5">
                                             {statusText}

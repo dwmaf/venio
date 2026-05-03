@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
+import { IconHome, IconArrowRight } from '@/Components/Icons';
 
 export default function Breadcrumb({ items }) {
     return (
@@ -15,10 +15,8 @@ export default function Breadcrumb({ items }) {
                                 href={item.href}
                                 className="flex items-center gap-1"
                             >
-                                <Icon
-                                    icon="hugeicons:home-01"
-                                    className="w-4 h-4 lg:w-6 lg:h-6"
-                                />
+                                
+                                <IconHome className="w-4 h-4 lg:w-6 lg:h-6" />
                             </Link>
                         ) : (
                             <Link
@@ -34,10 +32,7 @@ export default function Breadcrumb({ items }) {
                         </span>
                     )}
                     {idx < items.length - 1 && (
-                        <Icon
-                            icon="hugeicons:arrow-right-01"
-                            className="w-5 h-5 lg:2-6 lg:h-6"
-                        />
+                        <IconArrowRight className="w-5 h-5 lg:w-6 lg:h-6" />
                     )}
                 </span>
             ))}
