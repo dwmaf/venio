@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import { Link, usePage } from "@inertiajs/react";
 import NavItems from "@/Components/NavItems";
 import Toast from "@/Components/Toast";
-import { IconSidebarMinimalisticLinear, IconSolarLogout3Bold, IconJamMenu, IconDuoDashboard, IconDuoCalendar, IconDuoAddCircle, IconFluentMailUnread20Filled, IconSolarSettingsBroken } from "@/Components/Icons";
+import {
+    IconSidebarMinimalisticLinear,
+    IconSolarLogout3Bold,
+    IconJamMenu,
+    IconDuoDashboard,
+    IconDuoCalendar,
+    IconDuoAddCircle,
+    IconFluentMailUnread20Filled,
+    IconSolarSettingsBroken,
+} from "@/Components/Icons";
 
 export default function AdminLayout({ children, title }) {
     const { flash } = usePage().props;
@@ -50,11 +59,11 @@ export default function AdminLayout({ children, title }) {
         },
     ];
 
-    const sidebarWidth = isSidebarOpen ? "w-81.25" : "w-23";
-    const contentMargin = isSidebarOpen ? "lg:ml-81.25" : "lg:ml-23";
+    const sidebarWidth = isSidebarOpen ? "w-72" : "w-23";
+    const contentMargin = isSidebarOpen ? "lg:ml-72" : "lg:ml-23";
 
     return (
-        <div className="min-h-screen bg-white flex">
+        <div className="flex min-h-screen bg-white">
             {toast && (
                 <Toast
                     message={toast.message}
@@ -64,34 +73,34 @@ export default function AdminLayout({ children, title }) {
             )}
             {/* SIDEBAR */}
             <aside
-                className={`hidden lg:flex fixed left-0 top-0 z-30 bg-white border-r border-default/30 transition-all duration-300 ${sidebarWidth} lg:translate-x-0 flex flex-col h-screen`}
+                className={`border-default/30 fixed top-0 left-0 z-30 hidden border-r bg-white transition-all duration-300 lg:flex ${sidebarWidth} flex h-screen flex-col lg:translate-x-0`}
             >
                 <div
-                    className={`py-4 flex items-center border-b border-default/30 ${!isSidebarOpen ? "justify-center px-4" : "justify-between px-6"}`}
+                    className={`border-default/30 flex items-center border-b py-4 ${!isSidebarOpen ? "justify-center px-4" : "justify-between px-6"}`}
                 >
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        className={`flex items-center ${!isSidebarOpen && "justify-center"} gap-1 cursor-pointer`}
+                        className={`flex items-center ${!isSidebarOpen && "justify-center"} cursor-pointer gap-1`}
                     >
                         <img
                             src="/venio-icon.png"
                             alt="Logo"
-                            className="w-10 h-10 object-contain flex items-center justify-center"
+                            className="flex h-10 w-10 items-center justify-center object-contain"
                         />
                         <span
-                            className={`font-semibold text-4xl leading-none tracking-tighter font-heading ${!isSidebarOpen && "hidden"}`}
+                            className={`font-heading text-4xl leading-none font-semibold tracking-tighter ${!isSidebarOpen && "hidden"}`}
                         >
                             Venio
                         </span>
                     </button>
                     {isSidebarOpen && (
                         <button onClick={() => setIsSidebarOpen(false)}>
-                            <IconSidebarMinimalisticLinear className="text-default w-6 h-6 cursor-pointer"/>
+                            <IconSidebarMinimalisticLinear className="text-default h-6 w-6 cursor-pointer" />
                         </button>
                     )}
                 </div>
 
-                <nav className="flex-1 mt-4 px-4 space-y-2">
+                <nav className="mt-4 flex-1 space-y-2 px-4">
                     {navLinks.map((item) => (
                         <NavItems
                             key={item.text}
@@ -101,7 +110,7 @@ export default function AdminLayout({ children, title }) {
                     ))}
                 </nav>
 
-                <div className="p-4 mt-auto flex items-center">
+                <div className="mt-auto flex items-center p-4">
                     <NavItems
                         icon={IconSolarLogout3Bold}
                         page="/logout"
@@ -115,34 +124,34 @@ export default function AdminLayout({ children, title }) {
 
             {/* MAIN CONTENT AREA */}
             <div
-                className={`flex-1 flex flex-col overflow-hidden ${contentMargin}`}
+                className={`flex flex-1 flex-col overflow-hidden ${contentMargin}`}
             >
                 {/* Tampilan Mobile - Tablet */}
-                <header className="lg:hidden bg-white fixed top-0 left-0 right-0 z-50 flex flex-col items-center p-3 lg:p-5 border-b border-default/30 justify-between">
-                    <div className="w-full flex items-center justify-between">
+                <header className="border-default/30 fixed top-0 right-0 left-0 z-50 flex flex-col items-center justify-between border-b bg-white p-3 lg:hidden lg:p-5">
+                    <div className="flex w-full items-center justify-between">
                         <img
                             src="/venio-icon.png"
                             alt="Logo"
-                            className="w-10 h-10 object-contain"
+                            className="h-10 w-10 object-contain"
                         />
                         <button
                             onClick={() => setIsHamMenuOpen(!isHamMenuOpen)}
                         >
-                            <IconJamMenu className="w-8 h-8 shrink-0"/>
+                            <IconJamMenu className="h-8 w-8 shrink-0" />
                         </button>
                     </div>
 
                     {/* Navigasi */}
                     <nav
-                        className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${isHamMenuOpen ? "max-h-96 mt-4" : "max-h-0 mt-0"}`}
+                        className={`w-full overflow-hidden transition-all duration-500 ease-in-out ${isHamMenuOpen ? "mt-4 max-h-96" : "mt-0 max-h-0"}`}
                     >
                         <Link
                             href="/dashboard"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconDuoDashboard className="text-default shrink-0 w-6 h-6"/>
+                            <IconDuoDashboard className="text-default h-6 w-6 shrink-0" />
                             <span
-                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >
                                 Dashboard
                             </span>
@@ -151,9 +160,9 @@ export default function AdminLayout({ children, title }) {
                             href="/all-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconDuoCalendar className="text-default shrink-0 w-6 h-6"/>
+                            <IconDuoCalendar className="text-default h-6 w-6 shrink-0" />
                             <span
-                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >
                                 Events
                             </span>
@@ -162,9 +171,9 @@ export default function AdminLayout({ children, title }) {
                             href="/create-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconDuoAddCircle className="text-default shrink-0 w-6 h-6"/>
+                            <IconDuoAddCircle className="text-default h-6 w-6 shrink-0" />
                             <span
-                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >
                                 Add Events
                             </span>
@@ -173,22 +182,22 @@ export default function AdminLayout({ children, title }) {
                             href="/all-events"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconFluentMailUnread20Filled className="text-default shrink-0 w-6 h-6"/>
+                            <IconFluentMailUnread20Filled className="text-default h-6 w-6 shrink-0" />
                             <span
-                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >
                                 Mail Logs
                             </span>
                         </Link>
                         <Link
                             href="/logout"
-                            method="post" 
-                            as="button" 
+                            method="post"
+                            as="button"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconSolarLogout3Bold className="text-default shrink-0 w-6 h-6 rotate-180"/>
+                            <IconSolarLogout3Bold className="text-default h-6 w-6 shrink-0 rotate-180" />
                             <span
-                                className={`font-normal text[20px] leading-none font-['Plus_Jakarta_Sans']`}
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >
                                 Logout
                             </span>
@@ -197,14 +206,14 @@ export default function AdminLayout({ children, title }) {
                 </header>
 
                 {/* Tampilan Desktop */}
-                <header className="bg-white hidden lg:flex items-center p-5 border-b border-default/30 justify-between">
-                    <h2 className="font-heading font-medium text-[32px] leading-none">
+                <header className="border-default/30 hidden items-center justify-between border-b bg-white p-5 lg:flex">
+                    <h2 className="font-heading text-[32px] leading-none font-medium">
                         {title ?? "Dashboard"}
                     </h2>
-                    <IconSolarSettingsBroken className="shrink-0 w-8 h-8"/>
+                    <IconSolarSettingsBroken className="h-8 w-8 shrink-0" />
                 </header>
 
-                <main className="flex-1 overflow-y-auto pt-20 pb-4 px-4 md:px-6 md:pb-6 lg:p-8">
+                <main className="flex-1 overflow-y-auto px-4 pt-20 pb-4 md:px-6 md:pb-6 lg:p-8">
                     {children}
                 </main>
             </div>
