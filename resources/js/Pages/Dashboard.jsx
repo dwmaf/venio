@@ -4,7 +4,11 @@ import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
-import { IconDuoApproved, IconDuoAlignBottom, IconTwotoneHandshake } from "@/Components/Icons";
+import {
+    IconDuoApproved,
+    IconDuoAlignBottom,
+    IconTwotoneHandshake,
+} from "@/Components/Icons";
 import Metadata from "@/Components/Metadata";
 import { NoEvent, EventCard } from "@/Components/EventCard";
 import { RouteButton, Redirect } from "@/Components/Buttons";
@@ -86,12 +90,12 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 <Breadcrumb items={breadcrumbs} />
 
                 {/* 3 statistik */}
-                <div className="flex flex-col sm:flex-row justify-between gap-4 w-full">
+                <div className="flex w-full flex-col justify-between gap-4 sm:flex-row">
                     <Metadata
                         icon={IconDuoAlignBottom}
                         title="Total Events"
                         data={`${stats.totalEvents} Events`}
-                        className="bg-yellow-50 border border-yellow-500/30"
+                        className="border border-yellow-500/30 bg-yellow-50"
                         textColor="text-yellow-400"
                     />
 
@@ -99,7 +103,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         icon={IconDuoApproved}
                         title="Completed Events"
                         data={`${stats.completedEvents} Events`}
-                        className="bg-teal-50 border border-teal-500/30"
+                        className="border border-teal-500/30 bg-teal-50"
                         textColor="text-teal-400"
                     />
 
@@ -107,7 +111,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         icon={IconTwotoneHandshake}
                         title="Partners"
                         data={`${stats.completedEvents} Partners`}
-                        className="bg-purple-50 border border-purple-500/30"
+                        className="border border-purple-500/30 bg-purple-50"
                         textColor="text-purple-400"
                     />
                 </div>
@@ -116,12 +120,12 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 <div className="relative">
                     <div
                         ref={scrollContainerRef}
-                        className="flex overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar"
+                        className="hide-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto"
                     >
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
-                            <div className="flex flex-col shrink-0 w-full min-h-64.25 border border-default/30 rounded-2xl p-8 gap-8">
-                                <span className="font-body font-medium text-2xl leading-none">
+                            <div className="border-default/30 flex min-h-64.25 w-full shrink-0 flex-col gap-8 rounded-2xl border p-8">
+                                <span className="font-body text-2xl leading-none font-medium">
                                     Ongoing Events!
                                 </span>
                                 <NoEvent inner={true} />
@@ -136,7 +140,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             (slideRefs.current[index] = el)
                                         }
                                         key={event.id}
-                                        className="shrink-0 w-full md:w-120 lg:w-140 snap-center"
+                                        className="w-full shrink-0 snap-center md:w-120 lg:w-140"
                                     >
                                         <EventCard
                                             name={event.nama_event}
@@ -155,8 +159,8 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
                                 {/* kalau ongoing event cuman 1, kasih tambahan card*/}
                                 {ongoingEvents.length === 1 && (
-                                    <div className="flex flex-col shrink-0 min-w-129 min-h-64.25 border border-default/30 rounded-2xl p-8 gap-8">
-                                        <span className="font-body font-medium text-2xl leading-none">
+                                    <div className="border-default/30 flex min-h-64.25 min-w-129 shrink-0 flex-col gap-8 rounded-2xl border p-8">
+                                        <span className="font-body text-2xl leading-none font-medium">
                                             Ongoing Events!
                                         </span>
                                         <NoEvent inner={true} />
@@ -168,14 +172,14 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
                     {/* Render Titik Indikator */}
                     {ongoingEvents.length > 1 && (
-                        <div className="flex justify-center gap-2 mt-4">
+                        <div className="mt-4 flex justify-center gap-2">
                             {ongoingEvents.map((_, index) => (
                                 <button
                                     key={index}
                                     onClick={() => handleDotClick(index)}
-                                    className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                                    className={`h-2 w-2 cursor-pointer rounded-full transition-all duration-300 ${
                                         activeIndex === index
-                                            ? "bg-blue-700 w-4"
+                                            ? "w-4 bg-blue-700"
                                             : "bg-gray-300"
                                     }`}
                                 ></button>
@@ -185,13 +189,13 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 </div>
 
                 {/* upcoming events */}
-                <div className="flex flex-col flex-1 min-h-101.75 border border-default/30 rounded-2xl p-6 lg:p-8 gap-6 lg:gap-8">
+                <div className="border-default/30 flex min-h-101.75 flex-1 flex-col gap-6 rounded-2xl border p-6 lg:gap-8 lg:p-8">
                     <div className="flex justify-between">
-                        <div className="flex flex-col gap-2 lg:gap-4 font-body leading-none w-full">
-                            <span className="font-medium text-xl lg:text-2xl leading-none">
+                        <div className="font-body flex w-full flex-col gap-2 leading-none lg:gap-4">
+                            <span className="text-xl leading-none font-medium lg:text-2xl">
                                 Upcoming Events
                             </span>
-                            <div className="flex items-center justify-between text-base lg:text-xl text-neutral w-full">
+                            <div className="text-neutral flex w-full items-center justify-between text-base lg:text-xl">
                                 <span>Event yang akan berlangsung</span>
                                 <RouteButton
                                     href={route("upcoming.events")}
@@ -212,7 +216,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     timeEnd={event.jam_selesai}
                                     location={event.lokasi}
                                     inner={true}
-                                    col={true}
+                                    col={false}
                                 />
 
                                 <Redirect

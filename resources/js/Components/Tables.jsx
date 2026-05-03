@@ -1,17 +1,20 @@
 import { useState } from "react";
-import { IconSolarCopyBold, IconSolarCopyLineDuotone } from "@/Components/Icons";
+import {
+    IconSolarCopyBold,
+    IconSolarCopyLineDuotone,
+} from "@/Components/Icons";
 
 export function TableHead({ text }) {
     return (
-        <th className="p-2 lg:p-5 font-medium font-body text-base lg:text-xl leading-none">
+        <th className="font-body p-2 text-base leading-none font-medium lg:p-5 lg:text-xl">
             {text}
         </th>
     );
 }
 
-export function TableRow({ key, children }) {
+export function TableRow({ id, children }) {
     return (
-        <tr key={key} className="border-b border-neutral-400">
+        <tr data-id={id} className="border-b border-neutral-400">
             {children}
         </tr>
     );
@@ -19,7 +22,7 @@ export function TableRow({ key, children }) {
 
 export function TableData({ text }) {
     return (
-        <td className="p-5 font-body text-base leading-none whitespace-nowrap">
+        <td className="font-body p-3 text-base leading-none whitespace-nowrap lg:p-5">
             {text}
         </td>
     );
@@ -28,8 +31,8 @@ export function TableData({ text }) {
 export function CopyableText({ label, textToCopy }) {
     const [isCopied, setIsCopied] = useState(false);
 
-        const handleCopy = () => {
-        if (!textToCopy) return; 
+    const handleCopy = () => {
+        if (!textToCopy) return;
 
         // Cara modern jika koneksi secure (HTTPS/localhost)
         if (navigator.clipboard && window.isSecureContext) {
@@ -43,14 +46,14 @@ export function CopyableText({ label, textToCopy }) {
             textArea.style.left = "-999999px";
             textArea.style.top = "-999999px";
             document.body.appendChild(textArea);
-            
+
             // Pilih dan copy kontennya
             textArea.focus();
             textArea.select();
             try {
                 document.execCommand("copy");
             } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
+                console.error("Fallback: Oops, unable to copy", err);
             }
             // Hapus textarea bekas
             document.body.removeChild(textArea);
@@ -63,24 +66,19 @@ export function CopyableText({ label, textToCopy }) {
     const hasContent = textToCopy && textToCopy !== "";
 
     return (
-        <span className="font-body flex gap-2 items-center text-xs leading-none text-neutral whitespace-nowrap">
+        <span className="font-body text-neutral flex items-center gap-2 text-xs leading-none whitespace-nowrap">
             {label}: {hasContent ? textToCopy : "Belum Terisi"}
-            
             {/* Tombol Copy Hanya Muncul Jika Ada Isinya */}
             {hasContent && (
-                <button 
-                    onClick={handleCopy} 
+                <button
+                    onClick={handleCopy}
                     title={`Copy ${label}`}
-                    className="focus:outline-none hover:text-neutral-800 transition"
+                    className="transition hover:text-neutral-800 focus:outline-none"
                 >
                     {isCopied ? (
-                        <IconSolarCopyBold 
-                            className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 transition-colors duration-300" 
-                        />
+                        <IconSolarCopyBold className="h-4 w-4 text-gray-500 transition-colors duration-300 lg:h-5 lg:w-5" />
                     ) : (
-                        <IconSolarCopyLineDuotone 
-                            className="w-4 h-4 lg:w-5 lg:h-5 text-neutral transition-colors duration-300" 
-                        />
+                        <IconSolarCopyLineDuotone className="text-neutral h-4 w-4 transition-colors duration-300 lg:h-5 lg:w-5" />
                     )}
                 </button>
             )}

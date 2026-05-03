@@ -14,31 +14,49 @@ import {
     WAButton,
     ActionButton,
     SendButton,
-    FilterDropdownButton
+    FilterDropdownButton,
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
-import { IconMaterialSymLightQrCodeRounded, IconBasilDocOutline, IconHugeZoom, IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPepHandshakePrint, IconSolarPenBoldDuotone, IconSolarUsersGroupBoldDuotone, IconDuoApproved, IconDuoUser, IconQrCodeBoldDuotone } from '@/Components/Icons';
+import {
+    IconMaterialSymLightQrCodeRounded,
+    IconBasilDocOutline,
+    IconHugeZoom,
+    IconDuoCalendar,
+    IconDuoClock,
+    IconDuoLocation,
+    IconPepHandshakePrint,
+    IconSolarPenBoldDuotone,
+    IconSolarUsersGroupBoldDuotone,
+    IconDuoApproved,
+    IconDuoUser,
+    IconQrCodeBoldDuotone,
+} from "@/Components/Icons";
 import Metadata from "@/Components/Metadata";
-import { TableHead, TableData, TableRow, CopyableText } from "@/Components/Tables";
+import {
+    TableHead,
+    TableData,
+    TableRow,
+    CopyableText,
+} from "@/Components/Tables";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { SearchInput } from "@/Components/Inputs";
 
 export default function Event({ event, participants, stats }) {
-
-    // State untuk modal/form Single Action
     const [selectedParticipantQR, setSelectedParticipantQR] = useState(null);
     const [selectedParticipantZoom, setSelectedParticipantZoom] =
         useState(null);
+
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isSendQRBulkOpen, setIsSendQRBulkOpen] = useState(false);
     const [isSendZoomBulkOpen, setIsSendZoomBulkOpen] = useState(false);
+
     const urlParams = new URLSearchParams(window.location.search);
-    const activeFilter = urlParams.get('filter') || '';
-    const activeSearch = urlParams.get('search') || '';
+    const activeFilter = urlParams.get("filter") || "";
+    const activeSearch = urlParams.get("search") || "";
     const [search, setSearch] = useState(activeSearch);
-    // console.log("Data Partners:");
+
     const d = new Date();
-    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    const today = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     let eventCategoryLabel = "";
     let eventCategoryRoute = "";
 
@@ -52,6 +70,7 @@ export default function Event({ event, participants, stats }) {
         eventCategoryLabel = "Upcoming Events";
         eventCategoryRoute = route("upcoming.events");
     }
+
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
         { label: "Events", href: route("all.events") },
@@ -63,13 +82,13 @@ export default function Event({ event, participants, stats }) {
     ];
 
     useEffect(() => {
-        if (search === activeSearch) return; // Mencegah request berulang saat baru dirender
+        if (search === activeSearch) return;
 
         const delayDebounceFn = setTimeout(() => {
             router.get(
                 route("events.index", event.id),
                 { filter: activeFilter, search: search },
-                { preserveState: true, replace: true }
+                { preserveState: true, replace: true },
             );
         }, 800);
 
@@ -80,7 +99,7 @@ export default function Event({ event, participants, stats }) {
         router.get(
             route("events.index", event.id),
             { filter: val },
-            { preserveState: true, replace: true }
+            { preserveState: true, replace: true },
         );
     };
 
@@ -92,19 +111,23 @@ export default function Event({ event, participants, stats }) {
                 <Breadcrumb items={breadcrumbs} />
 
                 <div className="flex flex-col gap-6">
-                    <div className="flex justify-between">
-                        <div className="flex gap-3 items-center">
-                            <h2 className="font-body font-medium text-base lg:text-2xl leading-none">
+                    <div className="flex justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                            <h2 className="font-body text-base leading-7 font-medium sm:text-2xl">
                                 {event.nama_event}
-                            </h2>
-                            <span
-                                className={`px-3 py-1 rounded-full text-xs font-semibold tracking-wider ${event.tipe_event === 'ONLINE' ? 'bg-amber-100 text-amber-700' :
-                                    event.tipe_event === 'OFFLINE' ? 'bg-lime-100 text-lime-700' :
-                                        'bg-blue-100 text-blue-700'
+                                <span
+                                    className={`ml-2 w-fit rounded-full px-2 py-0.5 text-xs font-semibold ${
+                                        event.tipe_event === "ONLINE"
+                                            ? "bg-amber-100 text-amber-700"
+                                            : event.tipe_event === "OFFLINE"
+                                              ? "bg-lime-100 text-lime-700"
+                                              : "bg-blue-100 text-blue-700"
                                     }`}
-                            >
-                                {event.tipe_event}
-                            </span>
+                                >
+                                    {event.tipe_event.charAt(0).toUpperCase() +
+                                        event.tipe_event.slice(1).toLowerCase()}
+                                </span>
+                            </h2>
                         </div>
 
                         {event.tipe_event !== "ONLINE" && (
@@ -114,45 +137,48 @@ export default function Event({ event, participants, stats }) {
                             />
                         )}
                     </div>
-                    <div className={`flex gap-2 lg:gap-4`}>
-                        <div className="flex gap-1 lg:gap-2 items-center">
-                            <IconDuoCalendar className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
-                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral ">
+
+                    <div className={`flex gap-2 sm:gap-4`}>
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <IconDuoCalendar className="text-neutral h-4 w-4 lg:h-6 lg:w-6" />
+                            <span className="text-neutral text-xs leading-none sm:text-base lg:mt-0">
                                 {formatTanggalSlash(event.tanggal_event)}
                             </span>
                         </div>
 
-                        <div className="flex gap-1 lg:gap-2 items-center">
-                            <IconDuoClock className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
-                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <IconDuoClock className="text-neutral h-4 w-4 lg:h-6 lg:w-6" />
+                            <span className="text-neutral text-xs leading-none sm:text-base lg:mt-0">
                                 {formatJamMenit(event.jam_mulai)} -{" "}
                                 {formatJamMenit(event.jam_selesai)}
                             </span>
                         </div>
-                        <div className="flex gap-1 lg:gap-2 items-center">
-                            <IconDuoLocation className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <IconDuoLocation className="text-neutral h-4 w-4 lg:h-6 lg:w-6" />
 
-                            <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
+                            <span className="text-neutral text-xs leading-none sm:text-base lg:mt-0">
                                 {event.lokasi}
                             </span>
                         </div>
                         {event.partners && event.partners.length > 0 && (
-                            <div className="flex gap-1 lg:gap-2 items-center">
-                                <IconPepHandshakePrint className="w-5 h-5 lg:w-6 lg:h-6 text-neutral" />
-                                <span className="leading-none text-sm lg:text-base mt-1 lg:mt-0 text-neutral">
-                                    {event.partners.map(p => p.nama).join(', ')}
+                            <div className="flex items-center gap-1 sm:gap-2">
+                                <IconPepHandshakePrint className="text-neutral h-5 w-5 lg:h-6 lg:w-6" />
+                                <span className="text-neutral mt-1 text-sm leading-none lg:mt-0 lg:text-base">
+                                    {event.partners
+                                        .map((p) => p.nama)
+                                        .join(", ")}
                                 </span>
                             </div>
                         )}
                     </div>
 
                     {/* 3 statistik */}
-                    <div className="flex flex-col lg:flex-row justify-between gap-4 w-full">
+                    <div className="flex w-full flex-col justify-between gap-4 md:flex-row">
                         <Metadata
                             icon={IconSolarUsersGroupBoldDuotone}
                             title="Total Peserta"
                             data={`${stats.total} Peserta`}
-                            className="bg-purple-50 border border-purple-500/30"
+                            className="border border-purple-500/30 bg-purple-50"
                             textColor="text-purple-500"
                         />
 
@@ -162,7 +188,7 @@ export default function Event({ event, participants, stats }) {
                                     icon={IconDuoApproved}
                                     title="Peserta Offline"
                                     data={`${stats.offline} Peserta`}
-                                    className="bg-blue-50 border border-blue-500/30"
+                                    className="border border-blue-500/30 bg-blue-50"
                                     textColor="text-blue-500"
                                 />
 
@@ -170,7 +196,7 @@ export default function Event({ event, participants, stats }) {
                                     icon={IconDuoUser}
                                     title="Peserta Online"
                                     data={`${stats.online} Peserta`}
-                                    className="bg-yellow-50 border border-yellow-500/30"
+                                    className="border border-yellow-500/30 bg-yellow-50"
                                     textColor="text-yellow-500"
                                 />
                             </>
@@ -178,56 +204,56 @@ export default function Event({ event, participants, stats }) {
 
                         {(event.tipe_event === "HYBRID" ||
                             event.tipe_event === "OFFLINE") && (
-                                <Metadata
-                                    icon={IconQrCodeBoldDuotone}
-                                    title="Sudah Scan QR"
-                                    data={stats.offline_checked_in}
-                                    className="bg-teal-50 border border-teal-500/30"
-                                    textColor="text-teal-500"
-                                />
-                            )}
+                            <Metadata
+                                icon={IconQrCodeBoldDuotone}
+                                title="Sudah Scan QR"
+                                data={stats.offline_checked_in}
+                                className="border border-teal-500/30 bg-teal-50"
+                                textColor="text-teal-500"
+                            />
+                        )}
 
                         {event.tipe_event === "ONLINE" && (
                             <Metadata
                                 icon={IconHugeZoom}
                                 title="Link Zoom Terisi"
                                 data={stats.online_zoom_filled}
-                                className="bg-blue-50 border border-blue-500/30"
+                                className="border border-blue-500/30 bg-blue-50"
                                 textColor="text-blue-500"
                             />
                         )}
 
                         {(event.tipe_event === "ONLINE" ||
                             event.tipe_event === "OFFLINE") && (
-                                <Metadata
-                                    icon={IconDuoUser}
-                                    title={
-                                        event.tipe_event === "ONLINE"
-                                            ? "Zoom Belum Terisi"
-                                            : "Belum Hadir"
-                                    }
-                                    data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
-                                    className="bg-yellow-50 border border-yellow-500/30"
-                                    textColor="text-yellow-500"
-                                />
-                            )}
+                            <Metadata
+                                icon={IconDuoUser}
+                                title={
+                                    event.tipe_event === "ONLINE"
+                                        ? "Zoom Belum Terisi"
+                                        : "Belum Hadir"
+                                }
+                                data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
+                                className="border border-yellow-500/30 bg-yellow-50"
+                                textColor="text-yellow-500"
+                            />
+                        )}
                     </div>
 
                     {/* button" fungsional */}
                     <div className="flex flex-col gap-6 lg:gap-8">
                         {/* impor ekspor */}
-                        <div className="flex flex-col lg:flex-row gap-4 justify-between">
+                        <div className="flex flex-col justify-between gap-4 md:flex-row">
                             <div className="flex flex-col gap-2">
-                                <h2 className="font-body font-medium text-lg lg:text-2xl leading-none">
+                                <h2 className="font-body text-lg leading-none font-medium md:text-xl">
                                     Daftar Peserta
                                 </h2>
-                                <span className="font-body text-sm lg:text-base leading-4 text-neutral">
+                                <span className="font-body text-neutral text-sm leading-5 md:text-base">
                                     Kelola peserta, impor data, dan kirim
                                     informasi dalam satu area.
                                 </span>
                             </div>
 
-                            <div className="flex gap-4 justify-center">
+                            <div className="flex items-center justify-center gap-2 lg:gap-4">
                                 <ImportButton
                                     text="Impor Peserta"
                                     onClick={() => setIsImportModalOpen(true)}
@@ -240,9 +266,12 @@ export default function Event({ event, participants, stats }) {
 
                                 <Link
                                     href={route("events.edit", event.id)}
-                                    className="flex items-center justify-center rounded-lg bg-yellow-100 hover:bg-yellow-200 transition px-5 py-3 lg:px-5 lg:py-2"
+                                    className="flex h-fit items-center justify-center gap-0.5 rounded-lg bg-yellow-100 px-5 py-4.5 transition hover:bg-yellow-200 sm:gap-2 lg:h-full lg:px-5 lg:py-2"
                                 >
-                                    <IconSolarPenBoldDuotone className="w-5 h-5 text-yellow-500" />
+                                    <IconSolarPenBoldDuotone className="h-4 w-4 text-yellow-500 md:h-5 md:w-5" />
+                                    <span className="font-body hidden text-sm leading-none text-yellow-700 sm:flex lg:text-base">
+                                        Edit
+                                    </span>
                                 </Link>
                             </div>
                         </div>
@@ -284,7 +313,7 @@ export default function Event({ event, participants, stats }) {
                             </div>
                         </div>
 
-                        <div className="w-full lg:w-1/3 max-w-md ml-auto">
+                        <div className="w-full lg:w-1/3 lg:max-w-md">
                             <SearchInput
                                 id="search"
                                 name="search"
@@ -297,7 +326,7 @@ export default function Event({ event, participants, stats }) {
 
                     {/* tabel */}
                     <div className="w-full overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full border-collapse text-left">
                             <thead>
                                 <tr className="border-b border-neutral-400">
                                     <TableHead text="Nama" />
@@ -323,43 +352,55 @@ export default function Event({ event, participants, stats }) {
                                             text={participant.no_hp_normalized}
                                         />
 
-                                        <td className="p-5 font-medium font-body text-xs leading-none">
+                                        <td className="font-body p-3 text-xs leading-none font-medium lg:p-5">
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex gap-2">
                                                     <div
-                                                        className={`rounded-2xl px-2 py-1 capitalize max-w-14 max-auto ${participant.metode_kehadiran === "OFFLINE" ? "bg-lime-100 text-lime-700" : "bg-yellow-100 text-yellow-700"}`}
+                                                        className={`max-auto max-w-14 rounded-2xl px-2 py-1 capitalize ${participant.metode_kehadiran === "OFFLINE" ? "bg-lime-100 text-lime-700" : "bg-yellow-100 text-yellow-700"}`}
                                                     >
                                                         {participant.metode_kehadiran.toLowerCase()}
                                                     </div>
 
                                                     {participant.metode_kehadiran ===
                                                         "OFFLINE" && (
-                                                            <div
-                                                                className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
-                                                            >
-                                                                {participant.checked_in_at
-                                                                    ? "Sudah Hadir"
-                                                                    : "Belum Hadir"}
-                                                            </div>
-                                                        )}
+                                                        <div
+                                                            className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
+                                                        >
+                                                            {participant.checked_in_at
+                                                                ? "Sudah Hadir"
+                                                                : "Belum Hadir"}
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <CopyableText
-                                                    label={participant.metode_kehadiran === "OFFLINE" ? "QR" : "Zoom"}
-                                                    textToCopy={participant.metode_kehadiran === "OFFLINE" ? participant.qr_token : participant.zoom_link}
+                                                    label={
+                                                        participant.metode_kehadiran ===
+                                                        "OFFLINE"
+                                                            ? "QR"
+                                                            : "Zoom"
+                                                    }
+                                                    textToCopy={
+                                                        participant.metode_kehadiran ===
+                                                        "OFFLINE"
+                                                            ? participant.qr_token
+                                                            : participant.zoom_link
+                                                    }
                                                 />
                                             </div>
                                         </td>
 
                                         <td className="p-5">
                                             {participant.metode_kehadiran ===
-                                                "OFFLINE" ? (
+                                            "OFFLINE" ? (
                                                 <SendButton
                                                     onClick={() =>
                                                         setSelectedParticipantQR(
                                                             participant,
                                                         )
                                                     }
-                                                    icon={IconMaterialSymLightQrCodeRounded}
+                                                    icon={
+                                                        IconMaterialSymLightQrCodeRounded
+                                                    }
                                                     text="Kirim QR"
                                                     textClass="text-teal-500"
                                                     buttonClass="bg-teal-50"
@@ -385,8 +426,8 @@ export default function Event({ event, participants, stats }) {
                     </div>
                 </div>
 
-                <div className="mt-8 flex justify-between flex-col md:flex-row items-center gap-4">
-                    <span className="font-normal font-body text-base leading-none text-neutral whitespace-nowrap">
+                <div className="mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
+                    <span className="font-body text-neutral text-base leading-none font-normal whitespace-nowrap">
                         Menampilkan {participants.data.length} dari{" "}
                         {participants.total} data
                     </span>
