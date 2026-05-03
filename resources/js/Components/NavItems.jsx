@@ -1,10 +1,9 @@
 import { Link, usePage } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
 import Tooltip from "./Tooltip";
 
 export default function NavItems({
     page,
-    icon,
+    icon: IconComponent,
     className = "",
     text,
     rotate,
@@ -35,10 +34,8 @@ export default function NavItems({
     return (
         <Link href={page} className={linkClasses} method={logout ? "post" : "get"} 
         as={logout ? "button" : "a"}>
-            <Icon
-                icon={icon}
-                rotate={rotate}
-                className={`shrink-0 w-6 h-6 flex items-center justify-center ${className}`}
+            <IconComponent
+                className={`shrink-0 w-6 h-6 flex items-center justify-center ${className} ${rotate === 2 ? 'rotate-180' : ''}`}
             />
 
             <span className={textClass}>{text}</span>

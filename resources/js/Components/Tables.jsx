@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Icon } from "@iconify/react";
+import { IconSolarCopyBold, IconSolarCopyLineDuotone } from "@/Components/Icons";
 
 export function TableHead({ text }) {
     return (
@@ -73,10 +73,15 @@ export function CopyableText({ label, textToCopy }) {
                     title={`Copy ${label}`}
                     className="focus:outline-none hover:text-neutral-800 transition"
                 >
-                    <Icon
-                        icon={isCopied ? "solar:copy-bold" : "solar:copy-line-duotone"}
-                        className={`w-4 h-4 lg:w-5 lg:h-5 transition-colors duration-300 ${isCopied ? 'text-gray-500' : 'text-neutral'}`}
-                    />
+                    {isCopied ? (
+                        <IconSolarCopyBold 
+                            className="w-4 h-4 lg:w-5 lg:h-5 text-gray-500 transition-colors duration-300" 
+                        />
+                    ) : (
+                        <IconSolarCopyLineDuotone 
+                            className="w-4 h-4 lg:w-5 lg:h-5 text-neutral transition-colors duration-300" 
+                        />
+                    )}
                 </button>
             )}
         </span>

@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
+import { IconChevronLeft, IconChevronRight } from "@/Components/Icons";
 
 function cleanLabel(label = "") {
     return label
@@ -66,14 +66,14 @@ export default function Pagination({ links = [] }) {
                     className="flex items-center justify-center px-2 py-2 text-gray-700 hover:bg-gray-100"
                     aria-label="Previous page"
                 >
-                    <Icon icon="lucide:chevron-left" className="h-4 w-4" />
+                    <IconChevronLeft className="h-4 w-4"/>
                 </Link>
             ) : (
                 <span
                     className="flex items-center justify-center px-2 py-2 text-gray-300"
                     aria-hidden="true"
                 >
-                    <Icon icon="lucide:chevron-left" className="h-4 w-4" />
+                    <IconChevronLeft className="h-4 w-4"/>
                 </span>
             )}
 
@@ -116,14 +116,14 @@ export default function Pagination({ links = [] }) {
                     className="flex items-center justify-center px-2 py-2 text-gray-700 hover:bg-gray-100"
                     aria-label="Next page"
                 >
-                    <Icon icon="lucide:chevron-right" className="h-4 w-4" />
+                    <IconChevronRight className="h-4 w-4"/>
                 </Link>
             ) : (
                 <span
                     className="flex items-center justify-center px-2 py-2 text-gray-300"
                     aria-hidden="true"
                 >
-                    <Icon icon="lucide:chevron-right" className="h-4 w-4" />
+                    <IconChevronRight className="h-4 w-4"/>
                 </span>
             )}
         </nav>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Icon } from "@iconify/react";
+import { IconCloseCircleLinear, IconCheckCircleBold, IconSolarDangerBold } from "@/Components/Icons";
 
 export default function Toast({ message, type = "success", onClose }) {
     const [visible, setVisible] = useState(true);
@@ -18,19 +18,20 @@ export default function Toast({ message, type = "success", onClose }) {
             bg: "bg-green-50",
             border: "border-green-500",
             text: "text-green-800",
-            icon: "solar:check-circle-bold",
+            icon: IconCheckCircleBold,
             iconColor: "text-green-500",
         },
         error: {
             bg: "bg-red-50",
             border: "border-red-500",
             text: "text-red-800",
-            icon: "solar:danger-bold",
+            icon: IconSolarDangerBold,
             iconColor: "text-red-500",
         },
     };
 
     const current = config[type] || config.success;
+    const IconComponent = current.icon;
 
     return (
         <div
@@ -39,7 +40,7 @@ export default function Toast({ message, type = "success", onClose }) {
             } ${current.bg} ${current.border}`}
             role="alert"
         >
-            <Icon icon={current.icon} className={`w-6 h-6 mr-3 ${current.iconColor}`} />
+            <IconComponent className={`w-6 h-6 mr-3 ${current.iconColor} shrink-0`} />
             <div className={`text-sm font-medium ${current.text}`}>
                 {message}
             </div>
@@ -47,7 +48,7 @@ export default function Toast({ message, type = "success", onClose }) {
                 onClick={() => setVisible(false)}
                 className="ml-auto -mx-1.5 -my-1.5 p-1.5 inline-flex h-8 w-8 text-gray-500 hover:text-gray-900 focus:ring-2 focus:ring-gray-300"
             >
-                <Icon icon="solar:close-circle-linear" className="w-5 h-5" />
+                <IconCloseCircleLinear className="w-5 h-5"/>
             </button>
         </div>
     );

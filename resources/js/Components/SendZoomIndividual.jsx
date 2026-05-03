@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { Icon } from "@iconify/react";
+import { IconFluentSend24Filled } from "@/Components/Icons";
 
 export default function SendZoomIndividual({ participant, onClose }) {
     const { data, setData, post, processing, errors } = useForm({
@@ -57,7 +57,7 @@ export default function SendZoomIndividual({ participant, onClose }) {
                                 disabled={processing}
                                 className="flex items-center rounded-lg bg-blue-50 p-3 gap-2 cursor-pointer"
                             >
-                                <Icon icon="fluent:send-24-filled" width="20" height="20" className='text-blue-700' />
+                                <IconFluentSend24Filled className='w-5 h-5 text-blue-700'/>
                                 <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-blue-700">
                                     {processing ? 'Mengirim...' : 'Kirim Sekarang'}
                                 </span>

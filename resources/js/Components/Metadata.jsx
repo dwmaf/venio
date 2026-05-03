@@ -1,7 +1,5 @@
-import { Icon } from "@iconify/react";
-
 export default function Metadata({
-    icon,
+    icon: IconComponent,
     title,
     data,
     className = "",
@@ -15,10 +13,8 @@ export default function Metadata({
                 <span className="font-medium">{title}</span>
                 <span className="text-neutral">{data}</span>
             </div>
-
-            <Icon
-                icon={icon}
-                className={`${textColor} w-8 h-8 lg:w-10 lg:h-10 aspect-square`}
+            <IconComponent 
+                className={`${textColor} w-8 h-8 lg:w-10 lg:h-10 aspect-square`} 
             />
         </div>
     );

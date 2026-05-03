@@ -1,7 +1,7 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { useForm, Head, Link } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
+import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup, IconDisketteBold } from '@/Components/Icons';
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { route } from "ziggy-js";
 
@@ -113,10 +113,8 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <Icon
-                                        icon="solar:calendar-bold-duotone"
-                                        className="w-5 h-5"
-                                    />
+                                    
+                                    <IconMynauiCalender className="w-5 h-5 " />
                                 </div>
 
                                 <input
@@ -146,10 +144,7 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <Icon
-                                        icon="solar:clock-circle-bold-duotone"
-                                        className="w-5 h-5"
-                                    />
+                                    <IconClockLight className="w-5 h-5" />
                                 </div>
 
                                 <input
@@ -176,10 +171,7 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <Icon
-                                        icon="solar:clock-circle-bold-duotone"
-                                        className="w-5 h-5"
-                                    />
+                                    <IconClockLight className="w-5 h-5" />
                                 </div>
 
                                 <input
@@ -209,10 +201,7 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <Icon
-                                        icon="carbon:location"
-                                        className="w-5 h-5"
-                                    />
+                                    <IconCarbonLocation className="w-5 h-5" />
                                 </div>
 
                                 <input
@@ -240,10 +229,7 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <Icon
-                                        icon="mynaui:users-group"
-                                        className="w-5 h-5"
-                                    />
+                                    <IconUsersGroup className="w-5 h-5" />
                                 </div>
 
                                 <input
@@ -290,10 +276,7 @@ const EditEvent = ({ event }) => {
                             disabled={processing}
                             className="flex items-center gap-1.5 lg:gap-2.5 bg-blue-50 font-bold py-3 px-3 lg:px-4 rounded-xl cursor-pointer hover:bg-blue-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            <Icon
-                                icon="solar:diskette-bold-duotone"
-                                className="text-blue-700 w-4 h-4 lg:w-5 lg:h-5 aspect-square"
-                            />
+                            <IconDisketteBold className="text-blue-700 w-4 h-4 lg:w-5 lg:h-5 aspect-square" />
 
                             <span className="font-medium text-base leading-none text-blue-700">
                                 {processing ? "Menyimpan..." : "Simpan Edit"}

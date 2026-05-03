@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Icon } from "@iconify/react";
+import { IconCarbonClose } from "@/Components/Icons";
 import axios from "axios";
 
 export default function SelectOrAddTags({
@@ -87,7 +87,7 @@ export default function SelectOrAddTags({
                             onClick={() => removeTag(tag)}
                             className="hover:text-red-500 rounded-full"
                         >
-                            <Icon icon="carbon:close" />
+                            <IconCarbonClose className="w-4 h-4" />
                         </button>
                     </div>
                 ))}

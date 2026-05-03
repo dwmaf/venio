@@ -1,7 +1,7 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { useForm, Head } from "@inertiajs/react";
-import { Icon } from "@iconify/react";
+import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup, IconMaterialSymAddRounded } from '@/Components/Icons';
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 
 const AddEvents = () => {
@@ -79,14 +79,20 @@ const AddEvents = () => {
                             <label className="block text-base lg:text-xl leading-none">
                                 Tanggal
                             </label>
-                            <input
-                                type="date"
-                                className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                value={data.tanggal_event}
-                                onChange={(e) =>
-                                    setData("tanggal_event", e.target.value)
-                                }
-                            />
+                            <div className="relative flex items-center">
+                                <div className="absolute left-4 text-neutral pointer-events-none">
+
+                                    <IconMynauiCalender className="w-5 h-5 " />
+                                </div>
+                                <input
+                                    type="date"
+                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                                    value={data.tanggal_event}
+                                    onChange={(e) =>
+                                        setData("tanggal_event", e.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -96,28 +102,38 @@ const AddEvents = () => {
                             <label className="block text-base lg:text-xl leading-none">
                                 Jam Mulai
                             </label>
-                            <input
-                                type="time"
-                                className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                value={data.jam_mulai}
-                                onChange={(e) =>
-                                    setData("jam_mulai", e.target.value)
-                                }
-                            />
+                            <div className="relative flex items-center">
+                                <div className="absolute left-4 text-neutral pointer-events-none">
+                                    <IconClockLight className="w-5 h-5" />
+                                </div>
+                                <input
+                                    type="time"
+                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                                    value={data.jam_mulai}
+                                    onChange={(e) =>
+                                        setData("jam_mulai", e.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
                         {/* Jam Selesai */}
                         <div className="space-y-2">
                             <label className="block text-base lg:text-xl leading-none">
                                 Jam Selesai
                             </label>
-                            <input
-                                type="time"
-                                className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                value={data.jam_selesai}
-                                onChange={(e) =>
-                                    setData("jam_selesai", e.target.value)
-                                }
-                            />
+                            <div className="relative flex items-center">
+                                <div className="absolute left-4 text-neutral pointer-events-none">
+                                    <IconClockLight className="w-5 h-5" />
+                                </div>
+                                <input
+                                    type="time"
+                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                                    value={data.jam_selesai}
+                                    onChange={(e) =>
+                                        setData("jam_selesai", e.target.value)
+                                    }
+                                />
+                            </div>
                         </div>
                     </div>
 
@@ -125,35 +141,32 @@ const AddEvents = () => {
                         {/* Lokasi (Dinamis) */}
                         {(data.tipe_event === "OFFLINE" ||
                             data.tipe_event === "HYBRID") && (
-                            <div className="space-y-2">
-                                <label className="block text-base lg:text-xl leading-none">
-                                    Lokasi
-                                </label>
-                                <div className="relative flex items-center">
-                                    <div className="absolute left-4 text-neutral">
-                                        <Icon
-                                            icon="carbon:location"
-                                            className="w-5 h-5"
+                                <div className="space-y-2">
+                                    <label className="block text-base lg:text-xl leading-none">
+                                        Lokasi
+                                    </label>
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-4 text-neutral">
+                                            <IconCarbonLocation className="w-5 h-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                                            value={data.lokasi}
+                                            onChange={(e) =>
+                                                setData("lokasi", e.target.value)
+                                            }
+                                            placeholder="UPA PKK"
                                         />
                                     </div>
-                                    <input
-                                        type="text"
-                                        className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                        value={data.lokasi}
-                                        onChange={(e) =>
-                                            setData("lokasi", e.target.value)
-                                        }
-                                        placeholder="UPA PKK"
-                                    />
-                                </div>
 
-                                {errors.lokasi && (
-                                    <p className="text-red-500 text-xs">
-                                        {errors.lokasi}
-                                    </p>
-                                )}
-                            </div>
-                        )}
+                                    {errors.lokasi && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.lokasi}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
 
                         {/* Jumlah Peserta */}
                         <div className="space-y-2">
@@ -162,10 +175,7 @@ const AddEvents = () => {
                             </label>
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral">
-                                    <Icon
-                                        icon="mynaui:users-group"
-                                        className="w-5 h-5"
-                                    />
+                                    <IconUsersGroup className="w-5 h-5" />
                                 </div>
 
                                 <input
@@ -207,10 +217,7 @@ const AddEvents = () => {
                             disabled={processing}
                             className="flex items-center gap-1.5 lg:gap-2.5 bg-blue-50 font-bold py-3 px-3 lg:px-4 rounded-xl cursor-pointer"
                         >
-                            <Icon
-                                icon="material-symbols:add-rounded"
-                                className="text-blue-700 w-4 h-4 lg:w-5 lg:h-5 aspect-square"
-                            />
+                            <IconMaterialSymAddRounded className="text-blue-700 w-4 h-4 lg:w-5 lg:h-5 aspect-square" />
                             <span className="font-medium text-base leading-none text-blue-700">
                                 {processing ? "Menyimpan..." : "Tambah Event"}
                             </span>
