@@ -54,7 +54,7 @@ export default function AdminLayout({ children, title }) {
         },
         {
             icon: IconFluentMailUnread20Filled,
-            page: "#",
+            page: "/mail-logs",
             text: "Mail Logs",
         },
     ];
@@ -179,7 +179,7 @@ export default function AdminLayout({ children, title }) {
                             </span>
                         </Link>
                         <Link
-                            href="/all-events"
+                            href="/mail-logs"
                             className="flex items-center space-x-2 p-2"
                         >
                             <IconFluentMailUnread20Filled className="text-default h-6 w-6 shrink-0" />

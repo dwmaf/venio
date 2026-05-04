@@ -11,6 +11,7 @@ class Participant extends Model
     use HasFactory;
 
     protected $fillable = [
+        'event_id',
         'form_timestamp',
         'email_address_raw',
         'email_active_raw',
