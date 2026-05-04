@@ -106,5 +106,42 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        // --- BUAT 1 EVENT HYBRID KHUSUS UNTUK TESTING BULK EMAIL ---
+        $specialEvent = Event::create([
+            'nama_event' => 'Bulk Email Test Event (Hybrid)',
+            'lokasi' => 'Ruang Testing Hybrid',
+            'tanggal_event' => now()->addDays(2)->format('Y-m-d'), // Upcoming
+            'jam_mulai' => '08:00:00',
+            'jam_selesai' => '12:00:00',
+            'tipe_event' => 'HYBRID',
+        ]);
+
+        $testEmails = [
+            'dinnereatc@gmail.com',
+            'syariffullah0911@gmail.com',
+            'd1041231018@student.untan.ac.id',
+            'rayhannuerjamman@icloud.com',
+            'dawamaf11ipa2@gmail.com',
+            'd1041211005@student.untan.ac.id'
+        ];
+
+        $daftarProfesi = ['Mahasiswa', 'Dosen/Guru', 'Aparatur Sipil Negara (ASN)', 'Karyawan Swasta', 'Wirausaha', 'Pelajar', 'Umum'];
+
+        foreach ($testEmails as $email) {
+            $metode = $faker->randomElement(['OFFLINE', 'ONLINE']);
+            $nama = $faker->name();
+            
+            Participant::create([
+                'event_id' => $specialEvent->id,
+                'email_primary' => $email,
+                'nama_lengkap' => $nama,
+                'no_hp_normalized' => '628' . $faker->numerify('##########'),
+                'kategori_peserta' => $faker->randomElement($daftarProfesi),
+                'metode_kehadiran' => $metode,
+                'checked_in_at' => null,
+                'dedupe_key_hash' => hash('sha256', strtolower($nama) . '|' . $email . '|' . $metode . '|' . $specialEvent->id),
+            ]);
+        }
     }
 }

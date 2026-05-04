@@ -12,6 +12,7 @@ class ParticipantImportController extends Controller
 {
     public function store(Request $request)
     {
+        // dd($request);
         $request->validate([
             'csv_file' => ['required', 'file', 'mimes:csv,txt', 'max:10240'],
             'event_id' => ['required', 'exists:events,id'],
@@ -21,7 +22,7 @@ class ParticipantImportController extends Controller
         $handle = fopen($request->file('csv_file')->getRealPath(), 'r');
 
         if (! $handle) {
-            return redirect()->route('inertia.dasbor')->with('error', 'Gagal membaca file CSV.');
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal membaca file CSV.');
         }
 
         try {
@@ -29,14 +30,14 @@ class ParticipantImportController extends Controller
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('inertia.dasbor')->with('error', 'Import gagal: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Import gagal: '.$exception->getMessage());
         }
 
         fclose($handle);
 
         $message = "Import selesai. Baru: {$inserted}, Diperbarui: {$updated}, Dilewati: {$skipped}.";
 
-        return redirect()->route('inertia.dasbor')->with('success', $message);
+        return redirect()->route('events.index', $eventId)->with('success', $message);
     }
 
     public function storeFromSheet(Request $request)
@@ -50,7 +51,7 @@ class ParticipantImportController extends Controller
         $eventId = $validated['event_id'];
 
         if ($sourceUrl === '') {
-            return redirect()->route('inertia.dasbor')->with('error', 'Link Google Spreadsheet belum diisi.');
+            return redirect()->route('events.index', $eventId)->with('error', 'Link Google Spreadsheet belum diisi.');
         }
 
         $csvUrl = $this->buildCsvUrl($sourceUrl);
@@ -58,22 +59,22 @@ class ParticipantImportController extends Controller
         try {
             $response = Http::timeout((int) config('services.google_sheet.timeout', 20))->get($csvUrl);
         } catch (\Throwable $exception) {
-            return redirect()->route('inertia.dasbor')->with('error', 'Gagal mengambil data spreadsheet: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil data spreadsheet: '.$exception->getMessage());
         }
 
         if (! $response->successful()) {
-            return redirect()->route('inertia.dasbor')->with('error', 'Gagal mengambil spreadsheet. Status HTTP: '.$response->status());
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil spreadsheet. Status HTTP: '.$response->status());
         }
 
         $content = $response->body();
         if (trim($content) === '') {
-            return redirect()->route('inertia.dasbor')->with('error', 'Spreadsheet kosong atau tidak dapat dibaca sebagai CSV.');
+            return redirect()->route('events.index', $eventId)->with('error', 'Spreadsheet kosong atau tidak dapat dibaca sebagai CSV.');
         }
 
         $handle = fopen('php://temp', 'r+');
 
         if (! $handle) {
-            return redirect()->route('inertia.dasbor')->with('error', 'Gagal menyiapkan parser CSV untuk spreadsheet.');
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal menyiapkan parser CSV untuk spreadsheet.');
         }
 
         fwrite($handle, $content);
@@ -84,19 +85,37 @@ class ParticipantImportController extends Controller
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('inertia.dasbor')->with('error', 'Import dari spreadsheet gagal: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Import dari spreadsheet gagal: '.$exception->getMessage());
         }
 
         fclose($handle);
 
         $message = "Import spreadsheet selesai. Baru: {$inserted}, Diperbarui: {$updated}, Dilewati: {$skipped}.";
 
-        return redirect()->route('inertia.dasbor')->with('success', $message);
+        return redirect()->route('events.index', $eventId)->with('success', $message);
     }
 
     private function importFromHandle($handle, $eventId): array
     {
-        $headers = $this->readCsvRow($handle);
+        // Deteksi pemisah (delimiter) CSV secara otomatis
+        $firstLine = fgets($handle);
+        if ($firstLine === false) {
+            throw new \RuntimeException('File CSV kosong.');
+        }
+        rewind($handle);
+
+        $delimiter = ',';
+        $commaCount = substr_count($firstLine, ',');
+        $semicolonCount = substr_count($firstLine, ';');
+        $tabCount = substr_count($firstLine, "\t");
+
+        if ($semicolonCount > $commaCount && $semicolonCount > $tabCount) {
+            $delimiter = ';';
+        } elseif ($tabCount > $commaCount && $tabCount > $semicolonCount) {
+            $delimiter = "\t";
+        }
+
+        $headers = $this->readCsvRow($handle, $delimiter);
 
         if ($headers === false) {
             throw new \RuntimeException('Header CSV tidak ditemukan.');
@@ -107,8 +126,9 @@ class ParticipantImportController extends Controller
         $inserted = 0;
         $updated = 0;
         $skipped = 0;
-
-        while (($row = $this->readCsvRow($handle)) !== false) {
+        
+        
+        while (($row = $this->readCsvRow($handle, $delimiter)) !== false) {
             $rowData = [];
             foreach ($normalizedHeaders as $index => $normalizedHeader) {
                 $rowData[$normalizedHeader] = $row[$index] ?? null;
@@ -135,9 +155,9 @@ class ParticipantImportController extends Controller
         return [$inserted, $updated, $skipped];
     }
 
-    private function readCsvRow($handle): array|false
+    private function readCsvRow($handle, $delimiter = ','): array|false
     {
-        return fgetcsv($handle, 0, ',', '"', '\\');
+        return fgetcsv($handle, 0, $delimiter, '"', '\\');
     }
 
     private function buildCsvUrl(string $sourceUrl): string
@@ -170,6 +190,12 @@ class ParticipantImportController extends Controller
         $noHpRaw = trim((string) $this->value($row, ['no hp - whatsapp aktif']));
         $noHpNormalized = $this->normalizePhone($noHpRaw);
 
+        $metodeRaw = Str::lower(trim((string) $this->value($row, ['metode kehadiran'])));
+        $metodeKehadiran = 'OFFLINE'; // default
+        if (Str::contains($metodeRaw, 'online')) {
+            $metodeKehadiran = 'ONLINE';
+        }
+
         $consentRaw = Str::lower(trim((string) $this->value($row, ['saya menyatakan data yang diisi sudah benar'])));
         $persetujuanData = Str::contains($consentRaw, 'ya');
 
@@ -190,6 +216,7 @@ class ParticipantImportController extends Controller
             'instansi' => $this->nullableTrim($this->value($row, ['instansi / tempat kerja'])),
             'alamat_instansi' => $this->nullableTrim($this->value($row, ['alamat instansi'])),
             'kategori_biaya' => $this->nullableTrim($this->value($row, ['kategori biaya'])),
+            'metode_kehadiran' => $metodeKehadiran,
             'payment_proof_url' => $this->nullableTrim($this->value($row, ['upload bukti pembayaran'])),
             'persetujuan_data' => $persetujuanData,
             'zoom_link' => null,

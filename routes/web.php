@@ -9,6 +9,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\ParticipantImportController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\PartnerController;
+use App\Http\Controllers\MailLogController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => Auth::check() ? redirect()->route('dashboard') : redirect()->route('login'));
@@ -40,6 +41,7 @@ Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+	Route::get('/mail-logs', [MailLogController::class, 'index'])->name('mail.logs');
 
 	Route::post('/peserta/import', [ParticipantImportController::class, 'store'])->name('peserta.import');
 	Route::post('/peserta/import-sheet', [ParticipantImportController::class, 'storeFromSheet'])->name('peserta.import-sheet');
