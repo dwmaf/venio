@@ -24,8 +24,18 @@ export default function SendQRIndividual({ participant, onClose }) {
                 </div>
                 
                 <div className="p-6 space-y-6">
-                    <p className="text-sm font-['Plus_Jakarta_Sans'] leading-none font-normal">
-                        Kirim QR ke email <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                    <p className="text-sm font-['Plus_Jakarta_Sans'] leading-normal font-normal">
+                        {participant.qr_sent_at ? (
+                            <>
+                                Email QR sudah pernah dikirim pada <span className="font-bold">{new Date(participant.qr_sent_at).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</span>.
+                                <br />
+                                Anda yakin untuk <span className="font-bold text-blue-700">mengirim ulang</span> email QR ke <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                            </>
+                        ) : (
+                            <>
+                                Kirim QR ke email <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                            </>
+                        )}
                     </p>
                     
                     <form onSubmit={submit}>
@@ -44,7 +54,7 @@ export default function SendQRIndividual({ participant, onClose }) {
                             >
                                 <IconFluentSend24Filled className='w-5 h-5 text-blue-700'/>
                                 <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-blue-700">
-                                {processing ? 'Mengirim...' : 'Kirim Sekarang'}
+                                {processing ? 'Mengirim...' : (participant.qr_sent_at ? 'Kirim Ulang Sekarang' : 'Kirim Sekarang')}
                                 </span>
                             </button>
                         </div>

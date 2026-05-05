@@ -1,10 +1,19 @@
 import { useForm } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { IconFluentSend24Filled } from "@/Components/Icons";
 
 export default function SendZoomIndividual({ participant, onClose }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         zoom_link: '',
     });
+
+    useEffect(() => {
+        if (participant) {
+            setData('zoom_link', participant.zoom_link || '');
+        } else {
+            reset();
+        }
+    }, [participant]);
 
     if (!participant) return null;
 
@@ -27,8 +36,18 @@ export default function SendZoomIndividual({ participant, onClose }) {
                 </div>
 
                 <div className="p-6 space-y-6">
-                    <p className="text-sm font-['Plus_Jakarta_Sans'] leading-none font-normal">
-                        Kirim Link Zoom ke email <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                    <p className="text-sm font-['Plus_Jakarta_Sans'] leading-normal font-normal">
+                        {participant.zoom_sent_at ? (
+                            <>
+                                Email Link Zoom sudah pernah dikirim pada <span className="font-bold">{new Date(participant.zoom_sent_at).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' })}</span>.
+                                <br />
+                                Anda yakin untuk <span className="font-bold text-blue-700">mengirim ulang</span> Link Zoom ke <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                            </>
+                        ) : (
+                            <>
+                                Kirim Link Zoom ke email <span className="font-bold ">{participant.email_primary}</span> atas nama <span className="font-bold ">{participant.nama_lengkap}</span>?
+                            </>
+                        )}
                     </p>
 
                     <form onSubmit={submit}>
@@ -59,7 +78,7 @@ export default function SendZoomIndividual({ participant, onClose }) {
                             >
                                 <IconFluentSend24Filled className='w-5 h-5 text-blue-700'/>
                                 <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-blue-700">
-                                    {processing ? 'Mengirim...' : 'Kirim Sekarang'}
+                                    {processing ? 'Mengirim...' : (participant.zoom_sent_at ? 'Kirim Ulang Sekarang' : 'Kirim Sekarang')}
                                 </span>
                             </button>
                         </div>

@@ -33,6 +33,7 @@ class SendEmailController extends Controller
             return redirect()->route('events.index', $participant->event->id)->with('error', 'Peserta ini belum memiliki email utama yang valid.');
         }
 
+        $alreadySent = !is_null($participant->qr_sent_at);
         $actor = $this->actorName();
 
         try {
@@ -44,7 +45,8 @@ class SendEmailController extends Controller
             return redirect()->route('events.index', $participant->event->id)->with('error', $this->buildMailErrorMessage($exception, 'QR'));
         }
 
-        return redirect()->route('events.index', $participant->event->id)->with('success', "Email QR dikirim ke {$participant->nama_lengkap}. (Limit tersisa: {$remaining}/1024 hari ini).");
+        $statusMsg = $alreadySent ? "dikirim ulang" : "dikirim";
+        return redirect()->route('events.index', $participant->event->id)->with('success', "Email QR {$statusMsg} ke {$participant->nama_lengkap}. (Limit tersisa: {$remaining}/1024 hari ini).");
     }
 
     public function sendQrBulk(Request $request, Event $event)
@@ -54,15 +56,26 @@ class SendEmailController extends Controller
                 ->with('error', 'Gagal memproses bulk. Limit harian email (1024) sudah habis.');
         }
 
+        $request->validate([
+            'resend_all' => 'nullable|boolean'
+        ]);
+
+        $resendAll = filter_var($request->input('resend_all', false), FILTER_VALIDATE_BOOLEAN);
+
         $actor = $this->actorName();
         $total = 0;
         $sent = 0;
         $failed = 0;
         $skipped = 0;
 
-        Participant::where('event_id', $event->id)
-            ->where('metode_kehadiran', 'OFFLINE')
-            ->orderBy('id')
+        $query = Participant::where('event_id', $event->id)
+            ->where('metode_kehadiran', 'OFFLINE');
+
+        if (!$resendAll) {
+            $query->whereNull('qr_sent_at');
+        }
+
+        $query->orderBy('id')
             ->chunkById(100, function ($participants) use (&$total, &$sent, &$failed, &$skipped, $actor): void {
                 $delay = 0;
                 foreach ($participants as $participant) {
@@ -151,6 +164,7 @@ class SendEmailController extends Controller
             'zoom_link' => $zoomLink
         ]);
 
+        $alreadySent = !is_null($participant->zoom_sent_at);
         $actor = $this->actorName();
 
         try {
@@ -162,7 +176,8 @@ class SendEmailController extends Controller
             return redirect()->route('events.index', $participant->event_id)->with('error', $this->buildMailErrorMessage($exception, 'Zoom'));
         }
 
-        return redirect()->route('events.index', $participant->event->id)->with('success', "Email Link Zoom dikirim ke {$participant->nama_lengkap}. (Limit tersisa: {$remaining}/1024 hari ini).");
+        $statusMsg = $alreadySent ? "dikirim ulang" : "dikirim";
+        return redirect()->route('events.index', $participant->event->id)->with('success', "Email Link Zoom {$statusMsg} ke {$participant->nama_lengkap}. (Limit tersisa: {$remaining}/1024 hari ini).");
     }
 
     public function sendZoomBulk(Request $request, Event $event)
@@ -173,19 +188,27 @@ class SendEmailController extends Controller
         }
 
         $request->validate([
-            'zoom_link' => 'required|url'
+            'zoom_link' => 'required|url',
+            'resend_all' => 'nullable|boolean'
         ]);
 
         $zoomLink = $request->input('zoom_link');
+        $resendAll = filter_var($request->input('resend_all', false), FILTER_VALIDATE_BOOLEAN);
+
         $actor = $this->actorName();
         $total = 0;
         $sent = 0;
         $failed = 0;
         $skipped = 0;
 
-        Participant::where('event_id', $event->id)
-            ->where('metode_kehadiran', 'ONLINE')
-            ->orderBy('id')
+        $query = Participant::where('event_id', $event->id)
+            ->where('metode_kehadiran', 'ONLINE');
+
+        if (!$resendAll) {
+            $query->whereNull('zoom_sent_at');
+        }
+
+        $query->orderBy('id')
             ->chunkById(100, function ($participants) use (&$total, &$sent, &$failed, &$skipped, $actor, $zoomLink): void {
                 $delay = 0;
                 foreach ($participants as $participant) {

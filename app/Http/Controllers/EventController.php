@@ -220,6 +220,17 @@ class EventController extends Controller
             ->where('metode_kehadiran', 'ONLINE')
             ->whereNotNull('zoom_link')
             ->count();
+
+        $offlineQrSent = $event->participants()
+            ->where('metode_kehadiran', 'OFFLINE')
+            ->whereNotNull('qr_sent_at')
+            ->count();
+
+        $onlineZoomSent = $event->participants()
+            ->where('metode_kehadiran', 'ONLINE')
+            ->whereNotNull('zoom_sent_at')
+            ->count();
+
         $stats = [
             'total' => $totalCount,
             'checked_in' => $checkedInCount,
@@ -230,6 +241,8 @@ class EventController extends Controller
             'offline_not_checked_in' => max(0, $offlineCount - $offlineCheckedIn),
             'online_zoom_filled' => $onlineZoomFilled,
             'online_zoom_empty' => max(0, $onlineCount - $onlineZoomFilled),
+            'offline_qr_sent' => $offlineQrSent,
+            'online_zoom_sent' => $onlineZoomSent,
         ];
 
         return Inertia::render('Events/DetailEvent', [
