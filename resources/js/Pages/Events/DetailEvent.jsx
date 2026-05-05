@@ -450,6 +450,7 @@ export default function Event({ event, participants, stats }) {
                 onClose={() => setIsSendQRBulkOpen(false)}
                 eventId={event.id}
                 offline={stats.offline}
+                sentCount={stats.offline_qr_sent}
             />
 
             <SendZoomBulk
@@ -457,6 +458,7 @@ export default function Event({ event, participants, stats }) {
                 onClose={() => setIsSendZoomBulkOpen(false)}
                 eventId={event.id}
                 online={stats.online}
+                sentCount={stats.online_zoom_sent}
             />
 
             <ImportPeserta
