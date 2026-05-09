@@ -59,7 +59,7 @@ export default function Pagination({ links = [] }) {
     });
 
     return (
-        <nav className="inline-flex items-stretch overflow-hidden rounded-lg border border-gray-300 divide-x-2 divide-gray-300">
+        <nav className="inline-flex items-stretch overflow-hidden rounded-lg border border-gray-300 divide-x-2 divide-gray-300 w-fit ">
             {prevLink?.url ? (
                 <Link
                     href={prevLink.url}

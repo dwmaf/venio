@@ -111,7 +111,7 @@ export default function Event({ event, participants, stats }) {
                 <Breadcrumb items={breadcrumbs} />
 
                 <div className="flex flex-col gap-6">
-                    <div className="flex justify-between gap-3">
+                    <div className="flex justify-between gap-3 flex-wrap items-start">
                         <div className="flex items-center gap-3">
                             <h2 className="font-body text-base leading-7 font-medium sm:text-2xl">
                                 {event.nama_event}
@@ -131,14 +131,16 @@ export default function Event({ event, participants, stats }) {
                         </div>
 
                         {event.tipe_event !== "ONLINE" && (
-                            <RouteButton
-                                text="Scan QR"
-                                href={route("datang.index", event.id)}
-                            />
+                            <div className="ml-auto sm:ml-0">
+                                <RouteButton
+                                    text="Scan QR"
+                                    href={route("datang.index", event.id)}
+                                />
+                            </div>
                         )}
                     </div>
 
-                    <div className={`flex gap-2 sm:gap-4`}>
+                    <div className={`flex flex-wrap gap-x-2 gap-y-2 sm:gap-4`}>
                         <div className="flex items-center gap-1 sm:gap-2">
                             <IconDuoCalendar className="text-neutral h-4 w-4 lg:h-6 lg:w-6" />
                             <span className="text-neutral text-xs leading-none sm:text-base lg:mt-0">
@@ -242,7 +244,7 @@ export default function Event({ event, participants, stats }) {
                     {/* button" fungsional */}
                     <div className="flex flex-col gap-6 lg:gap-8">
                         {/* impor ekspor */}
-                        <div className="flex flex-col justify-between gap-4 md:flex-row">
+                        <div className="flex flex-col justify-between gap-4 md:flex-row items-start">
                             <div className="flex flex-col gap-2">
                                 <h2 className="font-body text-lg leading-none font-medium md:text-xl">
                                     Daftar Peserta
@@ -253,7 +255,7 @@ export default function Event({ event, participants, stats }) {
                                 </span>
                             </div>
 
-                            <div className="flex items-center justify-center gap-2 lg:gap-4">
+                            <div className="flex flex-wrap md:flex-nowrap items-start md:justify-center gap-2 lg:gap-4 h-fit">
                                 <ImportButton
                                     text="Impor Peserta"
                                     onClick={() => setIsImportModalOpen(true)}
@@ -266,9 +268,9 @@ export default function Event({ event, participants, stats }) {
 
                                 <Link
                                     href={route("events.edit", event.id)}
-                                    className="flex h-fit items-center justify-center gap-0.5 rounded-lg bg-yellow-100 px-5 py-4.5 transition hover:bg-yellow-200 sm:gap-2 lg:h-full lg:px-5 lg:py-2"
+                                    className="flex h-fit items-center justify-center gap-0.5 rounded-lg bg-yellow-100 p-3 transition hover:bg-yellow-200 sm:gap-2 lg:h-full "
                                 >
-                                    <IconSolarPenBoldDuotone className="h-4 w-4 text-yellow-500 md:h-5 md:w-5" />
+                                    <IconSolarPenBoldDuotone className="text-yellow-500 h-5 w-5" />
                                     <span className="font-body hidden text-sm leading-none text-yellow-700 sm:flex lg:text-base">
                                         Edit
                                     </span>
@@ -277,14 +279,13 @@ export default function Event({ event, participants, stats }) {
                         </div>
 
                         {/* zoom, QR, rekap */}
-                        <div className="flex justify-between">
+                        <div className="flex justify-between flex-wrap items-center gap-4">
                             <FilterDropdownButton
                                 tipeEvent={event.tipe_event}
                                 activeFilter={activeFilter}
                                 onFilter={handleFilter}
                             />
-
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2">
                                 {event.tipe_event !== "OFFLINE" && (
                                     <ActionButton
                                         onClick={() =>
@@ -294,7 +295,6 @@ export default function Event({ event, participants, stats }) {
                                         label="Zoom Bulk"
                                     />
                                 )}
-
                                 {event.tipe_event !== "ONLINE" && (
                                     <ActionButton
                                         onClick={() =>
@@ -304,7 +304,6 @@ export default function Event({ event, participants, stats }) {
                                         label="QR Bulk"
                                     />
                                 )}
-
                                 <ActionButton
                                     href={route("ekspor.recap", event.id)}
                                     icon={IconBasilDocOutline}
