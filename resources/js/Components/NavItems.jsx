@@ -25,17 +25,23 @@ export default function NavItems({
         ? "hover:bg-red-50 hover:text-red-700 w-full"
         : "hover:bg-blue-50 hover:text-blue-700";
 
-    const linkClasses = `${baseClass} ${layoutClass} ${stateClass} ${hoverClass}`;
+    const activeClass = "active:scale-85 transition-transform duration-250";
+
+    const linkClasses = `${baseClass} ${layoutClass} ${stateClass} ${hoverClass} ${activeClass}`;
 
     const textClass = `text-lg leading-none font-body whitespace-nowrap ${
         isActive && !logout ? "font-medium" : ""
     } ${!isSidebarOpen ? "hidden" : ""}`;
 
     return (
-        <Link href={page} className={linkClasses} method={logout ? "post" : "get"} 
-        as={logout ? "button" : "a"}>
+        <Link
+            href={page}
+            className={linkClasses}
+            method={logout ? "post" : "get"}
+            as={logout ? "button" : "a"}
+        >
             <IconComponent
-                className={`shrink-0 w-6 h-6 flex items-center justify-center ${className} ${rotate === 2 ? 'rotate-180' : ''}`}
+                className={`flex h-6 w-6 shrink-0 items-center justify-center ${className} ${rotate === 2 ? "rotate-180" : ""}`}
             />
 
             <span className={textClass}>{text}</span>
