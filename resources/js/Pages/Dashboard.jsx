@@ -208,7 +208,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         <NoEvent inner={true} />
                     ) : (
                         upcomingEvents.map((event) => (
-                            <div className="flex items-center justify-between">
+                            <div key={event.id} className="flex items-center justify-between">
                                 <EventCard
                                     name={event.nama_event}
                                     date={event.tanggal_event}

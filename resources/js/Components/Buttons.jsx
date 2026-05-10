@@ -34,8 +34,8 @@ export function ImportButton({ text, onClick }) {
             onClick={onClick}
             className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 sm:gap-2 lg:h-full"
         >
-            <IconMingcuteFileImportFill className="h-5 w-5 text-blue-700" />
-            <span className="font-body text-sm leading-none text-blue-700 lg:text-base">
+            <IconMingcuteFileImportFill className="h-5 w-5 text-blue-700 shrink-0" />
+            <span className="font-body text-sm leading-none text-blue-700 lg:text-base whitespace-nowrap">
                 {text}
             </span>
         </button>
@@ -48,8 +48,8 @@ export function WAButton({ text, href }) {
             href={href}
             className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-lime-100 p-3 hover:bg-lime-200 active:bg-lime-300 sm:gap-2 lg:h-full"
         >
-            <IconRiWhatsappFill className="h-5 w-5 text-lime-700" />
-            <span className="font-body text-center text-sm leading-none text-lime-700 lg:text-base">
+            <IconRiWhatsappFill className="h-5 w-5 text-lime-700 shrink-0" />
+            <span className="font-body text-center text-sm leading-none text-lime-700 lg:text-base whitespace-nowrap">
                 {text}
             </span>
         </a>

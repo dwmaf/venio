@@ -103,15 +103,16 @@ export default function PastEvents({ pastEvents, filters }) {
                             </table>
                         )}
 
-                        {shownCount > 0 && (
-                            <div className="mt-6 lg:mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                                <span className="font-normal font-body text-sm lg:text-base leading-none text-gray-500">
-                                    Menampilkan {shownCount} dari {pastEvents.total} data
-                                </span>
-                                <Pagination links={pastEvents.links} />
-                            </div>
-                        )}
+
                     </div>
+                    {shownCount > 0 && (
+                        <div className="mt-6 lg:mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                            <span className="font-normal font-body text-sm lg:text-base leading-none text-gray-500">
+                                Menampilkan {shownCount} dari {pastEvents.total} data
+                            </span>
+                            <Pagination links={pastEvents.links} />
+                        </div>
+                    )}
                 </div>
             </div>
         </AdminLayout>
