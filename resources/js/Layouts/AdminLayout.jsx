@@ -93,8 +93,12 @@ export default function AdminLayout({ children, title }) {
                             Venio
                         </span>
                     </button>
+
                     {isSidebarOpen && (
-                        <button onClick={() => setIsSidebarOpen(false)}>
+                        <button
+                            onClick={() => setIsSidebarOpen(false)}
+                            className="cursor-pointer rounded-lg p-2 transition-all duration-300 ease-in-out hover:bg-gray-50"
+                        >
                             <IconSidebarMinimalisticLinear className="text-default h-6 w-6 cursor-pointer" />
                         </button>
                     )}
@@ -134,6 +138,7 @@ export default function AdminLayout({ children, title }) {
                             alt="Logo"
                             className="h-10 w-10 object-contain"
                         />
+
                         <button
                             onClick={() => setIsHamMenuOpen(!isHamMenuOpen)}
                         >
