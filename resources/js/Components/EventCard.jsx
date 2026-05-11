@@ -45,7 +45,7 @@ export function EventCard({
                         {name}
                     </span>
 
-                    <div className={`flex ${col && "flex-col"} gap-2 lg:gap-4`}>
+                    <div className={`flex ${col ? "flex-col" : "flex-col sm:flex-row sm:flex-wrap"} gap-2 lg:gap-4`}>
                         <div className="flex items-center gap-1 lg:gap-2">
                             <IconDuoCalendar className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" />
                             <span className="text-default mt-1 text-sm leading-none lg:mt-0 lg:text-base">

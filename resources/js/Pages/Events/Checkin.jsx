@@ -130,26 +130,25 @@ export default function Checkin({ event }) {
                 <Head title={`Scan Page - ${event.nama_event}`} />
                 <Breadcrumb items={breadcrumbs} />
 
-                <h2 className="font-['Plus_Jakarta_Sans'] font-medium text-2xl leading-none">{event.nama_event}</h2>
+                <h2 className="font-['Plus_Jakarta_Sans'] font-medium text-base sm:text-2xl leading-none">{event.nama_event}</h2>
 
-                <div className="flex gap-8">
+                <div className="flex flex-wrap gap-x-2 gap-y-2 sm:gap-4">
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoCalendar className='w-6 h-6 text-neutral'/>
-                        
-                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatTanggalSlash(event.tanggal_event)}</span>
+                        <IconDuoCalendar className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{formatTanggalSlash(event.tanggal_event)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoClock className='w-6 h-6 text-neutral'/>
-                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
+                        <IconDuoClock className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoLocation className='w-6 h-6 text-neutral'/>
-                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">{event.lokasi}</span>
+                        <IconDuoLocation className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{event.lokasi}</span>
                     </div>
                     {event.partners && event.partners.length > 0 && (
                         <div className="flex gap-2.5 items-center">
-                            <IconPepHandshakePrint className='w-6 h-6 text-neutral'/>
-                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">
+                            <IconPepHandshakePrint className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">
                                 {event.partners.map(partner => partner.nama).join(', ')}
                             </span>
                         </div>
@@ -158,8 +157,8 @@ export default function Checkin({ event }) {
                 <div className="flex flex-col gap-12">
                     <div className="flex justify-between">
                         <div className="flex flex-col gap-2">
-                            <h2 className="font-['Poppins'] font-medium text-2xl leading-none">Scanner QR Check-in Offline</h2>
-                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">Arahkan kamera ke QR peserta atau gunakan input token manual jika kamera tidak tersedia.</span>
+                            <h2 className="font-['Poppins'] font-medium text-xl md:text-2xl leading-none">Scanner QR Check-in Offline</h2>
+                            <span className="font-['Plus_Jakarta_Sans'] font-normal text-sm md:text-base leading-none text-neutral">Arahkan kamera ke QR peserta atau gunakan input token manual jika kamera tidak tersedia.</span>
                         </div>
                         {/* status kamera */}
                         {statusTone !== 'error' && (
@@ -173,9 +172,10 @@ export default function Checkin({ event }) {
                         )}
 
                     </div>
-                    <div className="flex gap-12 lg:pr-12 lg:pl-8">
+                    
+                    <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 lg:pr-12 lg:pl-8">
                         {/* kamera */}
-                        <div className="w-full relative flex items-center justify-center bg-gray-100 min-h-75 overflow-hidden">
+                        <div className="w-full relative flex items-center justify-center bg-gray-100 min-h-75 overflow-hidden lg:w-2/3 aspect-square sm:aspect-video lg:aspect-auto">
                             {(statusTone === 'loading' || statusTone === 'error') && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-2 p-4">
                                     <IconPhCameraSlashDuotone className='w-12.5 h-12.5 text-neutral'/>
@@ -192,7 +192,7 @@ export default function Checkin({ event }) {
                             ></div>
                         </div>
                         {/* bagian kanan */}
-                        <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-4 w-full lg:w-1/3">
                             {/* panduan */}
                             <div className="flex flex-col border border-neutral/30 rounded-xl p-4 gap-3">
                                 <span className="font-['Plus_Jakarta_Sans'] font-medium text-xl leading-none">Panduan Cepat</span>
