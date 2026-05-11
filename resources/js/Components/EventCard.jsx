@@ -10,7 +10,7 @@ import { Link } from "@inertiajs/react";
 export function NoEvent({ inner = false }) {
     return (
         <div
-            className={`font-heading text-neutral flex min-h-42.5 max-w-screen flex-col items-center justify-center gap-8 text-xl leading-none font-medium md:flex-1 lg:min-h-56 lg:text-2xl ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
+            className={`font-heading text-neutral flex max-w-screen flex-col items-center justify-center gap-8 text-xl leading-none font-medium md:flex-1 lg:text-2xl ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
         >
             <span>No Event!</span>
         </div>
@@ -35,7 +35,7 @@ export function EventCard({
         <Component
             href={href}
             key={id}
-            className={`flex flex-col ${col && "flex-1"} font-body text-neutral snap-center justify-between gap-6 text-base ${snap && "min-h-42 min-w-75.75 snap-center lg:min-w-100"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
+            className={`flex flex-col ${col && "flex-1"} font-body text-neutral snap-center justify-between gap-6 text-base ${snap && "min-h-42 w-full min-w-75.75 snap-center lg:min-w-100"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
         >
             <div className="text-default flex h-full items-center gap-4">
                 <IconDuoAward className="h-8 w-8 shrink-0" />
