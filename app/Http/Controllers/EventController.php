@@ -101,18 +101,18 @@ class EventController extends Controller
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
             ->orderBy('jam_mulai', 'asc')
-            ->limit(2)
+            ->limit(3)
             ->get();
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
             ->orderBy('tanggal_event', 'asc')
-            ->limit(2)
+            ->limit(3)
             ->get();
 
         $pastEvents = Event::where('tanggal_event', '<', $today)
             ->orderBy('tanggal_event', 'desc')
-            ->limit(2)
+            ->limit(3)
             ->get();
 
         // Ubah dari view() menjadi Inertia::render()

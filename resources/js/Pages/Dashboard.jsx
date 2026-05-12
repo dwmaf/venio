@@ -138,7 +138,9 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                 {ongoingEvents.map((event, index) => (
                                     <div
                                         // Tambahkan ref untuk setiap slide
-                                        ref={(el) => (slideRefs.current[index] = el)}
+                                        ref={(el) =>
+                                            (slideRefs.current[index] = el)
+                                        }
                                         key={event.id}
                                         className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0"
                                     >
@@ -147,7 +149,10 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route("events.index", event.id)}
+                                            href={route(
+                                                "events.index",
+                                                event.id,
+                                            )}
                                             location={event.lokasi}
                                             snap={true}
                                         />
@@ -155,11 +160,14 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                 ))}
 
                                 {/* jika ongoingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
-                                {ongoingEvents.length > 0 && ongoingEvents.length < 3 &&
-                                    Array.from({ length: 3 - ongoingEvents.length }).map((_, i) => (
+                                {ongoingEvents.length > 0 &&
+                                    ongoingEvents.length < 3 &&
+                                    Array.from({
+                                        length: 3 - ongoingEvents.length,
+                                    }).map((_, i) => (
                                         <div
                                             key={`no-event-${i}`}
-                                            className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0"
+                                            className="border-default/30 w-full shrink-0 snap-center rounded-2xl border md:w-120 lg:w-1/3 lg:min-w-0"
                                         >
                                             <NoEvent inner={true} />
                                         </div>
@@ -202,29 +210,34 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                             </div>
                         </div>
                     </div>
+
                     {upcomingEvents.length === 0 ? (
                         <NoEvent inner={true} />
                     ) : (
                         upcomingEvents.map((event, index) => (
-                            <div
-                                key={event.id}
-                                className="flex items-center justify-between"
-                            >
-                                <EventCard
-                                    key={index}
-                                    name={event.nama_event}
-                                    date={event.tanggal_event}
-                                    timeStart={event.jam_mulai}
-                                    timeEnd={event.jam_selesai}
-                                    location={event.lokasi}
-                                    inner={true}
-                                    col={isMobile}
-                                />
+                            <>
+                                <div
+                                    key={event.id}
+                                    className="flex items-center justify-between"
+                                >
+                                    <EventCard
+                                        key={index}
+                                        name={event.nama_event}
+                                        date={event.tanggal_event}
+                                        timeStart={event.jam_mulai}
+                                        timeEnd={event.jam_selesai}
+                                        location={event.lokasi}
+                                        inner={true}
+                                        col={isMobile}
+                                    />
 
-                                <Redirect
-                                    href={route("events.index", event.id)}
-                                />
-                            </div>
+                                    <Redirect
+                                        href={route("events.index", event.id)}
+                                    />
+                                </div>
+
+                                <hr className="border-default/30" />
+                            </>
                         ))
                     )}
                 </div>
