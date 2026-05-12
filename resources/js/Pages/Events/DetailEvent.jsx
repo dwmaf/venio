@@ -81,6 +81,11 @@ export default function Event({ event, participants, stats }) {
         },
     ];
 
+    const bgPurpleGradient = "bg-gradient-to-br from-purple-400 to-purple-600";
+    const bgBlueGradient = "bg-gradient-to-br from-blue-400 to-blue-600";
+    const bgTealGradient = "bg-gradient-to-br from-teal-400 to-teal-600";
+    const bgYellowGradient = "bg-gradient-to-br from-yellow-400 to-yellow-600";
+
     useEffect(() => {
         if (search === activeSearch) return;
 
@@ -111,7 +116,7 @@ export default function Event({ event, participants, stats }) {
                 <Breadcrumb items={breadcrumbs} />
 
                 <div className="flex flex-col gap-6">
-                    <div className="flex justify-between gap-3 flex-wrap items-start">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="flex items-center gap-3">
                             <h2 className="font-body text-base leading-7 font-medium sm:text-2xl">
                                 {event.nama_event}
@@ -180,8 +185,8 @@ export default function Event({ event, participants, stats }) {
                             icon={IconSolarUsersGroupBoldDuotone}
                             title="Total Peserta"
                             data={`${stats.total} Peserta`}
-                            className="border border-purple-500/30 bg-purple-50"
-                            textColor="text-purple-500"
+                            className={`${bgPurpleGradient}`}
+                            textColor="text-white"
                         />
 
                         {event.tipe_event === "HYBRID" && (
@@ -190,16 +195,16 @@ export default function Event({ event, participants, stats }) {
                                     icon={IconDuoApproved}
                                     title="Peserta Offline"
                                     data={`${stats.offline} Peserta`}
-                                    className="border border-blue-500/30 bg-blue-50"
-                                    textColor="text-blue-500"
+                                    className={`${bgBlueGradient}`}
+                                    textColor="text-white"
                                 />
 
                                 <Metadata
                                     icon={IconDuoUser}
                                     title="Peserta Online"
                                     data={`${stats.online} Peserta`}
-                                    className="border border-yellow-500/30 bg-yellow-50"
-                                    textColor="text-yellow-500"
+                                    className={`${bgYellowGradient}`}
+                                    textColor="text-white"
                                 />
                             </>
                         )}
@@ -210,8 +215,8 @@ export default function Event({ event, participants, stats }) {
                                 icon={IconQrCodeBoldDuotone}
                                 title="Sudah Scan QR"
                                 data={stats.offline_checked_in}
-                                className="border border-teal-500/30 bg-teal-50"
-                                textColor="text-teal-500"
+                                className={`${bgTealGradient}`}
+                                textColor="text-white"
                             />
                         )}
 
@@ -220,8 +225,8 @@ export default function Event({ event, participants, stats }) {
                                 icon={IconHugeZoom}
                                 title="Link Zoom Terisi"
                                 data={stats.online_zoom_filled}
-                                className="border border-blue-500/30 bg-blue-50"
-                                textColor="text-blue-500"
+                                className={`${bgBlueGradient}`}
+                                textColor="text-white"
                             />
                         )}
 
@@ -235,8 +240,8 @@ export default function Event({ event, participants, stats }) {
                                         : "Belum Hadir"
                                 }
                                 data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
-                                className="border border-yellow-500/30 bg-yellow-50"
-                                textColor="text-yellow-500"
+                                className={`${bgYellowGradient}`}
+                                textColor="text-white"
                             />
                         )}
                     </div>
@@ -244,7 +249,7 @@ export default function Event({ event, participants, stats }) {
                     {/* button" fungsional */}
                     <div className="flex flex-col gap-6 lg:gap-8">
                         {/* impor ekspor */}
-                        <div className="flex flex-col justify-between gap-4 md:flex-row items-start">
+                        <div className="flex flex-col items-start justify-between gap-4 md:flex-row">
                             <div className="flex flex-col gap-2">
                                 <h2 className="font-body text-lg leading-none font-medium md:text-xl">
                                     Daftar Peserta
@@ -255,7 +260,7 @@ export default function Event({ event, participants, stats }) {
                                 </span>
                             </div>
 
-                            <div className="flex flex-wrap md:flex-nowrap items-start md:justify-center gap-2 lg:gap-4 h-fit">
+                            <div className="flex h-fit flex-wrap items-start gap-2 md:flex-nowrap md:justify-center lg:gap-4">
                                 <ImportButton
                                     text="Impor Peserta"
                                     onClick={() => setIsImportModalOpen(true)}
@@ -268,9 +273,9 @@ export default function Event({ event, participants, stats }) {
 
                                 <Link
                                     href={route("events.edit", event.id)}
-                                    className="flex h-fit items-center justify-center gap-0.5 rounded-lg bg-yellow-100 p-3 transition hover:bg-yellow-200 sm:gap-2 lg:h-full "
+                                    className="flex h-fit items-center justify-center gap-0.5 rounded-lg bg-yellow-100 p-3 transition hover:bg-yellow-200 sm:gap-2 lg:h-full"
                                 >
-                                    <IconSolarPenBoldDuotone className="text-yellow-500 h-5 w-5" />
+                                    <IconSolarPenBoldDuotone className="h-5 w-5 text-yellow-500" />
                                     <span className="font-body hidden text-sm leading-none text-yellow-700 sm:flex lg:text-base">
                                         Edit
                                     </span>
@@ -279,7 +284,7 @@ export default function Event({ event, participants, stats }) {
                         </div>
 
                         {/* zoom, QR, rekap */}
-                        <div className="flex justify-between flex-wrap items-center gap-4">
+                        <div className="flex flex-wrap items-center justify-between gap-4">
                             <FilterDropdownButton
                                 tipeEvent={event.tipe_event}
                                 activeFilter={activeFilter}
