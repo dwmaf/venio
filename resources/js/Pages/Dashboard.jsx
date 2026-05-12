@@ -138,36 +138,32 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                 {ongoingEvents.map((event, index) => (
                                     <div
                                         // Tambahkan ref untuk setiap slide
-                                        ref={(el) =>
-                                            (slideRefs.current[index] = el)
-                                        }
+                                        ref={(el) => (slideRefs.current[index] = el)}
                                         key={event.id}
-                                        className="w-full shrink-0 snap-center md:w-120 lg:w-1/2 lg:min-w-140"
+                                        className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0"
                                     >
                                         <EventCard
                                             name={event.nama_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route(
-                                                "events.index",
-                                                event.id,
-                                            )}
+                                            href={route("events.index", event.id)}
                                             location={event.lokasi}
                                             snap={true}
                                         />
                                     </div>
                                 ))}
 
-                                {/* kalau ongoing event cuman 1, kasih tambahan card*/}
-                                {ongoingEvents.length === 1 && (
-                                    <div className="border-default/30 flex min-w-129 flex-col gap-8 rounded-2xl border p-8 lg:w-1/2">
-                                        <span className="font-body text-2xl leading-none font-medium">
-                                            Ongoing Events!
-                                        </span>
-                                        <NoEvent inner={true} />
-                                    </div>
-                                )}
+                                {/* jika ongoingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
+                                {ongoingEvents.length > 0 && ongoingEvents.length < 3 &&
+                                    Array.from({ length: 3 - ongoingEvents.length }).map((_, i) => (
+                                        <div
+                                            key={`no-event-${i}`}
+                                            className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0"
+                                        >
+                                            <NoEvent inner={true} />
+                                        </div>
+                                    ))}
                             </>
                         )}
                     </div>
