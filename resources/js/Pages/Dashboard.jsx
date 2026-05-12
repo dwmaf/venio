@@ -126,7 +126,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 <div className="relative">
                     <div
                         ref={scrollContainerRef}
-                        className="hide-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto p-4"
+                        className={`hide-scrollbar flex gap-4 p-4 ${
+                            ongoingEvents.length > 3
+                                ? "snap-x snap-mandatory overflow-x-auto"
+                                : ""
+                        }`}
                     >
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
@@ -146,7 +150,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             (slideRefs.current[index] = el)
                                         }
                                         key={event.id}
-                                        className="w-full shrink-0 snap-center rounded-2xl shadow-md md:w-120 lg:w-1/3 lg:min-w-0"
+                                        className={`flex-1 shrink-0 rounded-2xl shadow-md lg:min-w-0 ${
+                                            ongoingEvents.length > 3
+                                                ? "snap-center"
+                                                : ""
+                                        }`}
                                     >
                                         <EventCard
                                             name={event.nama_event}
@@ -171,7 +179,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     }).map((_, i) => (
                                         <div
                                             key={`no-event-${i}`}
-                                            className="border-default/30 w-full shrink-0 snap-center rounded-2xl border shadow-md md:w-120 lg:w-1/3 lg:min-w-0"
+                                            className={`border-default/30 w-full shrink-0 rounded-2xl border shadow-md md:w-120 lg:w-1/3 lg:min-w-0 ${
+                                                ongoingEvents.length > 3
+                                                    ? "snap-center"
+                                                    : ""
+                                            }`}
                                         >
                                             <NoEvent inner={true} />
                                         </div>
@@ -181,7 +193,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     </div>
 
                     {/* Render Titik Indikator */}
-                    {ongoingEvents.length > 1 && (
+                    {ongoingEvents.length > 3 && (
                         <div className="mt-4 flex justify-center gap-2">
                             {ongoingEvents.map((_, index) => (
                                 <button
@@ -222,7 +234,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                             {upcomingEvents.map((event, index) => (
                                 <div
                                     key={event.id}
-                                    className="border-default/30 flex items-center justify-between rounded-xl border px-8 py-4"
+                                    className="flex items-center justify-between rounded-xl bg-slate-50/30 px-8 py-4"
                                 >
                                     <EventCard
                                         key={index}
