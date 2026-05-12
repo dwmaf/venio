@@ -43,19 +43,25 @@ export default function AllEvents({
                             <>
                                 {/* kalau ongoing event ada */}
                                 {ongoingEvents.map((event) => (
-                                    <EventCard
-                                        key={event.id}
-                                        name={event.nama_event}
-                                        date={event.tanggal_event}
-                                        timeStart={event.jam_mulai}
-                                        timeEnd={event.jam_selesai}
-                                        href={route("events.index", event.id)}
-                                        location={event.lokasi}
-                                        col={true}
-                                    />
+                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                        <EventCard
+                                            name={event.nama_event}
+                                            date={event.tanggal_event}
+                                            timeStart={event.jam_mulai}
+                                            timeEnd={event.jam_selesai}
+                                            href={route("events.index", event.id)}
+                                            location={event.lokasi}
+                                            col={true}
+                                        />
+                                    </div>
                                 ))}
-                                {/* kalau ongoing event cuman 1, kasih tambahan card*/}
-                                {ongoingEvents.length === 1 && <NoEvent />}
+                                {/* jika ongoingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
+                                {ongoingEvents.length > 0 && ongoingEvents.length < 3 &&
+                                    Array.from({ length: 3 - ongoingEvents.length }).map((_, i) => (
+                                        <div key={`no-ongoing-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                            <NoEvent />
+                                        </div>
+                                    ))}
                             </>
                         )}
                     </div>
@@ -81,19 +87,25 @@ export default function AllEvents({
                             <>
                                 {/* kalau upcoming event ada */}
                                 {upcomingEvents.map((event) => (
-                                    <EventCard
-                                        key={event.id}
-                                        name={event.nama_event}
-                                        date={event.tanggal_event}
-                                        timeStart={event.jam_mulai}
-                                        timeEnd={event.jam_selesai}
-                                        href={route("events.index", event.id)}
-                                        location={event.lokasi}
-                                        col={true}
-                                    />
+                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                        <EventCard
+                                            name={event.nama_event}
+                                            date={event.tanggal_event}
+                                            timeStart={event.jam_mulai}
+                                            timeEnd={event.jam_selesai}
+                                            href={route("events.index", event.id)}
+                                            location={event.lokasi}
+                                            col={true}
+                                        />
+                                    </div>
                                 ))}
-                                {/* kalau upcoming event cuman 1, kasih tambahan card*/}
-                                {upcomingEvents.length === 1 && <NoEvent />}
+                                {/* jika upcomingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
+                                {upcomingEvents.length > 0 && upcomingEvents.length < 3 &&
+                                    Array.from({ length: 3 - upcomingEvents.length }).map((_, i) => (
+                                        <div key={`no-upcoming-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                            <NoEvent />
+                                        </div>
+                                    ))}
                             </>
                         )}
                     </div>
@@ -119,19 +131,25 @@ export default function AllEvents({
                             <>
                                 {/* kalau past event ada */}
                                 {pastEvents.map((event) => (
-                                    <EventCard
-                                        key={event.id}
-                                        name={event.nama_event}
-                                        date={event.tanggal_event}
-                                        timeStart={event.jam_mulai}
-                                        timeEnd={event.jam_selesai}
-                                        href={route("events.index", event.id)}
-                                        location={event.lokasi}
-                                        col={true}
-                                    />
+                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                        <EventCard
+                                            name={event.nama_event}
+                                            date={event.tanggal_event}
+                                            timeStart={event.jam_mulai}
+                                            timeEnd={event.jam_selesai}
+                                            href={route("events.index", event.id)}
+                                            location={event.lokasi}
+                                            col={true}
+                                        />
+                                    </div>
                                 ))}
-                                {/* kalau past event cuman 1, kasih tambahan card*/}
-                                {pastEvents.length === 1 && <NoEvent />}
+                                {/* jika pastEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
+                                {pastEvents.length > 0 && pastEvents.length < 3 &&
+                                    Array.from({ length: 3 - pastEvents.length }).map((_, i) => (
+                                        <div key={`no-past-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                            <NoEvent />
+                                        </div>
+                                    ))}
                             </>
                         )}
                     </div>
