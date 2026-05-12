@@ -4,6 +4,7 @@ import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
+import { useMediaQuery } from "@/Utils/useMediaQuery";
 import {
     IconDuoApproved,
     IconDuoAlignBottom,
@@ -23,6 +24,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
     const slideRefs = useRef([]);
 
     const isScrollingByClick = useRef(false);
+    const isMobile = useMediaQuery("(max-width: 640px)");
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -140,7 +142,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             (slideRefs.current[index] = el)
                                         }
                                         key={event.id}
-                                        className="w-full shrink-0 snap-center md:w-120 lg:w-140"
+                                        className="w-full shrink-0 snap-center md:w-120 lg:w-1/2 lg:min-w-140"
                                     >
                                         <EventCard
                                             name={event.nama_event}
@@ -159,7 +161,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
                                 {/* kalau ongoing event cuman 1, kasih tambahan card*/}
                                 {ongoingEvents.length === 1 && (
-                                    <div className="border-default/30 flex min-h-64.25 min-w-129 shrink-0 flex-col gap-8 rounded-2xl border p-8">
+                                    <div className="border-default/30 flex min-w-129 flex-col gap-8 rounded-2xl border p-8 lg:w-1/2">
                                         <span className="font-body text-2xl leading-none font-medium">
                                             Ongoing Events!
                                         </span>
@@ -210,13 +212,14 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         upcomingEvents.map((event) => (
                             <div key={event.id} className="flex items-center justify-between">
                                 <EventCard
+                                    key={index}
                                     name={event.nama_event}
                                     date={event.tanggal_event}
                                     timeStart={event.jam_mulai}
                                     timeEnd={event.jam_selesai}
                                     location={event.lokasi}
                                     inner={true}
-                                    col={false}
+                                    col={isMobile}
                                 />
 
                                 <Redirect
