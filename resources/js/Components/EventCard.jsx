@@ -10,7 +10,7 @@ import { Link } from "@inertiajs/react";
 export function NoEvent({ inner = false }) {
     return (
         <div
-            className={`font-heading text-neutral flex max-w-screen flex-col items-center justify-center gap-8 text-xl leading-none font-medium md:flex-1 lg:text-2xl ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
+            className={`font-heading text-neutral flex min-h-36 max-w-screen flex-col items-center justify-center gap-8 text-xl leading-none font-medium md:flex-1 lg:text-2xl ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
         >
             <span>No Event!</span>
         </div>
@@ -35,17 +35,21 @@ export function EventCard({
         <Component
             href={href}
             key={id}
-            className={`flex flex-col ${col && "flex-1"} font-body text-neutral snap-center justify-between gap-6 text-base ${snap && "min-h-42 w-full min-w-75.75 snap-center lg:min-w-100"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
+            className={`flex flex-col ${col && "flex-1"} font-body text-neutral h-full snap-center justify-center gap-6 text-base ${snap && "min-h-42 w-full min-w-75.75 snap-center lg:min-w-100"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"}`}
         >
-            <div className="text-default flex h-full items-center gap-4">
-                <IconDuoAward className="h-8 w-8 shrink-0" />
+            <div className="text-default flex h-full items-center gap-8">
+                <div className="rounded-lg bg-blue-50 p-2">
+                    <IconDuoAward className="h-8 w-8 shrink-0 text-blue-500" />
+                </div>
 
                 <div className="flex flex-col gap-3 lg:gap-5">
                     <span className="text-base leading-6 font-medium text-pretty lg:text-xl">
                         {name}
                     </span>
 
-                    <div className={`flex ${col ? "flex-col" : "flex-col sm:flex-row sm:flex-wrap"} gap-2 lg:gap-4`}>
+                    <div
+                        className={`flex ${col ? "flex-col" : "flex-col sm:flex-row sm:flex-wrap"} gap-2 lg:gap-4`}
+                    >
                         <div className="flex items-center gap-1 lg:gap-2">
                             <IconDuoCalendar className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" />
                             <span className="text-default mt-1 text-sm leading-none lg:mt-0 lg:text-base">
@@ -63,7 +67,7 @@ export function EventCard({
                         <div className="flex items-center gap-1 lg:gap-2">
                             <IconDuoLocation className="h-5 w-5 shrink-0 lg:h-6 lg:w-6" />
                             <span className="mt-1 text-sm leading-none lg:mt-0 lg:text-base">
-                                {location}
+                                {location ? location : "Online"}
                             </span>
                         </div>
                     </div>
