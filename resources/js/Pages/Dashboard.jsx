@@ -26,6 +26,10 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
     const isScrollingByClick = useRef(false);
     const isMobile = useMediaQuery("(max-width: 640px)");
 
+    const bgBlueGradient = "bg-gradient-to-br from-blue-400 to-blue-600";
+    const bgTealGradient = "bg-gradient-to-br from-teal-400 to-teal-600";
+    const bgPurpleGradient = "bg-gradient-to-br from-purple-400 to-purple-600";
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -97,24 +101,24 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         icon={IconDuoAlignBottom}
                         title="Total Events"
                         data={`${stats.totalEvents} Events`}
-                        className="border border-yellow-500/30 bg-yellow-50"
-                        textColor="text-yellow-400"
+                        className={`${bgBlueGradient}`}
+                        textColor="text-white"
                     />
 
                     <Metadata
                         icon={IconDuoApproved}
                         title="Completed Events"
                         data={`${stats.completedEvents} Events`}
-                        className="border border-teal-500/30 bg-teal-50"
-                        textColor="text-teal-400"
+                        className={`${bgTealGradient}`}
+                        textColor="text-white"
                     />
 
                     <Metadata
                         icon={IconTwotoneHandshake}
                         title="Partners"
                         data={`${stats.completedEvents} Partners`}
-                        className="border border-purple-500/30 bg-purple-50"
-                        textColor="text-purple-400"
+                        className={`${bgPurpleGradient}`}
+                        textColor="text-white"
                     />
                 </div>
 
@@ -122,7 +126,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 <div className="relative">
                     <div
                         ref={scrollContainerRef}
-                        className="hide-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto"
+                        className="hide-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto p-4"
                     >
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
@@ -142,7 +146,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             (slideRefs.current[index] = el)
                                         }
                                         key={event.id}
-                                        className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0"
+                                        className="w-full shrink-0 snap-center rounded-2xl shadow-md md:w-120 lg:w-1/3 lg:min-w-0"
                                     >
                                         <EventCard
                                             name={event.nama_event}
@@ -167,7 +171,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     }).map((_, i) => (
                                         <div
                                             key={`no-event-${i}`}
-                                            className="border-default/30 w-full shrink-0 snap-center rounded-2xl border md:w-120 lg:w-1/3 lg:min-w-0"
+                                            className="border-default/30 w-full shrink-0 snap-center rounded-2xl border shadow-md md:w-120 lg:w-1/3 lg:min-w-0"
                                         >
                                             <NoEvent inner={true} />
                                         </div>
@@ -214,11 +218,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     {upcomingEvents.length === 0 ? (
                         <NoEvent inner={true} />
                     ) : (
-                        upcomingEvents.map((event, index) => (
-                            <>
+                        <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+                            {upcomingEvents.map((event, index) => (
                                 <div
                                     key={event.id}
-                                    className="flex items-center justify-between"
+                                    className="border-default/30 flex items-center justify-between rounded-xl border px-8 py-4"
                                 >
                                     <EventCard
                                         key={index}
@@ -235,10 +239,8 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                         href={route("events.index", event.id)}
                                     />
                                 </div>
-
-                                <hr className="border-default/30" />
-                            </>
-                        ))
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>
