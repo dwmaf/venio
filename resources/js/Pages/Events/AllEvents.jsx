@@ -25,7 +25,7 @@ export default function AllEvents({
 
                 {/* ongoing events */}
                 <div className="flex flex-col gap-4 lg:gap-6">
-                    <div className="flex justify-between font-body font-medium leading-none">
+                    <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
                             Ongoing Events
                         </span>
@@ -35,7 +35,7 @@ export default function AllEvents({
                         />
                     </div>
 
-                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="hide-scrollbar flex snap-x snap-mandatory flex-col gap-4 overflow-x-auto md:flex-row">
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
                             <NoEvent />
@@ -43,22 +43,35 @@ export default function AllEvents({
                             <>
                                 {/* kalau ongoing event ada */}
                                 {ongoingEvents.map((event) => (
-                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                    <div
+                                        key={event.id}
+                                        className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                    >
                                         <EventCard
                                             name={event.nama_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route("events.index", event.id)}
+                                            href={route(
+                                                "events.index",
+                                                event.id,
+                                            )}
                                             location={event.lokasi}
                                             col={true}
                                         />
                                     </div>
                                 ))}
+
                                 {/* jika ongoingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
-                                {ongoingEvents.length > 0 && ongoingEvents.length < 3 &&
-                                    Array.from({ length: 3 - ongoingEvents.length }).map((_, i) => (
-                                        <div key={`no-ongoing-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                {ongoingEvents.length > 0 &&
+                                    ongoingEvents.length < 3 &&
+                                    Array.from({
+                                        length: 3 - ongoingEvents.length,
+                                    }).map((_, i) => (
+                                        <div
+                                            key={`no-ongoing-${i}`}
+                                            className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                        >
                                             <NoEvent />
                                         </div>
                                     ))}
@@ -69,7 +82,7 @@ export default function AllEvents({
 
                 {/* upcoming events */}
                 <div className="flex flex-col gap-4 lg:gap-6">
-                    <div className="flex justify-between font-body font-medium leading-none">
+                    <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
                             Upcoming Events
                         </span>
@@ -79,7 +92,7 @@ export default function AllEvents({
                         />
                     </div>
 
-                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="hide-scrollbar flex snap-x snap-mandatory flex-col gap-4 overflow-x-auto md:flex-row">
                         {/* kalau tak ada upcoming event */}
                         {upcomingEvents.length === 0 ? (
                             <NoEvent />
@@ -87,22 +100,35 @@ export default function AllEvents({
                             <>
                                 {/* kalau upcoming event ada */}
                                 {upcomingEvents.map((event) => (
-                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                    <div
+                                        key={event.id}
+                                        className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                    >
                                         <EventCard
                                             name={event.nama_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route("events.index", event.id)}
+                                            href={route(
+                                                "events.index",
+                                                event.id,
+                                            )}
                                             location={event.lokasi}
                                             col={true}
                                         />
                                     </div>
                                 ))}
+
                                 {/* jika upcomingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
-                                {upcomingEvents.length > 0 && upcomingEvents.length < 3 &&
-                                    Array.from({ length: 3 - upcomingEvents.length }).map((_, i) => (
-                                        <div key={`no-upcoming-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                {upcomingEvents.length > 0 &&
+                                    upcomingEvents.length < 3 &&
+                                    Array.from({
+                                        length: 3 - upcomingEvents.length,
+                                    }).map((_, i) => (
+                                        <div
+                                            key={`no-upcoming-${i}`}
+                                            className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                        >
                                             <NoEvent />
                                         </div>
                                     ))}
@@ -112,8 +138,8 @@ export default function AllEvents({
                 </div>
 
                 {/* past events */}
-                <div className="flex flex-col  gap-4 lg:gap-6">
-                    <div className="flex justify-between font-body font-medium leading-none">
+                <div className="flex flex-col gap-4 lg:gap-6">
+                    <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
                             Past Events
                         </span>
@@ -123,7 +149,7 @@ export default function AllEvents({
                         />
                     </div>
 
-                    <div className="flex flex-col md:flex-row overflow-x-auto gap-4 snap-x snap-mandatory hide-scrollbar">
+                    <div className="hide-scrollbar flex snap-x snap-mandatory flex-col gap-4 overflow-x-auto md:flex-row">
                         {/* kalau tak ada past event */}
                         {pastEvents.length === 0 ? (
                             <NoEvent />
@@ -131,22 +157,35 @@ export default function AllEvents({
                             <>
                                 {/* kalau past event ada */}
                                 {pastEvents.map((event) => (
-                                    <div key={event.id} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                    <div
+                                        key={event.id}
+                                        className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                    >
                                         <EventCard
                                             name={event.nama_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
-                                            href={route("events.index", event.id)}
+                                            href={route(
+                                                "events.index",
+                                                event.id,
+                                            )}
                                             location={event.lokasi}
                                             col={true}
                                         />
                                     </div>
                                 ))}
+
                                 {/* jika pastEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
-                                {pastEvents.length > 0 && pastEvents.length < 3 &&
-                                    Array.from({ length: 3 - pastEvents.length }).map((_, i) => (
-                                        <div key={`no-past-${i}`} className="w-full shrink-0 snap-center md:w-120 lg:w-1/3 lg:min-w-0">
+                                {pastEvents.length > 0 &&
+                                    pastEvents.length < 3 &&
+                                    Array.from({
+                                        length: 3 - pastEvents.length,
+                                    }).map((_, i) => (
+                                        <div
+                                            key={`no-past-${i}`}
+                                            className="w-full md:w-120 lg:w-1/3 lg:min-w-0"
+                                        >
                                             <NoEvent />
                                         </div>
                                     ))}
