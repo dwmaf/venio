@@ -12,10 +12,10 @@ export function RouteButton({ text, href }) {
     return (
         <Link
             href={href}
-            className="font-body group mt-1 flex items-center gap-0.5 text-sm leading-none font-medium text-blue-700 hover:underline md:text-lg lg:gap-2"
+            className="font-body group flex items-center gap-1 text-xs leading-none font-medium text-nowrap text-blue-700 hover:underline md:mt-1 md:text-lg"
         >
             <span>{text}</span>
-            <IconBasilArrowLeftOutline className="group-hover:translate-x- aspect-square h-5 w-5 rotate-180 text-blue-700 transition-all duration-300 md:h-6 md:w-6" />
+            <IconBasilArrowLeftOutline className="aspect-square h-5 w-5 rotate-180 text-blue-700 transition-all duration-300 group-hover:translate-x-1 md:h-6 md:w-6" />
         </Link>
     );
 }
@@ -23,7 +23,7 @@ export function RouteButton({ text, href }) {
 export function Redirect({ href }) {
     return (
         <Link href={href}>
-            <IconEvaExternalLinkFill className="aspect-square h-5 w-5 text-blue-700 lg:h-6 lg:w-6" />
+            <IconEvaExternalLinkFill className="aspect-square h-5 w-5 text-blue-700" />
         </Link>
     );
 }
@@ -34,8 +34,8 @@ export function ImportButton({ text, onClick }) {
             onClick={onClick}
             className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 sm:gap-2 lg:h-full"
         >
-            <IconMingcuteFileImportFill className="h-5 w-5 text-blue-700 shrink-0" />
-            <span className="font-body text-sm leading-none text-blue-700 lg:text-base whitespace-nowrap">
+            <IconMingcuteFileImportFill className="h-5 w-5 shrink-0 text-blue-700" />
+            <span className="font-body text-sm leading-none whitespace-nowrap text-blue-700 lg:text-base">
                 {text}
             </span>
         </button>
@@ -48,8 +48,8 @@ export function WAButton({ text, href }) {
             href={href}
             className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-lime-100 p-3 hover:bg-lime-200 active:bg-lime-300 sm:gap-2 lg:h-full"
         >
-            <IconRiWhatsappFill className="h-5 w-5 text-lime-700 shrink-0" />
-            <span className="font-body text-center text-sm leading-none text-lime-700 lg:text-base whitespace-nowrap">
+            <IconRiWhatsappFill className="h-5 w-5 shrink-0 text-lime-700" />
+            <span className="font-body text-center text-sm leading-none whitespace-nowrap text-lime-700 lg:text-base">
                 {text}
             </span>
         </a>
