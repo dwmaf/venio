@@ -25,6 +25,12 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
     const isScrollingByClick = useRef(false);
     const isMobile = useMediaQuery("(max-width: 640px)");
+    const isMobileMin = useMediaQuery(
+        "(min-width: 641px) and (max-width: 767px)",
+    );
+    const isMedium = useMediaQuery(
+        "(min-width: 768px) and (max-width: 1023px)",
+    );
 
     const bgBlueGradient = "bg-gradient-to-br from-blue-400 to-blue-600";
     const bgTealGradient = "bg-gradient-to-br from-teal-400 to-teal-600";
@@ -88,6 +94,15 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
     const breadcrumbs = [{ label: "Home", href: route("dashboard") }];
 
+    let placeholderCount = 0;
+    if (ongoingEvents.length > 0) {
+        if (isMobileMin)
+            placeholderCount = Math.max(0, 2 - ongoingEvents.length);
+        else if (isMedium)
+            placeholderCount = Math.max(0, 2 - ongoingEvents.length);
+        else placeholderCount = Math.max(0, 3 - ongoingEvents.length);
+    }
+
     return (
         <AdminLayout title="Dashboard">
             <Head title="Venio | Dashboard Event" />
@@ -99,24 +114,24 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 <div className="flex w-full flex-col justify-between gap-4 sm:flex-row">
                     <Metadata
                         icon={IconDuoAlignBottom}
-                        title="Total Events"
-                        data={`${stats.totalEvents} Events`}
+                        title="Total Acara"
+                        data={`${stats.totalEvents} Acara`}
                         className={`${bgBlueGradient}`}
                         textColor="text-white"
                     />
 
                     <Metadata
                         icon={IconDuoApproved}
-                        title="Completed Events"
-                        data={`${stats.completedEvents} Events`}
+                        title="Acara Selesai"
+                        data={`${stats.completedEvents} Acara`}
                         className={`${bgTealGradient}`}
                         textColor="text-white"
                     />
 
                     <Metadata
                         icon={IconTwotoneHandshake}
-                        title="Partners"
-                        data={`${stats.completedEvents} Partners`}
+                        title="Partner"
+                        data={`${stats.completedEvents} Partner`}
                         className={`${bgPurpleGradient}`}
                         textColor="text-white"
                     />
@@ -124,6 +139,17 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
                 {/* ongoing events */}
                 <div className="relative">
+                    <div className="flex justify-between">
+                        <span className="font-body text-base leading-none font-medium md:text-2xl">
+                            Sedang Berlangsung!
+                        </span>
+
+                        <RouteButton
+                            href={route("create.events")}
+                            text="Tambah Acara"
+                        />
+                    </div>
+
                     <div
                         ref={scrollContainerRef}
                         className={`hide-scrollbar flex gap-4 p-4 ${
@@ -134,10 +160,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     >
                         {/* kalau tak ada ongoing event */}
                         {ongoingEvents.length === 0 ? (
-                            <div className="border-default/30 flex min-h-64.25 w-full shrink-0 flex-col gap-8 rounded-2xl border p-8">
-                                <span className="font-body text-2xl leading-none font-medium">
-                                    Ongoing Events!
-                                </span>
+                            <div className="border-default/30 flex min-h-64.25 w-full shrink-0 flex-col gap-8 rounded-2xl border p-4 md:p-8">
                                 <NoEvent inner={true} />
                             </div>
                         ) : (
@@ -166,20 +189,23 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                                 event.id,
                                             )}
                                             location={event.lokasi}
+                                            participantsCount={
+                                                event.jumlah_peserta
+                                            }
                                             snap={true}
                                         />
                                     </div>
                                 ))}
 
                                 {/* jika ongoingEvents berjumlah 1 atau 2, tambahkan placeholder NoEvent supaya total 3 */}
-                                {ongoingEvents.length > 0 &&
+                                {placeholderCount > 0 &&
                                     ongoingEvents.length < 3 &&
                                     Array.from({
-                                        length: 3 - ongoingEvents.length,
+                                        length: placeholderCount,
                                     }).map((_, i) => (
                                         <div
                                             key={`no-event-${i}`}
-                                            className={`border-default/30 w-full shrink-0 rounded-2xl border shadow-md md:w-120 lg:w-1/3 lg:min-w-0 ${
+                                            className={`border-default/30 hidden flex-1 shrink-0 justify-center rounded-2xl border shadow-md sm:flex md:w-120 lg:w-1/3 lg:min-w-0 ${
                                                 ongoingEvents.length > 3
                                                     ? "snap-center"
                                                     : ""
@@ -211,14 +237,14 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                 </div>
 
                 {/* upcoming events */}
-                <div className="border-default/30 flex min-h-101.75 flex-1 flex-col gap-6 rounded-2xl border p-6 lg:gap-8 lg:p-8">
+                <div className="flex min-h-101.75 flex-1 flex-col gap-6 rounded-2xl lg:gap-8">
                     <div className="flex justify-between">
                         <div className="font-body flex w-full flex-col gap-2 leading-none lg:gap-4">
                             <span className="text-xl leading-none font-medium lg:text-2xl">
-                                Upcoming Events
+                                Yang akan datang
                             </span>
                             <div className="text-neutral flex w-full items-center justify-between text-base lg:text-xl">
-                                <span>Event yang akan berlangsung</span>
+                                <span>Daftar acara yang akan berlangsung</span>
                                 <RouteButton
                                     href={route("upcoming.events")}
                                     text="Lihat Semua"
@@ -230,11 +256,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     {upcomingEvents.length === 0 ? (
                         <NoEvent inner={true} />
                     ) : (
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-6">
+                        <div className="grid grid-cols-1 gap-x-6 gap-y-6 md:grid-cols-2">
                             {upcomingEvents.map((event, index) => (
                                 <div
                                     key={event.id}
-                                    className="flex items-center justify-between rounded-xl bg-slate-50/30 px-8 py-4"
+                                    className="flex items-center justify-between rounded-xl bg-slate-50/30 px-4 py-4 md:px-8"
                                 >
                                     <EventCard
                                         key={index}
@@ -243,6 +269,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                         timeStart={event.jam_mulai}
                                         timeEnd={event.jam_selesai}
                                         location={event.lokasi}
+                                        participantsCount={event.jumlah_peserta}
                                         inner={true}
                                         col={isMobile}
                                     />
