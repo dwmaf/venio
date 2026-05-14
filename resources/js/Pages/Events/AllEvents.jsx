@@ -19,7 +19,7 @@ export default function AllEvents({
 
     return (
         <AdminLayout title="Daftar Acara">
-            <Head title="Venio | Events" />
+            <Head title="Venio | Daftar Acara" />
 
             <div className="flex flex-col gap-6 lg:gap-8">
                 <div className="flex justify-between">
@@ -89,7 +89,7 @@ export default function AllEvents({
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
-                            Yang akan datang
+                            Acara Mendatang
                         </span>
                         <RouteButton
                             href={route("upcoming.events")}
@@ -146,7 +146,7 @@ export default function AllEvents({
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
-                            Sudah Selesai
+                            Acara Sebelumnya
                         </span>
                         <RouteButton
                             href={route("past.events")}
