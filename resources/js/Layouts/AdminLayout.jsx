@@ -9,8 +9,9 @@ import {
     IconDuoDashboard,
     IconDuoCalendar,
     IconDuoAddCircle,
-    IconFluentMailUnread20Filled,
     IconSolarSettingsBroken,
+    IconDuoBox,
+    IconDuoHandshake,
 } from "@/Components/Icons";
 
 export default function AdminLayout({ children, title }) {
@@ -45,17 +46,22 @@ export default function AdminLayout({ children, title }) {
         {
             icon: IconDuoCalendar,
             page: "/all-events",
-            text: "Events",
+            text: "Daftar Acara",
         },
         {
             icon: IconDuoAddCircle,
             page: "/create-events",
-            text: "Add Event",
+            text: "Tambah Acara",
         },
         {
-            icon: IconFluentMailUnread20Filled,
+            icon: IconDuoHandshake,
+            page: "/create-events",
+            text: "Daftar Partner",
+        },
+        {
+            icon: IconDuoBox,
             page: "/mail-logs",
-            text: "Mail Logs",
+            text: "Log Email",
         },
     ];
 
@@ -187,7 +193,7 @@ export default function AdminLayout({ children, title }) {
                             href="/mail-logs"
                             className="flex items-center space-x-2 p-2"
                         >
-                            <IconFluentMailUnread20Filled className="text-default h-6 w-6 shrink-0" />
+                            <IconDuoBox className="text-default h-6 w-6 shrink-0" />
                             <span
                                 className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
                             >

@@ -984,4 +984,50 @@ export const IconCheck = (props) => (
         />
     </svg>
 );
+export const IconDuoBox = (props) => (
+    <svg
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+        color="currentColor"
+        width="1em"
+        height="1em"
+        {...props}
+    >
+        <path
+            fill="currentColor"
+            d="M 21 10 L 21 19 C 21 20.105 20.105 21 19 21 L 5 21 C 3.895 21 3 20.105 3 19 L 3 10 L 21 10 Z"
+            opacity=".3"
+            className="duo-icons-secondary-layer"
+        />
+        <path
+            fill="currentColor"
+            d="M 20 3 C 21.105 3 22 3.895 22 5 L 22 8 L 2 8 L 2 5 C 2 3.895 2.895 3 4 3 L 20 3 Z"
+            className="duo-icons-primary-layer"
+        />
+        <path
+            fill="currentColor"
+            d="M 14 13 L 10 13 C 9.23 13 8.749 13.833 9.134 14.5 C 9.313 14.809 9.643 15 10 15 L 14 15 C 14.77 15 15.251 14.167 14.866 13.5 C 14.687 13.191 14.357 13 14 13 Z"
+            className="duo-icons-primary-layer"
+        />
+    </svg>
+);
+export const IconDuoHandshake = (props) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 640 640"
+        width="1em"
+        height="1em"
+        {...props}
+    >
+        <path
+            fill="currentColor"
+            d="M300.9 149.2L184.3 278.8C179.7 283.9 179.9 291.8 184.8 296.7C215.3 327.2 264.8 327.2 295.3 296.7L327.1 264.9C331.3 260.7 336.6 258.4 342 258C348.8 257.4 355.8 259.7 361 264.9L537.6 440L608 384L608 96L496 160L472.2 144.1C456.4 133.6 437.9 128 418.9 128L348.5 128C347.4 128 346.2 128 345.1 128.1C328.2 129 312.3 136.6 300.9 149.2z"
+        />
+        <path
+            fill="currentColor"
+            opacity=".4"
+            d="M148.6 246.7L255.4 128L215.8 128C190.3 128 165.9 138.1 147.9 156.1L144 160L32 96L32 384L188.4 514.3C211.4 533.5 240.4 544 270.3 544L286 544L279 537C269.6 527.6 269.6 512.4 279 503.1C288.4 493.8 303.6 493.7 312.9 503.1L353.9 544.1L362.9 544.1C382 544.1 400.7 539.8 417.7 531.8L391 505C381.6 495.6 381.6 480.4 391 471.1C400.4 461.8 415.6 461.7 424.9 471.1L456.9 503.1L474.4 485.6C483.3 476.7 485.9 463.8 482 452.5L344.1 315.7L329.2 330.6C279.9 379.9 200.1 379.9 150.8 330.6C127.8 307.6 126.9 270.7 148.6 246.6z"
+        />
+    </svg>
+);
 // export const Icon = (props) => ();
