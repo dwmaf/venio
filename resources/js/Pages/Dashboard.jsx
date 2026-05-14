@@ -32,6 +32,11 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
         "(min-width: 768px) and (max-width: 1023px)",
     );
 
+    const cardsPerPage = isMobile || isMobileMin ? 1 : isMedium ? 2 : 3;
+
+    const totalPages = Math.ceil(ongoingEvents.length / cardsPerPage);
+    const currentPage = Math.floor(activeIndex / cardsPerPage);
+
     const bgBlueGradient = "bg-gradient-to-br from-blue-400 to-blue-600";
     const bgTealGradient = "bg-gradient-to-br from-teal-400 to-teal-600";
     const bgPurpleGradient = "bg-gradient-to-br from-purple-400 to-purple-600";
@@ -43,17 +48,17 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     return;
                 }
 
-                entries.forEach((entry) => {
+                for (const entry of entries) {
                     if (entry.isIntersecting) {
-                        // Temukan index dari slide yang terlihat
                         const index = slideRefs.current.findIndex(
                             (ref) => ref === entry.target,
                         );
                         if (index !== -1) {
                             setActiveIndex(index);
+                            break;
                         }
                     }
-                });
+                }
             },
             {
                 root: scrollContainerRef.current, // Mengamati di dalam kontainer scroll
@@ -92,6 +97,36 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
         }, 800); // Durasi harus lebih lama dari animasi scroll
     };
 
+    const handlePrev = () => {
+        isScrollingByClick.current = true;
+        // Pindah ke halaman sebelumnya
+        const prevPageIndex = Math.max(currentPage - 1, 0);
+        const targetIndex = prevPageIndex * cardsPerPage;
+
+        slideRefs.current[targetIndex]?.scrollIntoView({
+            behavior: "smooth",
+            inline: "start",
+            block: "nearest",
+        });
+        setActiveIndex(targetIndex);
+        setTimeout(() => (isScrollingByClick.current = false), 800);
+    };
+
+    const handleNext = () => {
+        isScrollingByClick.current = true;
+        // Pindah ke halaman berikutnya
+        const nextPageIndex = Math.min(currentPage + 1, totalPages - 1);
+        const targetIndex = nextPageIndex * cardsPerPage;
+
+        slideRefs.current[targetIndex]?.scrollIntoView({
+            behavior: "smooth",
+            inline: "start",
+            block: "nearest",
+        });
+        setActiveIndex(targetIndex);
+        setTimeout(() => (isScrollingByClick.current = false), 800);
+    };
+
     const breadcrumbs = [{ label: "Home", href: route("dashboard") }];
 
     let placeholderCount = 0;
@@ -105,7 +140,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
 
     return (
         <AdminLayout title="Dashboard">
-            <Head title="Venio | Dashboard Event" />
+            <Head title="Venio | Dashboard" />
 
             <div className="flex flex-col gap-8">
                 <Breadcrumb items={breadcrumbs} />
@@ -150,6 +185,54 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                         />
                     </div>
 
+                    {ongoingEvents.length > cardsPerPage && (
+                        <>
+                            {/* Tombol Panah Kiri */}
+                            <button
+                                onClick={handlePrev}
+                                disabled={currentPage === 0}
+                                className="group absolute top-1/2 left-0 z-10 -translate-y-1/2 transform cursor-pointer rounded-full bg-white/80 p-2 shadow-md transition hover:bg-white disabled:cursor-default disabled:opacity-0 md:-left-5"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="h-6 w-6 text-blue-700 transition-transform duration-300 hover:-translate-x-0.5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M15.75 19.5L8.25 12l7.5-7.5"
+                                    />
+                                </svg>
+                            </button>
+
+                            {/* Tombol Panah Kanan */}
+                            <button
+                                onClick={handleNext}
+                                disabled={currentPage === totalPages - 1}
+                                className="absolute top-1/2 right-0 z-10 -translate-y-1/2 transform cursor-pointer rounded-full bg-white/80 p-2 shadow-md transition hover:bg-white disabled:cursor-default disabled:opacity-0 md:-right-5"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="h-6 w-6 text-blue-700 transition-transform duration-300 hover:translate-x-0.5"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                                    />
+                                </svg>
+                            </button>
+                        </>
+                    )}
+
                     <div
                         ref={scrollContainerRef}
                         className={`hide-scrollbar flex gap-4 p-4 ${
@@ -173,10 +256,10 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             (slideRefs.current[index] = el)
                                         }
                                         key={event.id}
-                                        className={`flex-1 shrink-0 rounded-2xl shadow-md lg:min-w-0 ${
+                                        className={`flex-1 shrink-0 rounded-2xl shadow-md ${
                                             ongoingEvents.length > 3
-                                                ? "snap-center"
-                                                : ""
+                                                ? "min-w-72 snap-center md:min-w-96"
+                                                : "lg:min-w-0"
                                         }`}
                                     >
                                         <EventCard
