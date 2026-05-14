@@ -7,6 +7,7 @@ import Breadcrumb from "@/Components/Breadcrumb";
 import Pagination from "@/Components/Pagination";
 import { NoEvent } from "@/Components/EventCard";
 import { SearchInput } from "@/Components/Inputs";
+import { BackButton } from "@/Components/Buttons";
 
 export default function PastEvents({ pastEvents, filters }) {
     const [search, setSearch] = useState(filters?.search || "");
@@ -17,7 +18,7 @@ export default function PastEvents({ pastEvents, filters }) {
             router.get(
                 route("past.events"),
                 { search: search },
-                { preserveState: true, replace: true }
+                { preserveState: true, replace: true },
             );
         }, 800);
 
@@ -38,61 +39,92 @@ export default function PastEvents({ pastEvents, filters }) {
     const shownCount = pastEvents.data.length;
 
     return (
-        <AdminLayout title="Events">
+        <AdminLayout title="Daftar Acara">
             <Head title="Venio | Past Events" />
 
             <div className="flex flex-col gap-6 lg:gap-8">
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex items-center justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+
+                    <BackButton text="Kembali" />
+                </div>
 
                 <div className="flex flex-col gap-4 lg:gap-6">
-                    <span className="font-body font-medium text-base lg:text-2xl leading-none">
-                        Past Events
-                    </span>
-                    <div className="w-full lg:w-1/3">
-                        <SearchInput
-                            placeholder="Cari Nama Event..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                    <div className="flex items-center justify-between">
+                        <h1 className="font-body text-base leading-none font-medium lg:text-2xl">
+                            Acara Sebelumnya
+                        </h1>
+
+                        <div className="w-1/5">
+                            <SearchInput
+                                placeholder="Cari Acara..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                        </div>
                     </div>
 
                     <div className="w-full overflow-x-auto">
                         {pastEvents.data.length === 0 ? (
                             <NoEvent />
                         ) : (
-                            <table className="w-full min-w-172 text-left border-collapse">
+                            <table className="w-full min-w-172 table-fixed border-collapse text-left">
                                 <thead>
                                     <tr className="border-b border-neutral-400">
-                                        <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
-                                            Nama Event
+                                        <th className="font-body p-4 text-base leading-none font-normal text-black lg:p-5 lg:text-xl">
+                                            Acara
                                         </th>
-                                        <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        <th className="font-body w-[15%] p-4 text-base leading-none font-normal text-black lg:p-5 lg:text-xl">
                                             Tanggal
                                         </th>
-                                        <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        <th className="font-body w-[15%] p-4 text-base leading-none font-normal text-black lg:p-5 lg:text-xl">
                                             Total Peserta
                                         </th>
-                                        <th className="p-4 lg:p-5 font-normal font-body text-base lg:text-xl leading-none text-black">
+                                        <th className="font-body w-[10%] p-4 text-base leading-none font-normal text-black lg:p-5 lg:text-xl">
                                             Tipe
+                                        </th>
+                                        <th className="font-body w-[15%] p-4 text-base leading-none font-normal text-black lg:p-5 lg:text-xl">
+                                            Partner
                                         </th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     {pastEvents.data.map((event) => (
-                                        <tr key={event.id} className="border-b border-neutral-400 cursor-pointer"
-                                            onClick={() => router.visit(route("events.index", event.id))}>
-                                            <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
+                                        <tr
+                                            key={event.id}
+                                            className="cursor-pointer border-b border-neutral-400 hover:bg-neutral-50"
+                                            onClick={() =>
+                                                router.visit(
+                                                    route(
+                                                        "events.index",
+                                                        event.id,
+                                                    ),
+                                                )
+                                            }
+                                        >
+                                            <td className="font-body truncate p-4 text-sm leading-none font-normal text-black lg:p-5 lg:text-base">
                                                 {event.nama_event}
                                             </td>
-                                            <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
-                                                {formatTanggalSlash(event.tanggal_event)}
+                                            <td className="font-body p-4 text-sm leading-none font-normal text-black lg:p-5 lg:text-base">
+                                                {formatTanggalSlash(
+                                                    event.tanggal_event,
+                                                )}
                                             </td>
-                                            <td className="p-4 lg:p-5 font-normal font-body text-sm lg:text-base leading-none text-black">
-                                                {event.participants_count} Peserta
+                                            <td className="font-body p-4 text-sm leading-none font-normal text-black lg:p-5 lg:text-base">
+                                                {event.participants_count}{" "}
+                                                Peserta
                                             </td>
-                                            <td className="p-4 lg:p-5 font-medium font-body text-xs leading-none capitalize">
+                                            <td className="font-body p-4 text-xs leading-none font-medium capitalize lg:p-5">
                                                 <div
-                                                    className={`${eventTypeColors[event.tipe_event] || "bg-gray-100 text-gray-700"} inline-flex items-center justify-center min-w-15 py-1 rounded-xl`}
+                                                    className={`${eventTypeColors[event.tipe_event] || "bg-gray-100 text-gray-700"} inline-flex min-w-15 items-center justify-center rounded-xl py-1`}
+                                                >
+                                                    {event.tipe_event.toLowerCase()}
+                                                </div>
+                                            </td>
+                                            <td className="font-body truncate p-4 text-xs leading-none font-medium capitalize lg:p-5">
+                                                <div
+                                                    className={`${eventTypeColors[event.tipe_event] || "bg-gray-100 text-gray-700"} inline-flex min-w-15 items-center justify-center rounded-xl py-1`}
                                                 >
                                                     {event.tipe_event.toLowerCase()}
                                                 </div>
@@ -102,14 +134,14 @@ export default function PastEvents({ pastEvents, filters }) {
                                 </tbody>
                             </table>
                         )}
-
-
                     </div>
                     {shownCount > 0 && (
-                        <div className="mt-6 lg:mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                            <span className="font-normal font-body text-sm lg:text-base leading-none text-gray-500">
-                                Menampilkan {shownCount} dari {pastEvents.total} data
+                        <div className="mt-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between lg:mt-8">
+                            <span className="font-body text-sm leading-none font-normal text-gray-500 lg:text-base">
+                                Menampilkan {shownCount} dari {pastEvents.total}{" "}
+                                data
                             </span>
+
                             <Pagination links={pastEvents.links} />
                         </div>
                     )}
