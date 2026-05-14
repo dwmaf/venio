@@ -14,7 +14,7 @@ export default function OngoingEvents({ ongoingEvents }) {
 
     return (
         <AdminLayout title="Events">
-            <Head title="Venio | Ongoing Events" />
+            <Head title="Venio | Sedang Berlangsung" />
 
             <div className="flex h-full flex-col gap-6 lg:gap-8">
                 <div className="flex justify-between">
