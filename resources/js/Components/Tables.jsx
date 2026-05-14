@@ -1,12 +1,11 @@
 import { useState } from "react";
-import {
-    IconSolarCopyBold,
-    IconSolarCopyLineDuotone,
-} from "@/Components/Icons";
+import { IconCheck, IconSolarCopyLineDuotone } from "@/Components/Icons";
 
-export function TableHead({ text }) {
+export function TableHead({ text, width }) {
     return (
-        <th className="font-body p-2 text-base leading-none font-medium lg:p-5 lg:text-xl">
+        <th
+            className={`font-body ${width} p-2 text-base leading-none font-medium lg:p-5 lg:text-xl`}
+        >
             {text}
         </th>
     );
@@ -76,7 +75,7 @@ export function CopyableText({ label, textToCopy }) {
                     className="transition hover:text-neutral-800 focus:outline-none"
                 >
                     {isCopied ? (
-                        <IconSolarCopyBold className="h-4 w-4 text-gray-500 transition-colors duration-300 lg:h-5 lg:w-5" />
+                        <IconCheck className="h-4 w-4 text-gray-500 transition-colors duration-300 lg:h-5 lg:w-5" />
                     ) : (
                         <IconSolarCopyLineDuotone className="text-neutral h-4 w-4 transition-colors duration-300 lg:h-5 lg:w-5" />
                     )}

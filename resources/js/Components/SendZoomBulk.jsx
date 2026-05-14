@@ -1,15 +1,41 @@
-import { useForm } from '@inertiajs/react';
+import { useForm } from "@inertiajs/react";
+import { IconFluentSend24Filled } from "@/Components/Icons";
+import { useState, useEffect } from "react";
 
-export default function SendZoomBulk({ isOpen, onClose, eventId, online, sentCount }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        zoom_link: '',
-        resend_all: false,
+export default function SendZoomBulk({
+    isOpen,
+    onClose,
+    eventId,
+    online,
+    sentCount,
+}) {
+    const { data, setData, post, processing, errors } = useForm({
+        zoom_link: "",
     });
-    if (!isOpen) return null;
+
+    const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        // Saat isOpen berubah, kita atur timeout kecil untuk memicu transisi
+        if (isOpen) {
+            const timer = setTimeout(() => setShow(true), 10); // Sedikit delay untuk memastikan elemen sudah di-render
+            return () => clearTimeout(timer);
+        } else {
+            setShow(false);
+        }
+    }, [isOpen]);
+
+    if (!isOpen && !show) return null;
+
+    const handleClose = () => {
+        setShow(false);
+        // Tunggu animasi selesai sebelum memanggil onClose
+        setTimeout(onClose, 300); // Durasi harus sama dengan durasi transisi
+    };
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('peserta.send-zoom-bulk', { event: eventId }), {
+        post(route("peserta.send-zoom-bulk", { event: eventId }), {
             onSuccess: () => {
                 reset();
                 onClose();
@@ -17,69 +43,107 @@ export default function SendZoomBulk({ isOpen, onClose, eventId, online, sentCou
         });
     };
 
-    const targetCount = data.resend_all ? online : (online - sentCount);
+    const targetCount = data.resend_all ? online : online - sentCount;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-default/50 px-4">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-md overflow-hidden">
-                <div className="px-6 py-4 border-b border-neutral/30 flex justify-between items-center">
-                    <h4 className="text-xl font-['Plus_Jakarta_Sans'] leading-none text-default font-medium">Kirim Zoom Bulk</h4>
-                    <button onClick={onClose} className="text-xl leading-none cursor-pointer">✕</button>
+        <div className="bg-default/50 fixed inset-0 z-50 flex items-center justify-center px-4">
+            <div
+                className={`w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-500 ease-in-out ${
+                    show
+                        ? "translate-y-8 scale-100 opacity-100"
+                        : "translate-y-0 scale-95 opacity-0"
+                }`}
+            >
+                <div className="border-neutral/30 flex items-center justify-between border-b px-6 py-4">
+                    <h4 className="font-body text-default text-xl leading-none font-medium">
+                        Kirim Zoom Bulk
+                    </h4>
+                    <button
+                        onClick={handleClose}
+                        className="cursor-pointer rounded-sm px-2 py-1 text-xl leading-none hover:bg-neutral-50"
+                    >
+                        ✕
+                    </button>
                 </div>
 
-                <div className="p-6 space-y-6">
-                    <p className="text-sm font-['Plus_Jakarta_Sans'] leading-normal font-normal">
-                        Kirim email Zoom ke <strong>{targetCount} peserta online</strong> di event ini?
-                        <br /><br />
-                        Secara default, email hanya akan dikirim ke peserta yang belum menerima Link Zoom.
+                <div className="space-y-6 p-6">
+                    <p className="font-body text-sm leading-normal">
+                        Kirim email Zoom ke <strong>{online} peserta</strong>{" "}
+                        online di event ini sekarang?
                         <br />
-                        <span className="text-xs text-red-500">Tindakan ini mungkin memakan waktu jika jumlah peserta banyak.</span>
+                        <br />
+                        Email hanya akan dikirim ke peserta yang belum menerima
+                        Link Zoom.
+                        <br />
+                        <span className="text-xs font-semibold text-red-600">
+                            Tindakan ini mungkin memakan waktu jika jumlah
+                            peserta banyak!
+                        </span>
                     </p>
 
                     <form onSubmit={submit}>
                         <div className="mb-4 space-y-2">
-                            <label className="block text-sm font-medium text-default font-['Plus_Jakarta_Sans']">Masukan Link Zoom untuk Event ini</label>
-                            <input 
-                                type="url" 
+                            <label className="text-default font-body block text-sm font-medium">
+                                Masukan Link Zoom untuk acara ini
+                            </label>
+                            <input
+                                type="url"
                                 required
                                 placeholder="https://zoom.us/j/..."
-                                value={data.zoom_link} 
-                                onChange={(e) => setData('zoom_link', e.target.value)} 
-                                className="w-full font-['Plus_Jakarta_Sans'] border border-neutral/30 rounded-lg p-2 text-sm placeholder:font-['Plus_Jakarta_Sans']"
+                                value={data.zoom_link}
+                                onChange={(e) =>
+                                    setData("zoom_link", e.target.value)
+                                }
+                                className="font-body border-neutral/30 placeholder:font-body w-full rounded-md border px-4 py-2 text-sm focus:border-blue-500 focus:outline-blue-500"
                             />
-                            {errors.zoom_link && <span className="font-['Plus_Jakarta_Sans'] text-red-500 text-xs">{errors.zoom_link}</span>}
+                            {errors.zoom_link && (
+                                <span className="font-body text-xs text-red-500">
+                                    {errors.zoom_link}
+                                </span>
+                            )}
                         </div>
                         {sentCount > 0 && (
                             <div className="mb-4 flex items-center gap-2">
-                                <input 
-                                    type="checkbox" 
-                                    id="resend_all" 
+                                <input
+                                    type="checkbox"
+                                    id="resend_all"
                                     checked={data.resend_all}
-                                    onChange={(e) => setData('resend_all', e.target.checked)}
-                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                                    onChange={(e) =>
+                                        setData("resend_all", e.target.checked)
+                                    }
+                                    className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-blue-500"
                                 />
-                                <label htmlFor="resend_all" className="text-sm font-['Plus_Jakarta_Sans'] text-default cursor-pointer">
-                                    Kirim ulang juga ke peserta yang sudah menerima ({sentCount} peserta)
+                                <label
+                                    htmlFor="resend_all"
+                                    className="text-default font-body cursor-pointer text-sm"
+                                >
+                                    Kirim ulang juga ke peserta yang sudah
+                                    menerima ({sentCount} peserta)
                                 </label>
                             </div>
                         )}
-                        <div className="flex justify-end space-x-3">
+
+                        <div className="flex flex-col-reverse justify-end gap-2 md:flex-row">
                             <button
                                 type="button"
-                                onClick={onClose}
-                                className="flex items-center rounded-lg border border-neutral/30 p-3 gap-2 cursor-pointer"
+                                onClick={handleClose}
+                                className="border-neutral/30 flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border p-3 hover:bg-neutral-50 md:w-fit"
                             >
-                                <span className="font-['Plus_Jakarta_Sans'] font-normal text-base leading-none text-neutral">Batal</span>
+                                <span className="font-body text-neutral text-base leading-none font-medium">
+                                    Batal
+                                </span>
                             </button>
+
                             <button
                                 type="submit"
-                                disabled={processing || targetCount === 0}
-                                className={`flex items-center rounded-lg p-3 gap-2 cursor-pointer ${
-                                    targetCount === 0 ? 'bg-neutral-100 text-neutral-400 cursor-not-allowed' : 'bg-blue-50 text-blue-700'
-                                }`}
+                                disabled={processing}
+                                className="group flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-50 p-3 transition-colors duration-300 hover:bg-blue-100"
                             >
-                                <span className={`font-['Plus_Jakarta_Sans'] font-normal text-base leading-none ${targetCount === 0 ? 'text-neutral-400' : 'text-blue-700'}`}>
-                                    {processing ? 'Mengirim...' : 'Kirim Zoom Bulk'}
+                                <IconFluentSend24Filled className="h-4 w-4 text-blue-700 transition-transform duration-300 ease-in-out group-hover:translate-x-1" />
+                                <span className="font-body text-base leading-none text-blue-700">
+                                    {processing
+                                        ? "Mengirim..."
+                                        : "Kirim Zoom Bulk"}
                                 </span>
                             </button>
                         </div>

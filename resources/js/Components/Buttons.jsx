@@ -6,6 +6,7 @@ import {
     IconMingcuteFileImportFill,
     IconRiWhatsappFill,
     IconLsiFilterOutline,
+    IconDuoTrash,
 } from "@/Components/Icons";
 
 export function RouteButton({ text, href }) {
@@ -44,11 +45,15 @@ export function Redirect({ href }) {
     );
 }
 
+export function DocumentationLink({ href }) {
+    return <Link href={href}>Dokumentasi</Link>;
+}
+
 export function ImportButton({ text, onClick }) {
     return (
         <button
             onClick={onClick}
-            className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 sm:gap-2 lg:h-full"
+            className="flex h-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 lg:h-full"
         >
             <IconMingcuteFileImportFill className="h-5 w-5 shrink-0 text-blue-700" />
             <span className="font-body text-sm leading-none whitespace-nowrap text-blue-700 lg:text-base">
@@ -62,7 +67,7 @@ export function WAButton({ text, href }) {
     return (
         <a
             href={href}
-            className="flex h-fit cursor-pointer items-center gap-0.5 rounded-lg bg-lime-100 p-3 hover:bg-lime-200 active:bg-lime-300 sm:gap-2 lg:h-full"
+            className="flex h-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-lime-100 p-3 hover:bg-lime-200 active:bg-lime-300 lg:h-full"
         >
             <IconRiWhatsappFill className="h-5 w-5 shrink-0 text-lime-700" />
             <span className="font-body text-center text-sm leading-none whitespace-nowrap text-lime-700 lg:text-base">
@@ -72,9 +77,15 @@ export function WAButton({ text, href }) {
     );
 }
 
-export function ActionButton({ icon: IconComponent, label, onClick, href }) {
+export function ActionButton({
+    icon: IconComponent,
+    label,
+    onClick,
+    href,
+    className,
+}) {
     const baseClass =
-        "flex items-center rounded-lg border border-neutral/30 p-3 gap-2";
+        "flex items-center rounded-lg border border-neutral/30 p-3 gap-2 hover:bg-neutral-50 transition-colors duration-300 justify-center";
 
     const content = (
         <>
@@ -87,7 +98,7 @@ export function ActionButton({ icon: IconComponent, label, onClick, href }) {
 
     if (href) {
         return (
-            <a href={href} className={baseClass}>
+            <a href={href} className={`${baseClass} ${className}`}>
                 {content}
             </a>
         );
@@ -96,6 +107,20 @@ export function ActionButton({ icon: IconComponent, label, onClick, href }) {
     return (
         <button onClick={onClick} className={`${baseClass} cursor-pointer`}>
             {content}
+        </button>
+    );
+}
+
+export function DeleteButton({ text, onClick }) {
+    return (
+        <button
+            onClick={onClick}
+            className="flex h-fit cursor-pointer items-center justify-center gap-0.5 rounded-lg bg-red-100 p-3 transition-colors duration-300 hover:bg-red-200 active:bg-red-300 sm:gap-2 lg:h-full"
+        >
+            <IconDuoTrash className="aspect-square h-5 w-5 text-red-500" />
+            <p className="font-body text-center text-sm leading-none whitespace-nowrap text-red-700 lg:text-base">
+                {text}
+            </p>
         </button>
     );
 }
@@ -144,7 +169,7 @@ export function FilterDropdownButton({ tipeEvent, activeFilter, onFilter }) {
     let options = [];
 
     if (tipeEvent === "HYBRID") {
-        title = "Filter Metode";
+        title = "Filter Metode Kehadiran";
         options = [
             {
                 value: "",
@@ -220,7 +245,7 @@ export function FilterDropdownButton({ tipeEvent, activeFilter, onFilter }) {
                 className="border-neutral/30 relative flex items-center gap-2 rounded-lg border p-3 transition hover:bg-neutral-50 lg:rounded-xl"
             >
                 <IconLsiFilterOutline className="text-neutral aspect-square h-5 w-5" />
-                <span className="font-body text-neutral hidden text-sm leading-none font-normal md:flex lg:text-base">
+                <span className="font-body text-neutral text-sm leading-none font-normal lg:text-base">
                     {title}
                 </span>
 
