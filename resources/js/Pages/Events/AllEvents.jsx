@@ -5,7 +5,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { NoEvent, EventCard } from "@/Components/EventCard";
-import { RouteButton } from "@/Components/Buttons";
+import { RouteButton, BackButton } from "@/Components/Buttons";
 
 export default function AllEvents({
     ongoingEvents,
@@ -18,16 +18,21 @@ export default function AllEvents({
     ];
 
     return (
-        <AdminLayout title="Events">
+        <AdminLayout title="Daftar Acara">
             <Head title="Venio | Events" />
+
             <div className="flex flex-col gap-6 lg:gap-8">
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+
+                    <BackButton text="Kembali" />
+                </div>
 
                 {/* ongoing events */}
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
-                            Ongoing Events
+                            Sedang Berlangsung!
                         </span>
                         <RouteButton
                             href={route("ongoing.events")}
@@ -84,7 +89,7 @@ export default function AllEvents({
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
-                            Upcoming Events
+                            Yang akan datang
                         </span>
                         <RouteButton
                             href={route("upcoming.events")}
@@ -141,7 +146,7 @@ export default function AllEvents({
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="font-body flex justify-between leading-none font-medium">
                         <span className="text-base lg:text-2xl">
-                            Past Events
+                            Sudah Selesai
                         </span>
                         <RouteButton
                             href={route("past.events")}
