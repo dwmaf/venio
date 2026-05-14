@@ -20,6 +20,22 @@ export function RouteButton({ text, href }) {
     );
 }
 
+export function BackButton({ text }) {
+    const goBack = () => {
+        window.history.back();
+    };
+
+    return (
+        <button
+            onClick={goBack}
+            className="font-body group flex items-center gap-1 text-xs leading-none font-medium text-nowrap text-blue-700 hover:underline md:mt-1 md:text-lg"
+        >
+            <IconBasilArrowLeftOutline className="aspect-square h-5 w-5 text-blue-700 transition-all duration-300 group-hover:-translate-x-1 md:h-6 md:w-6" />
+            <span>{text}</span>
+        </button>
+    );
+}
+
 export function Redirect({ href }) {
     return (
         <Link href={href}>
