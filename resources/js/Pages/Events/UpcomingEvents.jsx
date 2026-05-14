@@ -3,6 +3,7 @@ import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { NoEvent, EventCard } from "@/Components/EventCard";
+import { RouteButton, BackButton } from "../../Components/Buttons";
 
 export default function UpcomingEvents({ upcomingEvents }) {
     const breadcrumbs = [
@@ -12,20 +13,33 @@ export default function UpcomingEvents({ upcomingEvents }) {
     ];
 
     return (
-        <AdminLayout title="Events">
-            <Head title="Venio | Upcoming Events" />
+        <AdminLayout title="Daftar Acara">
+            <Head title="Venio | Acara Mendatang" />
 
             <div className="flex flex-col gap-6 lg:gap-8">
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+
+                    <BackButton text="Kembali" />
+                </div>
 
                 <div className="flex flex-col gap-4 lg:gap-6">
-                    <span className="font-body font-medium text-base lg:text-2xl leading-none">
-                        Upcoming Events
-                    </span>
+                    <div className="flex justify-between">
+                        <h1 className="font-body text-base leading-none font-medium lg:text-2xl">
+                            Acara Mendatang
+                        </h1>
 
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <RouteButton
+                            href={route("create.events")}
+                            text="Tambah Acara"
+                        />
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                         {upcomingEvents.length === 0 ? (
-                            <NoEvent />
+                            <div className="font-heading text-neutral flex h-full w-full grow items-center justify-center text-xl font-medium lg:text-2xl">
+                                <p>Tidak ada acara!</p>
+                            </div>
                         ) : (
                             <>
                                 {upcomingEvents.map((event) => (
