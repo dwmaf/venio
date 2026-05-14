@@ -14,12 +14,14 @@ export default function NavItems({
     const isActive = url.startsWith(page);
 
     const baseClass =
-        "group relative flex items-center p-4 gap-2 rounded-lg transition-all duration-200 ease-in-out";
+        "group relative flex items-center p-4 gap-2 rounded-lg transition-all duration-200 ease-in-out cursor-pointer";
 
     const layoutClass = !isSidebarOpen ? "justify-center" : "";
 
     const stateClass =
-        isActive && !logout ? "bg-blue-50 text-blue-700" : "text-default";
+        isActive && !logout
+            ? "bg-blue-50 text-blue-700"
+            : "bg-transparent text-default";
 
     const hoverClass = logout
         ? "hover:bg-red-50 hover:text-red-700 w-full"
