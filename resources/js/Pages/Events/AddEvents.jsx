@@ -9,6 +9,7 @@ import {
     IconMaterialSymAddRounded,
 } from "@/Components/Icons";
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
+import { BackButton } from "@/Components/Buttons";
 
 const AddEvents = () => {
     const breadcrumbs = [
@@ -34,15 +35,21 @@ const AddEvents = () => {
     };
 
     return (
-        <AdminLayout title="Add New Event">
-            <Head title="Tambah Event" />
-            <Breadcrumb items={breadcrumbs} />
+        <AdminLayout title="Acara Baru">
+            <Head title="Tambah Acara" />
+
+            <div className="flex justify-between">
+                <Breadcrumb items={breadcrumbs} />
+
+                <BackButton text="Kembali" />
+            </div>
+
             <div className="font-body m-auto mt-12 max-w-106">
                 <form onSubmit={submit} className="m space-y-4">
                     {/* Nama Event */}
                     <div className="space-y-3">
                         <label className="block text-base leading-none lg:text-xl">
-                            Nama Event
+                            Nama Acara <span className="text-red-400">*</span>
                         </label>
                         <input
                             type="text"
@@ -83,7 +90,7 @@ const AddEvents = () => {
                         {/* Tanggal */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
-                                Tanggal
+                                Tanggal <span className="text-red-400">*</span>
                             </label>
                             <div className="relative flex items-center">
                                 <div className="text-neutral pointer-events-none absolute left-4">
@@ -111,7 +118,8 @@ const AddEvents = () => {
                         {/* Jam Mulai */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
-                                Jam Mulai
+                                Jam Mulai{" "}
+                                <span className="text-red-400">*</span>
                             </label>
                             <div className="relative flex items-center">
                                 <div className="text-neutral pointer-events-none absolute left-4">
@@ -137,7 +145,8 @@ const AddEvents = () => {
                         {/* Jam Selesai */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
-                                Jam Selesai
+                                Jam Selesai{" "}
+                                <span className="text-red-400">*</span>
                             </label>
                             <div className="relative flex items-center">
                                 <div className="text-neutral pointer-events-none absolute left-4">
@@ -167,7 +176,8 @@ const AddEvents = () => {
                             data.tipe_event === "HYBRID") && (
                             <div className="space-y-2">
                                 <label className="block text-base leading-none lg:text-xl">
-                                    Lokasi
+                                    Lokasi{" "}
+                                    <span className="text-red-400">*</span>
                                 </label>
                                 <div className="relative flex items-center">
                                     <div className="text-neutral absolute left-4">
@@ -195,7 +205,7 @@ const AddEvents = () => {
                         {/* Jumlah Peserta */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
-                                Peserta
+                                Peserta <span className="text-red-400">*</span>
                             </label>
                             <div className="relative flex items-center">
                                 <div className="text-neutral absolute left-4">
@@ -243,7 +253,9 @@ const AddEvents = () => {
                         >
                             <IconMaterialSymAddRounded className="aspect-square h-4 w-4 text-blue-700 lg:h-5 lg:w-5" />
                             <span className="text-base leading-none font-medium text-blue-700">
-                                {processing ? "Menyimpan..." : "Tambah Event"}
+                                {processing
+                                    ? "Menyimpan..."
+                                    : "Tambah Acara Baru"}
                             </span>
                         </button>
                     </div>
