@@ -45,7 +45,7 @@ export function EventCard({
         <Component
             href={href}
             key={id}
-            className={`flex flex-col ${col && "flex-1"} font-body text-neutral h-full snap-center justify-center gap-6 text-base ${snap && "min-h-42 w-full snap-center"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"} relative overflow-hidden`}
+            className={`flex flex-col ${col && "flex-1"} font-body text-neutral h-full snap-center justify-center gap-6 text-base ${snap && "min-h-42 w-full snap-center"} ${!inner && "border-default/30 rounded-2xl border p-4 lg:p-8"} group relative overflow-hidden`}
         >
             <div className="text-default flex h-full items-center gap-8">
                 <div className="rounded-lg bg-blue-50 p-3">
@@ -98,7 +98,7 @@ export function EventCard({
             <div
                 className={
                     !inner &&
-                    "absolute right-0 bottom-0 h-10 w-10 rounded-full bg-blue-500 blur-2xl"
+                    "absolute right-0 bottom-0 h-10 w-10 rounded-full bg-blue-500 blur-2xl transition-all duration-500 ease-in-out group-hover:scale-[3.0]"
                 }
             ></div>
         </Component>
