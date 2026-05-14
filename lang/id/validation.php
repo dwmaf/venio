@@ -47,10 +47,10 @@ return [
     */
 
   'attributes' => [
-    'nama_event' => 'Nama Event',
-    'tipe_event' => 'Tipe Event',
+    'nama_event' => 'Nama Acara',
+    'tipe_event' => 'Tipe Acara',
     'lokasi' => 'Lokasi',
-    'tanggal_event' => 'Tanggal Event',
+    'tanggal_event' => 'Tanggal Acara',
     'jam_mulai' => 'Jam Mulai',
     'jam_selesai' => 'Jam Selesai',
     'quota' => 'Kuota Peserta',

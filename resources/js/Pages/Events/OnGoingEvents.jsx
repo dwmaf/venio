@@ -13,7 +13,7 @@ export default function OngoingEvents({ ongoingEvents }) {
     ];
 
     return (
-        <AdminLayout title="Events">
+        <AdminLayout title="Daftar Acara">
             <Head title="Venio | Ongoing Events" />
 
             <div className="flex h-full flex-col gap-6 lg:gap-8">
