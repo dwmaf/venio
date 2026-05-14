@@ -9,6 +9,7 @@ import {
     IconMaterialSymAddRounded,
 } from "@/Components/Icons";
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
+import { BackButton } from "@/Components/Buttons";
 
 const AddEvents = () => {
     const breadcrumbs = [
@@ -36,7 +37,13 @@ const AddEvents = () => {
     return (
         <AdminLayout title="Add New Event">
             <Head title="Tambah Event" />
-            <Breadcrumb items={breadcrumbs} />
+
+            <div className="flex justify-between">
+                <Breadcrumb items={breadcrumbs} />
+
+                <BackButton text="Kembali" />
+            </div>
+
             <div className="font-body m-auto mt-12 max-w-106">
                 <form onSubmit={submit} className="m space-y-4">
                     {/* Nama Event */}
