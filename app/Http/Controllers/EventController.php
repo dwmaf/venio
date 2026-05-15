@@ -100,17 +100,20 @@ class EventController extends Controller
         // 2. FILTER EVENT BERDASARKAN WAKTU
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
+            ->withCount('participants')
             ->orderBy('jam_mulai', 'asc')
             ->limit(3)
             ->get();
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
+            ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
             ->limit(3)
             ->get();
 
         $pastEvents = Event::where('tanggal_event', '<', $today)
+            ->withCount('participants')
             ->orderBy('tanggal_event', 'desc')
             ->limit(3)
             ->get();
@@ -128,6 +131,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
+        ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
             ->get();
         return Inertia::render('Events/UpcomingEvents', [
@@ -139,6 +143,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $ongoingEvents = Event::where('tanggal_event', $today)
+        ->withCount('participants')
             ->orderBy('jam_mulai', 'asc')
             ->get();
         return Inertia::render('Events/OnGoingEvents', [

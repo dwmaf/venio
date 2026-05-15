@@ -55,7 +55,7 @@ export default function AdminLayout({ children, title }) {
         },
         {
             icon: IconDuoHandshake,
-            page: "/create-events",
+            page: "/partners",
             text: "Daftar Partner",
         },
         {

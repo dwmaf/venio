@@ -41,6 +41,8 @@ Route::middleware('auth')->group(function () {
 	Route::delete('/events/{event}/participants/selected', [EventController::class, 'destroySelected'])->name('participants.destroy.selected');
 
 	Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
+	Route::resource('partners', PartnerController::class)->except(['create', 'show', 'edit']);
+	
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

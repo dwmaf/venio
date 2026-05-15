@@ -166,7 +166,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                     <Metadata
                         icon={IconTwotoneHandshake}
                         title="Partner"
-                        data={`${stats.completedEvents} Partner`}
+                        data={`${stats.partners} Partner`}
                         className={`${bgPurpleGradient}`}
                         textColor="text-white"
                     />
@@ -273,7 +273,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             )}
                                             location={event.lokasi}
                                             participantsCount={
-                                                event.jumlah_peserta
+                                                event.participants_count
                                             }
                                             snap={true}
                                         />
@@ -352,7 +352,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                         timeStart={event.jam_mulai}
                                         timeEnd={event.jam_selesai}
                                         location={event.lokasi}
-                                        participantsCount={event.jumlah_peserta}
+                                        participantsCount={event.participants_count}
                                         inner={true}
                                         col={isMobile}
                                     />

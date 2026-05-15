@@ -51,6 +51,7 @@ export default function UpcomingEvents({ upcomingEvents }) {
                                         timeEnd={event.jam_selesai}
                                         href={route("events.index", event.id)}
                                         location={event.lokasi}
+                                        participantsCount={event.participants_count}
                                     />
                                 ))}
                                 {upcomingEvents.length === 1 && <NoEvent />}
