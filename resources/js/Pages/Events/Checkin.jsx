@@ -4,7 +4,7 @@ import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Breadcrumb from '@/Components/Breadcrumb';
 import { Html5Qrcode } from 'html5-qrcode';
-import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone } from '@/Components/Icons';
+import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone, IconPepHandshakePrint } from '@/Components/Icons';
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 
 export default function Checkin({ event }) {

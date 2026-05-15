@@ -12,7 +12,7 @@ use App\Http\Controllers\PartnerController;
 use App\Http\Controllers\MailLogController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => Auth::check() ? redirect()->route('dashboard') : redirect()->route('login'));
+Route::get('/', fn() => Auth::check() ? redirect()->route('dashboard') : redirect()->route('login'));
 
 Route::middleware('guest')->group(function () {
 	Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -25,19 +25,22 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/all-events', [EventController::class, 'allEvents'])->name('all.events');
 
-Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
-Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
-Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
+	Route::get('/upcoming-events', [EventController::class, 'upcomingEvents'])->name('upcoming.events');
+	Route::get('/ongoing-events', [EventController::class, 'ongoingEvents'])->name('ongoing.events');
+	Route::get('/past-events', [EventController::class, 'pastEvents'])->name('past.events');
 
-Route::get('/create-events', [EventController::class, 'create'])->name('create.events');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
+	Route::get('/create-events', [EventController::class, 'create'])->name('create.events');
+	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
-Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
-Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
+	Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
+	Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
 
-Route::get('/events/{event}', [EventController::class, 'detailEvent'])->name('events.index');
+	Route::get('/events/{event}', [EventController::class, 'detailEvent'])->name('events.index');
 
-Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
+	Route::delete('/events/{event}/participants/all', [EventController::class, 'destroyAll'])->name('participants.destroy.all');
+	Route::delete('/events/{event}/participants/selected', [EventController::class, 'destroySelected'])->name('participants.destroy.selected');
+
+	Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('checkin_scans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('participant_id')->nullable()->constrained('participants')->nullOnDelete();
+            $table->foreignId('participant_id')->nullable()->constrained('participants')->cascadeOnDelete();
             $table->string('scanned_token', 64);
             $table->enum('result', ['VALID', 'DUPLICATE', 'INVALID']);
             $table->timestamp('scanned_at');

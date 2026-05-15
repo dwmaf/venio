@@ -275,3 +275,25 @@ export function FilterDropdownButton({ tipeEvent, activeFilter, onFilter }) {
         </div>
     );
 }
+
+export function DeleteSelectedButton({ onClick, disabled }) {
+    const baseClasses =
+        "flex h-fit items-center gap-0.5 rounded-lg p-3 sm:gap-2 lg:h-full transition-colors duration-200 justify-center";
+    const activeClasses =
+        "cursor-pointer bg-red-100 hover:bg-red-200 active:bg-red-300";
+    const disabledClasses = "cursor-not-allowed bg-neutral-100";
+
+    const iconClasses = `aspect-square h-5 w-5 ${disabled ? "text-neutral-400" : "text-red-500"}`;
+    const textClasses = `font-body text-center text-sm leading-none whitespace-nowrap lg:text-base ${disabled ? "text-neutral-400" : "text-red-700"}`;
+
+    return (
+        <button
+            onClick={onClick}
+            disabled={disabled}
+            className={`${baseClasses} ${disabled ? disabledClasses : activeClasses}`}
+        >
+            <IconDuoTrash className={iconClasses} />
+            <p className={textClasses}>Hapus Terpilih</p>
+        </button>
+    );
+}

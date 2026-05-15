@@ -44,8 +44,7 @@ export default function Login() {
 
                         {(errors.username || errors.password) && (
                             <div className="mb-4 flex gap-1 rounded-lg border border-red-700/30 bg-red-50 px-3 py-2 text-sm text-red-600">
-                                <Icon
-                                    icon="ci:warning"
+                                <IconCiWarning
                                     className="h-4.5 w-4.5"
                                 />
                                 <span>

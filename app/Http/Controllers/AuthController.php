@@ -30,7 +30,6 @@ class AuthController extends Controller
             'password' => $credentials['password'],
         ], $request->boolean('remember'))) {
             $request->session()->regenerate();
-
             return redirect()->intended(route('dashboard'));
         }
 
