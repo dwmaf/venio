@@ -6,6 +6,8 @@ import { useState, useEffect } from 'react';
 import { IconFluentMailUnread20Filled } from '@/Components/Icons';
 import { SearchInput } from '@/Components/Inputs';
 import { route } from "ziggy-js";
+import Breadcrumb from "@/Components/Breadcrumb";
+import { BackButton } from "@/Components/Buttons";
 
 export default function MailLogs({ logs, filters }) {
     const activeSearch = filters?.search || "";
@@ -34,31 +36,30 @@ export default function MailLogs({ logs, filters }) {
         });
     };
 
+    const breadcrumbs = [
+        { label: "Home", href: route("dashboard") },
+        { label: "Mail Logs", href: route("mail.logs") },
+    ];
+
     return (
         <AdminLayout title="Mail Logs">
-            
-            <Head title="Mail Logs" />
-            <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                        <IconFluentMailUnread20Filled className="h-6 w-6" />
-                        Email Delivery Logs
-                    </h1>
-                    <p className="text-gray-600 text-sm mt-1">
-                        Monitor the status of all sent emails (QR and Zoom links).
-                    </p>
-                </div>
 
-                <div className="w-full md:w-72">
-                    <SearchInput
-                        id="search"
-                        name="search"
-                        placeholder="Cari Nama atau Email..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
+            <Head title="Mail Logs" />
+            <div className="flex justify-between">
+                <Breadcrumb items={breadcrumbs} />
+
+                <BackButton text="Kembali" />
             </div>
+            <div className="w-full md:w-72 my-4">
+                <SearchInput
+                    id="search"
+                    name="search"
+                    placeholder="Cari Nama atau Email..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                />
+            </div>
+
 
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
                 <div className="overflow-x-auto">
@@ -89,16 +90,14 @@ export default function MailLogs({ logs, filters }) {
                                             )}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                log.email_type === 'QR_EVENT' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
-                                            }`}>
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${log.email_type === 'QR_EVENT' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'
+                                                }`}>
                                                 {log.email_type === 'QR_EVENT' ? 'QR Code' : 'Zoom Link'}
                                             </span>
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                log.status === 'SENT' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${log.status === 'SENT' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                }`}>
                                                 {log.status}
                                             </span>
                                         </td>
@@ -126,7 +125,7 @@ export default function MailLogs({ logs, filters }) {
                         </tbody>
                     </table>
                 </div>
-                
+
                 {logs.links && logs.links.length > 3 && (
                     <div className="border-t border-gray-100 p-4">
                         <Pagination links={logs.links} />

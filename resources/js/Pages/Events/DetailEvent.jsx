@@ -9,6 +9,7 @@ import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import Pagination from "@/Components/Pagination";
 import AddParticipantModal from "@/Components/AddParticipantModal";
+import DocumentationModal from "@/Components/DocumentationModal";
 import {
     RouteButton,
     ImportButton,
@@ -19,6 +20,7 @@ import {
     DeleteButton,
     DeleteSelectedButton,
     AddButton,
+    DocumentationButton
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
 import {
@@ -59,6 +61,7 @@ export default function Event({ event, participants, stats }) {
     const [isSendQRBulkOpen, setIsSendQRBulkOpen] = useState(false);
     const [isSendZoomBulkOpen, setIsSendZoomBulkOpen] = useState(false);
     const [isAddParticipantModalOpen, setIsAddParticipantModalOpen] = useState(false);
+    const [isDocModalOpen, setIsDocModalOpen] = useState(false);
 
     const urlParams = new URLSearchParams(window.location.search);
     const activeFilter = urlParams.get("filter") || "";
@@ -340,13 +343,14 @@ export default function Event({ event, participants, stats }) {
 
                                 <Link
                                     href={route("events.edit", event.id)}
-                                    className="col-span-2 flex h-fit items-center justify-center gap-2 rounded-lg bg-yellow-100 p-3 transition hover:bg-yellow-200 lg:h-full"
+                                    className=" flex h-fit items-center justify-center gap-2 rounded-lg bg-yellow-100 p-3 transition hover:bg-yellow-200 lg:h-full"
                                 >
                                     <IconSolarPenBoldDuotone className="h-5 w-5 text-yellow-500" />
                                     <span className="font-body text-sm leading-none text-yellow-700 lg:text-base">
                                         Edit
                                     </span>
                                 </Link>
+                                <DocumentationButton onClick={() => setIsDocModalOpen(true)} />
                             </div>
                         </div>
 
@@ -387,8 +391,9 @@ export default function Event({ event, participants, stats }) {
                                 />
 
                                 <AddButton
-                                    text="Tambah Peserta"
+                                    text="Tambah Peserta Manual"
                                     onClick={() => setIsAddParticipantModalOpen(true)}
+                                    className="col-span-2 justify-center"
                                 />
                             </div>
                         </div>
@@ -593,6 +598,12 @@ export default function Event({ event, participants, stats }) {
                 onClose={() => setIsAddParticipantModalOpen(false)}
                 eventId={event.id}
                 tipeEvent={event.tipe_event}
+            />
+
+            <DocumentationModal
+                isOpen={isDocModalOpen}
+                onClose={() => setIsDocModalOpen(false)}
+                event={event}
             />
         </AdminLayout>
     );

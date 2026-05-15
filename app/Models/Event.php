@@ -14,6 +14,7 @@ class Event extends Model
         'jam_selesai',
         'tipe_event',
         'quota',
+        'link_dokumentasi',
     ];
 
     
