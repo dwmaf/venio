@@ -7,6 +7,7 @@ import {
     IconRiWhatsappFill,
     IconLsiFilterOutline,
     IconDuoTrash,
+    IconRiDriveFill,
 } from "@/Components/Icons";
 
 export function RouteButton({ text, href }) {
@@ -45,8 +46,19 @@ export function Redirect({ href }) {
     );
 }
 
-export function DocumentationLink({ href }) {
-    return <Link href={href}>Dokumentasi</Link>;
+export function DocumentationButton({ onClick, className = "" }) {
+    return (
+        <button
+            onClick={onClick}
+            type="button"
+            className={`flex h-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-green-100 p-3 hover:bg-green-200 active:bg-green-300 lg:h-full ${className}`}
+        >
+            <IconRiDriveFill className="aspect-square h-5 w-5 shrink-0 text-green-700" />
+            <span className="font-body text-sm leading-none whitespace-nowrap font-medium text-green-700 lg:text-base">
+                Dokumentasi
+            </span>
+        </button>
+    );
 }
 
 export function ImportButton({ text, onClick }) {
@@ -386,12 +398,12 @@ export function FilterTipeEventDropdown({ activeFilter, onFilter }) {
     );
 }
 
-export function AddButton({ text, onClick }) {
+export function AddButton({ text, onClick, className = "" }) {
     return (
         <button
             onClick={onClick}
             type="button"
-            className="flex h-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 lg:h-full"
+            className={`flex h-fit cursor-pointer items-center justify-center gap-2 rounded-lg bg-blue-100 p-3 hover:bg-blue-200 active:bg-blue-300 lg:h-full ${className}`}
         >
             <span className="font-body text-xl font-bold leading-none text-blue-700">
                 +

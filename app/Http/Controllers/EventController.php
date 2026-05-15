@@ -304,4 +304,17 @@ class EventController extends Controller
 
         return back()->with('success', count($request->ids) . ' data peserta berhasil dihapus.');
     }
+
+    public function updateLinkDokumentasi(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'link_dokumentasi' => 'nullable|url'
+        ]);
+
+        $event->update([
+            'link_dokumentasi' => $validated['link_dokumentasi']
+        ]);
+
+        return back()->with('success', 'Link dokumentasi berhasil disimpan.');
+    }
 }

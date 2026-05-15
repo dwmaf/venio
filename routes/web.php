@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/event/{event}/send-zoom-bulk', [SendEmailController::class, 'sendZoomBulk'])->name('peserta.send-zoom-bulk');
 	Route::post('/peserta/{participant}/send-zoom', [SendEmailController::class, 'sendZoom'])->name('peserta.send-zoom');
 	Route::post('/events/{event}/participants', [ParticipantController::class, 'storeParticipant'])->name('participants.store');
+	Route::put('/events/{event}/link-dokumentasi', [EventController::class, 'updateLinkDokumentasi'])->name('events.update-link-dokumentasi');
 
 	Route::get('/datang/{event}', [CheckinController::class, 'index'])->name('datang.index');
 	Route::post('/datang/{event}/scan', [CheckinController::class, 'scan'])->name('datang.scan');

@@ -6,6 +6,7 @@ import Pagination from "@/Components/Pagination";
 import { TableHead, TableData, TableRow } from "@/Components/Tables";
 import { SearchInput } from "@/Components/Inputs";
 import { IconDuoTrash, IconSolarPenBoldDuotone } from "@/Components/Icons";
+import { AddButton, BackButton } from "@/Components/Buttons";
 
 export default function Index({ partners, filters }) {
     const [search, setSearch] = useState(filters?.search || "");
@@ -75,7 +76,11 @@ export default function Index({ partners, filters }) {
             <Head title="Venio | Daftar Partner" />
 
             <div className="flex flex-col gap-6 lg:gap-8">
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+
+                    <BackButton text="Kembali" />
+                </div>
 
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -86,12 +91,10 @@ export default function Index({ partners, filters }) {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </div>
-                        <button
+                        <AddButton
+                            text="Tambah Partner"
                             onClick={openAddModal}
-                            className="bg-blue-600 text-white font-body px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-                        >
-                            Tambah Partner
-                        </button>
+                        />
                     </div>
 
                     <div className="w-full overflow-x-auto">
@@ -162,7 +165,7 @@ export default function Index({ partners, filters }) {
                                     type="text"
                                     value={data.nama}
                                     onChange={(e) => setData("nama", e.target.value)}
-                                    className="w-full border rounded-lg p-2 font-body outline-blue-500"
+                                    className="w-full font-body border border-neutral/30 rounded-lg p-2 text-sm"
                                     placeholder="Contoh: PT. Venio Karya"
                                     required
                                 />
@@ -172,16 +175,20 @@ export default function Index({ partners, filters }) {
                                 <button
                                     type="button"
                                     onClick={closeModal}
-                                    className="px-4 py-2 border rounded-lg font-body hover:bg-gray-50"
+                                    className="px-4 py-2 border border-neutral/30 rounded-lg font-body hover:bg-gray-50"
                                 >
-                                    Batal
+                                    <span className="font-body font-normal text-base leading-none text-neutral">
+                                        Batal
+                                    </span>
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={processing}
-                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg font-body hover:bg-blue-700 disabled:opacity-50"
+                                    className="px-4 py-2 bg-blue-50 rounded-lg font-body disabled:opacity-50"
                                 >
-                                    {processing ? "Menyimpan..." : "Simpan"}
+                                    <span className="font-body font-normal text-base leading-none text-blue-700">
+                                        {processing ? "Menyimpan..." : "Simpan"}
+                                    </span>
                                 </button>
                             </div>
                         </form>

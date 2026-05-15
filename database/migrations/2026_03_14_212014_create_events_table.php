@@ -20,7 +20,7 @@ return new class extends Migration
             $table->time('jam_selesai');
             $table->enum('tipe_event', ['OFFLINE', 'ONLINE', 'HYBRID'])->default('OFFLINE'); 
             $table->integer('quota')->nullable();
-            $table->json('partners')->nullable();
+            $table->string('link_dokumentasi')->nullable();
             $table->timestamps();
         });
     }

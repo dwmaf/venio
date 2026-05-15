@@ -190,6 +190,17 @@ export default function AdminLayout({ children, title }) {
                             </span>
                         </Link>
                         <Link
+                            href="/partners"
+                            className="flex items-center space-x-2 p-2"
+                        >
+                            <IconDuoHandshake className="text-default h-6 w-6 shrink-0" />
+                            <span
+                                className={`text[20px] font-['Plus_Jakarta_Sans'] leading-none font-normal`}
+                            >
+                                Daftar Partner
+                            </span>
+                        </Link>
+                        <Link
                             href="/mail-logs"
                             className="flex items-center space-x-2 p-2"
                         >
