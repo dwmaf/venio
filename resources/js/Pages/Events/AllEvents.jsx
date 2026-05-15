@@ -1,21 +1,30 @@
 import { useState } from "react";
-import { Head, useForm, Link } from "@inertiajs/react";
+import { Head, router, Link } from "@inertiajs/react";
 import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { NoEvent, EventCard } from "@/Components/EventCard";
-import { RouteButton, BackButton } from "@/Components/Buttons";
+import { RouteButton, BackButton, FilterTipeEventDropdown } from "@/Components/Buttons";
 
 export default function AllEvents({
     ongoingEvents,
     upcomingEvents,
     pastEvents,
+    currentFilter,
 }) {
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
         { label: "Events", href: route("all.events") },
     ];
+
+    const handleFilter = (val) => {
+        router.get(
+            route("all.events"), 
+            { tipe: val }, // parameter query: /all-events?tipe=ONLINE
+            { preserveState: true, replace: true } // agar scroll tak reset
+        );
+    };
 
     return (
         <AdminLayout title="Daftar Acara">
@@ -27,6 +36,10 @@ export default function AllEvents({
 
                     <BackButton text="Kembali" />
                 </div>
+                <FilterTipeEventDropdown
+                    activeFilter={currentFilter || "ALL"}
+                    onFilter={handleFilter}
+                />
 
                 {/* ongoing events */}
                 <div className="flex flex-col gap-4 lg:gap-6">
@@ -54,6 +67,7 @@ export default function AllEvents({
                                     >
                                         <EventCard
                                             name={event.nama_event}
+                                            tipeEvent={event.tipe_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
@@ -112,6 +126,7 @@ export default function AllEvents({
                                     >
                                         <EventCard
                                             name={event.nama_event}
+                                            tipeEvent={event.tipe_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
@@ -170,6 +185,7 @@ export default function AllEvents({
                                     >
                                         <EventCard
                                             name={event.nama_event}
+                                            tipeEvent={event.tipe_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}

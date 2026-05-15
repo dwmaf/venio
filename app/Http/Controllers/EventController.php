@@ -97,9 +97,13 @@ class EventController extends Controller
     public function allEvents(Request $request, Event $event)
     {
         $today = Carbon::today()->format('Y-m-d');
+        $filter = $request->query('tipe', 'ALL');
         // 2. FILTER EVENT BERDASARKAN WAKTU
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::where('tanggal_event', $today)
+            ->when($filter !== 'ALL', function ($query) use ($filter) {
+                return $query->where('tipe_event', $filter);
+            })
             ->withCount('participants')
             ->orderBy('jam_mulai', 'asc')
             ->limit(3)
@@ -107,12 +111,18 @@ class EventController extends Controller
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
+            ->when($filter !== 'ALL', function ($query) use ($filter) {
+                return $query->where('tipe_event', $filter);
+            })
             ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
             ->limit(3)
             ->get();
 
         $pastEvents = Event::where('tanggal_event', '<', $today)
+            ->when($filter !== 'ALL', function ($query) use ($filter) {
+                return $query->where('tipe_event', $filter);
+            })
             ->withCount('participants')
             ->orderBy('tanggal_event', 'desc')
             ->limit(3)
@@ -124,6 +134,7 @@ class EventController extends Controller
             'ongoingEvents' => $ongoingEvents,
             'upcomingEvents' => $upcomingEvents,
             'pastEvents' => $pastEvents,
+            'currentFilter' => $filter,
         ]);
     }
 
@@ -131,7 +142,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
-        ->withCount('participants')
+            ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
             ->get();
         return Inertia::render('Events/UpcomingEvents', [
@@ -143,7 +154,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $ongoingEvents = Event::where('tanggal_event', $today)
-        ->withCount('participants')
+            ->withCount('participants')
             ->orderBy('jam_mulai', 'asc')
             ->get();
         return Inertia::render('Events/OnGoingEvents', [
@@ -156,9 +167,12 @@ class EventController extends Controller
         $today = Carbon::today()->format('Y-m-d');
         $query = Event::where('tanggal_event', '<', $today);
 
-        // Tambahkan filter search jika ada
         if ($request->has('search') && $request->search != '') {
             $query->where('nama_event', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('tipe') && $request->tipe !== 'ALL') {
+            $query->where('tipe_event', $request->tipe);
         }
 
         $pastEvents = $query->with('partners')
@@ -168,7 +182,7 @@ class EventController extends Controller
             ->withQueryString();
         return Inertia::render('Events/PastEvents', [
             'pastEvents' => $pastEvents,
-            'filters'    => $request->only(['search']),
+            'filters'    => $request->only(['search', 'tipe']),
         ]);
     }
 
