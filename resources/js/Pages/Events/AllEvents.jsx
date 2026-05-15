@@ -62,6 +62,7 @@ export default function AllEvents({
                                                 event.id,
                                             )}
                                             location={event.lokasi}
+                                            participantsCount={event.participants_count}
                                             col={true}
                                         />
                                     </div>
@@ -119,6 +120,7 @@ export default function AllEvents({
                                                 event.id,
                                             )}
                                             location={event.lokasi}
+                                            participantsCount={event.participants_count}
                                             col={true}
                                         />
                                     </div>
@@ -176,6 +178,7 @@ export default function AllEvents({
                                                 event.id,
                                             )}
                                             location={event.lokasi}
+                                            participantsCount={event.participants_count}
                                             col={true}
                                         />
                                     </div>
