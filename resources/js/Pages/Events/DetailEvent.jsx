@@ -16,6 +16,7 @@ import {
     SendButton,
     FilterDropdownButton,
     DeleteButton,
+    DeleteSelectedButton,
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
 import {
@@ -42,79 +43,10 @@ import {
 } from "@/Components/Tables";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { SearchInput } from "@/Components/Inputs";
-
-function DeleteSelectedButton({ onClick, disabled }) {
-    const baseClasses =
-        "flex h-fit items-center gap-0.5 rounded-lg p-3 sm:gap-2 lg:h-full transition-colors duration-200 justify-center";
-    const activeClasses =
-        "cursor-pointer bg-red-100 hover:bg-red-200 active:bg-red-300";
-    const disabledClasses = "cursor-not-allowed bg-neutral-100";
-
-    const iconClasses = `aspect-square h-5 w-5 ${disabled ? "text-neutral-400" : "text-red-500"}`;
-    const textClasses = `font-body text-center text-sm leading-none whitespace-nowrap lg:text-base ${disabled ? "text-neutral-400" : "text-red-700"}`;
-
-    return (
-        <button
-            onClick={onClick}
-            disabled={disabled}
-            className={`${baseClasses} ${disabled ? disabledClasses : activeClasses}`}
-        >
-            <IconDuoTrash className={iconClasses} />
-            <p className={textClasses}>Hapus Terpilih</p>
-        </button>
-    );
-}
-
-function DeleteAllDataModal({ isOpen, onClose, onConfirm, processing }) {
-    if (!isOpen) return null;
-
-    return (
-        <div className="bg-default/50 fixed inset-0 z-50 flex items-center justify-center px-4">
-            <div className="w-full max-w-md overflow-hidden rounded-lg bg-white shadow-lg">
-                <div className="border-neutral/30 flex items-center justify-between border-b px-6 py-4">
-                    <h4 className="font-body text-default text-xl leading-none font-medium">
-                        Hapus Semua Data Peserta?
-                    </h4>
-                    <button
-                        onClick={onClose}
-                        className="cursor-pointer rounded-sm px-2 py-1 text-xl leading-none hover:bg-neutral-50"
-                    >
-                        ✕
-                    </button>
-                </div>
-                <div className="space-y-6 p-6">
-                    <p className="font-body text-sm leading-relaxed text-neutral-600">
-                        Aksi ini akan menghapus{" "}
-                        <strong>semua data peserta</strong> beserta log email
-                        dan riwayat scan untuk event ini.
-                        <br />
-                        <br />
-                        <span className="font-semibold text-red-600">
-                            Data yang sudah dihapus tidak bisa dikembalikan!
-                        </span>
-                    </p>
-                    <div className="flex flex-col-reverse justify-end gap-2 md:flex-row">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            className="font-body cursor-pointer rounded-lg border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50"
-                        >
-                            Batal
-                        </button>
-                        <button
-                            type="button"
-                            onClick={onConfirm}
-                            disabled={processing}
-                            className="font-body cursor-pointer rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:bg-red-300"
-                        >
-                            {processing ? "Menghapus..." : "Hapus Data"}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+import { 
+    DeleteSelectedModal, 
+    DeleteAllDataModal 
+} from "@/Components/DeleteModals";
 
 export default function Event({ event, participants, stats }) {
     const [selectedParticipantQR, setSelectedParticipantQR] = useState(null);
@@ -132,7 +64,8 @@ export default function Event({ event, participants, stats }) {
 
     const [selectedIds, setSelectedIds] = useState([]);
 
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 1. Tambahkan state
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isDeleteSelectedModalOpen, setIsDeleteSelectedModalOpen] = useState(false);
     const { processing, delete: destroy } = useForm();
 
     const d = new Date();
@@ -187,10 +120,18 @@ export default function Event({ event, participants, stats }) {
     };
 
     const handleDeleteAllData = () => {
-        // Anda perlu membuat route ini di web.php
-        // Contoh: Route::delete('/events/{event}/participants', [ParticipantController::class, 'destroyAll'])->name('participants.destroy.all');
         destroy(route("participants.destroy.all", event.id), {
             onSuccess: () => setIsDeleteModalOpen(false),
+        });
+    };
+
+    const handleDeleteSelected = () => {
+        router.delete(route("participants.destroy.selected", event.id), {
+            data: { ids: selectedIds },
+            onSuccess: () => {
+                setIsDeleteSelectedModalOpen(false);
+                setSelectedIds([]);
+            },
         });
     };
 
@@ -234,13 +175,12 @@ export default function Event({ event, participants, stats }) {
                             <h2 className="font-body text-base leading-7 font-medium sm:text-2xl">
                                 {event.nama_event}
                                 <span
-                                    className={`ml-2 w-fit rounded-full px-2 py-0.5 text-xs font-semibold ${
-                                        event.tipe_event === "ONLINE"
-                                            ? "bg-amber-100 text-amber-700"
-                                            : event.tipe_event === "OFFLINE"
-                                              ? "bg-lime-100 text-lime-700"
-                                              : "bg-blue-100 text-blue-700"
-                                    }`}
+                                    className={`ml-2 w-fit rounded-full px-2 py-0.5 text-xs font-semibold ${event.tipe_event === "ONLINE"
+                                        ? "bg-amber-100 text-amber-700"
+                                        : event.tipe_event === "OFFLINE"
+                                            ? "bg-lime-100 text-lime-700"
+                                            : "bg-blue-100 text-blue-700"
+                                        }`}
                                 >
                                     {event.tipe_event.charAt(0).toUpperCase() +
                                         event.tipe_event.slice(1).toLowerCase()}
@@ -325,14 +265,14 @@ export default function Event({ event, participants, stats }) {
 
                         {(event.tipe_event === "HYBRID" ||
                             event.tipe_event === "OFFLINE") && (
-                            <Metadata
-                                icon={IconQrCodeBoldDuotone}
-                                title="Sudah Scan QR"
-                                data={stats.offline_checked_in}
-                                className={`${bgTealGradient}`}
-                                textColor="text-white"
-                            />
-                        )}
+                                <Metadata
+                                    icon={IconQrCodeBoldDuotone}
+                                    title="Sudah Scan QR"
+                                    data={stats.offline_checked_in}
+                                    className={`${bgTealGradient}`}
+                                    textColor="text-white"
+                                />
+                            )}
 
                         {event.tipe_event === "ONLINE" && (
                             <Metadata
@@ -346,18 +286,18 @@ export default function Event({ event, participants, stats }) {
 
                         {(event.tipe_event === "ONLINE" ||
                             event.tipe_event === "OFFLINE") && (
-                            <Metadata
-                                icon={IconDuoUser}
-                                title={
-                                    event.tipe_event === "ONLINE"
-                                        ? "Zoom Belum Terisi"
-                                        : "Belum Hadir"
-                                }
-                                data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
-                                className={`${bgYellowGradient}`}
-                                textColor="text-white"
-                            />
-                        )}
+                                <Metadata
+                                    icon={IconDuoUser}
+                                    title={
+                                        event.tipe_event === "ONLINE"
+                                            ? "Zoom Belum Terisi"
+                                            : "Belum Hadir"
+                                    }
+                                    data={`${event.tipe_event === "ONLINE" ? stats.online_zoom_empty : stats.offline_not_checked_in} Peserta`}
+                                    className={`${bgYellowGradient}`}
+                                    textColor="text-white"
+                                />
+                            )}
                     </div>
 
                     {/* button" fungsional */}
@@ -387,6 +327,7 @@ export default function Event({ event, participants, stats }) {
 
                                 <DeleteSelectedButton
                                     disabled={selectedIds.length === 0}
+                                    onClick={() => setIsDeleteSelectedModalOpen(true)}
                                 />
 
                                 <DeleteButton
@@ -519,26 +460,26 @@ export default function Event({ event, participants, stats }) {
 
                                                     {participant.metode_kehadiran ===
                                                         "OFFLINE" && (
-                                                        <div
-                                                            className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
-                                                        >
-                                                            {participant.checked_in_at
-                                                                ? "Sudah Hadir"
-                                                                : "Belum Hadir"}
-                                                        </div>
-                                                    )}
+                                                            <div
+                                                                className={`rounded-2xl px-2 py-1 whitespace-nowrap ${participant.checked_in_at ? "bg-blue-100 text-blue-700" : "bg-yellow-100 text-yellow-700"}`}
+                                                            >
+                                                                {participant.checked_in_at
+                                                                    ? "Sudah Hadir"
+                                                                    : "Belum Hadir"}
+                                                            </div>
+                                                        )}
                                                 </div>
 
                                                 <CopyableText
                                                     label={
                                                         participant.metode_kehadiran ===
-                                                        "OFFLINE"
+                                                            "OFFLINE"
                                                             ? "QR"
                                                             : "Zoom"
                                                     }
                                                     textToCopy={
                                                         participant.metode_kehadiran ===
-                                                        "OFFLINE"
+                                                            "OFFLINE"
                                                             ? participant.qr_token
                                                             : participant.zoom_link
                                                     }
@@ -548,7 +489,7 @@ export default function Event({ event, participants, stats }) {
 
                                         <td className="p-3 lg:p-5">
                                             {participant.metode_kehadiran ===
-                                            "OFFLINE" ? (
+                                                "OFFLINE" ? (
                                                 <SendButton
                                                     onClick={() =>
                                                         setSelectedParticipantQR(
@@ -591,6 +532,14 @@ export default function Event({ event, participants, stats }) {
                     <Pagination links={participants.links} />
                 </div>
             </div>
+
+            <DeleteSelectedModal
+                isOpen={isDeleteSelectedModalOpen}
+                onClose={() => setIsDeleteSelectedModalOpen(false)}
+                onConfirm={handleDeleteSelected}
+                count={selectedIds.length}
+                processing={processing}
+            />
 
             <DeleteAllDataModal
                 isOpen={isDeleteModalOpen}

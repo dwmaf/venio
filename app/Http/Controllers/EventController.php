@@ -199,8 +199,8 @@ class EventController extends Controller
             $search = $request->search;
             $participantsQuery->where(function ($query) use ($search) {
                 $query->where('nama_lengkap', 'like', '%' . $search . '%')
-                      ->orWhere('email_primary', 'like', '%' . $search . '%')
-                      ->orWhere('no_hp_normalized', 'like', '%' . $search . '%');
+                    ->orWhere('email_primary', 'like', '%' . $search . '%')
+                    ->orWhere('no_hp_normalized', 'like', '%' . $search . '%');
             });
         }
 
@@ -266,5 +266,23 @@ class EventController extends Controller
         return Inertia::render('Events/EditEvent', [
             'event' => $event,
         ]);
+    }
+    public function destroyAll(Event $event)
+    {
+        $event->participants()->delete();
+        return back()->with('success', 'Semua data peserta berhasil dihapus.');
+    }
+
+    public function destroySelected(Request $request, Event $event)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:participants,id',
+        ]);
+        $event->participants()
+            ->whereIn('id', $request->ids)
+            ->delete();
+
+        return back()->with('success', count($request->ids) . ' data peserta berhasil dihapus.');
     }
 }
