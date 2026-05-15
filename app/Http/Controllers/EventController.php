@@ -155,9 +155,11 @@ class EventController extends Controller
         if ($request->has('search') && $request->search != '') {
             $query->where('nama_event', 'like', '%' . $request->search . '%');
         }
-        $pastEvents = $query->withCount('participants')
+
+        $pastEvents = $query->with('partners')
+            ->withCount('participants')
             ->orderBy('tanggal_event', 'desc')
-            ->paginate(5)
+            ->paginate(8)
             ->withQueryString();
         return Inertia::render('Events/PastEvents', [
             'pastEvents' => $pastEvents,
