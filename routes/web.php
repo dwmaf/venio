@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\ParticipantImportController;
 use App\Http\Controllers\SendEmailController;
 use App\Http\Controllers\PartnerController;
@@ -42,7 +43,7 @@ Route::middleware('auth')->group(function () {
 
 	Route::get('/api/partners/search', [PartnerController::class, 'search'])->name('partners.search');
 	Route::resource('partners', PartnerController::class)->except(['create', 'show', 'edit']);
-	
+
 	Route::post('/events', [EventController::class, 'store'])->name('events.store');
 
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -54,6 +55,7 @@ Route::middleware('auth')->group(function () {
 	Route::post('/peserta/{participant}/send-qr', [SendEmailController::class, 'sendQr'])->name('peserta.send-qr');
 	Route::post('/event/{event}/send-zoom-bulk', [SendEmailController::class, 'sendZoomBulk'])->name('peserta.send-zoom-bulk');
 	Route::post('/peserta/{participant}/send-zoom', [SendEmailController::class, 'sendZoom'])->name('peserta.send-zoom');
+	Route::post('/events/{event}/participants', [ParticipantController::class, 'storeParticipant'])->name('participants.store');
 
 	Route::get('/datang/{event}', [CheckinController::class, 'index'])->name('datang.index');
 	Route::post('/datang/{event}/scan', [CheckinController::class, 'scan'])->name('datang.scan');

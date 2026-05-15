@@ -264,6 +264,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     >
                                         <EventCard
                                             name={event.nama_event}
+                                            tipeEvent={event.tipe_event}
                                             date={event.tanggal_event}
                                             timeStart={event.jam_mulai}
                                             timeEnd={event.jam_selesai}
@@ -348,6 +349,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                     <EventCard
                                         key={index}
                                         name={event.nama_event}
+                                        tipeEvent={event.tipe_event}
                                         date={event.tanggal_event}
                                         timeStart={event.jam_mulai}
                                         timeEnd={event.jam_selesai}

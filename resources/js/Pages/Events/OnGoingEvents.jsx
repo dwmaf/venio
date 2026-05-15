@@ -46,6 +46,7 @@ export default function OngoingEvents({ ongoingEvents }) {
                                     <EventCard
                                         key={event.id}
                                         name={event.nama_event}
+                                        tipeEvent={event.tipe_event}
                                         date={event.tanggal_event}
                                         timeStart={event.jam_mulai}
                                         timeEnd={event.jam_selesai}

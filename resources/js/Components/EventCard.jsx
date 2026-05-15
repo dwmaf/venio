@@ -38,6 +38,7 @@ export function EventCard({
     inner = false,
     col = true,
     isMobile,
+    tipeEvent
 }) {
     const Component = href ? Link : "div";
 
@@ -58,6 +59,16 @@ export function EventCard({
                     >
                         {name}
                     </span>
+
+                    {tipeEvent && (
+                        <span className={`w-fit rounded-full px-2 py-0.5 text-xs font-semibold
+                                ${tipeEvent === "ONLINE" ? "bg-amber-100 text-amber-700" :
+                                tipeEvent === "OFFLINE" ? "bg-lime-100 text-lime-700" :
+                                    "bg-blue-100 text-blue-700"}`}
+                        >
+                            {tipeEvent.charAt(0).toUpperCase() + tipeEvent.slice(1).toLowerCase()}
+                        </span>
+                    )}
 
                     <div
                         className={`flex ${col ? "flex-col" : "flex-col sm:flex-row sm:flex-wrap"} gap-3 lg:gap-3`}

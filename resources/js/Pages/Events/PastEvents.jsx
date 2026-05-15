@@ -7,11 +7,12 @@ import Breadcrumb from "@/Components/Breadcrumb";
 import Pagination from "@/Components/Pagination";
 import { NoEvent } from "@/Components/EventCard";
 import { SearchInput } from "@/Components/Inputs";
-import { BackButton } from "@/Components/Buttons";
+import { BackButton, FilterTipeEventDropdown } from "@/Components/Buttons";
 import { TableHead, TableData, TableRow } from "@/Components/Tables";
 
 export default function PastEvents({ pastEvents, filters }) {
     const [search, setSearch] = useState(filters?.search || "");
+    const [tipe, setTipe] = useState(filters?.tipe || "ALL");
 
     useEffect(() => {
         if (search === (filters?.search || "")) return;
@@ -26,6 +27,15 @@ export default function PastEvents({ pastEvents, filters }) {
 
         return () => clearTimeout(delayDebounceFn);
     }, [search]);
+
+    const handleFilter = (val) => {
+        setTipe(val);
+        router.get(
+            route("past.events"),
+            { search: search, tipe: val },
+            { preserveState: true, replace: true }
+        );
+    };
 
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
@@ -54,7 +64,10 @@ export default function PastEvents({ pastEvents, filters }) {
 
                     <BackButton text="Kembali" />
                 </div>
-
+                <FilterTipeEventDropdown 
+                                activeFilter={tipe} 
+                                onFilter={handleFilter} 
+                            />
                 <div className="flex flex-col gap-4 lg:gap-6">
                     <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
                         <h1 className="font-body text-base leading-none font-medium lg:text-2xl">

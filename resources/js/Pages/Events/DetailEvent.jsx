@@ -8,6 +8,7 @@ import SendZoomIndividual from "@/Components/SendZoomIndividual";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import Pagination from "@/Components/Pagination";
+import AddParticipantModal from "@/Components/AddParticipantModal";
 import {
     RouteButton,
     ImportButton,
@@ -17,6 +18,7 @@ import {
     FilterDropdownButton,
     DeleteButton,
     DeleteSelectedButton,
+    AddButton,
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
 import {
@@ -43,9 +45,9 @@ import {
 } from "@/Components/Tables";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { SearchInput } from "@/Components/Inputs";
-import { 
-    DeleteSelectedModal, 
-    DeleteAllDataModal 
+import {
+    DeleteSelectedModal,
+    DeleteAllDataModal
 } from "@/Components/DeleteModals";
 
 export default function Event({ event, participants, stats }) {
@@ -56,6 +58,7 @@ export default function Event({ event, participants, stats }) {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [isSendQRBulkOpen, setIsSendQRBulkOpen] = useState(false);
     const [isSendZoomBulkOpen, setIsSendZoomBulkOpen] = useState(false);
+    const [isAddParticipantModalOpen, setIsAddParticipantModalOpen] = useState(false);
 
     const urlParams = new URLSearchParams(window.location.search);
     const activeFilter = urlParams.get("filter") || "";
@@ -382,6 +385,11 @@ export default function Event({ event, participants, stats }) {
                                     label="Ekspor Rekap Hadir"
                                     className="col-span-2 justify-center"
                                 />
+
+                                <AddButton
+                                    text="Tambah Peserta"
+                                    onClick={() => setIsAddParticipantModalOpen(true)}
+                                />
                             </div>
                         </div>
 
@@ -578,6 +586,13 @@ export default function Event({ event, participants, stats }) {
                 isOpen={isImportModalOpen}
                 onClose={() => setIsImportModalOpen(false)}
                 eventId={event.id}
+            />
+
+            <AddParticipantModal
+                isOpen={isAddParticipantModalOpen}
+                onClose={() => setIsAddParticipantModalOpen(false)}
+                eventId={event.id}
+                tipeEvent={event.tipe_event}
             />
         </AdminLayout>
     );
