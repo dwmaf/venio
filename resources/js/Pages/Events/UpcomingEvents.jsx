@@ -3,7 +3,7 @@ import { route } from "ziggy-js";
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { NoEvent, EventCard } from "@/Components/EventCard";
-import { RouteButton, BackButton } from "../../Components/Buttons";
+import { RouteButton, BackButton } from "@/Components/Buttons";
 
 export default function UpcomingEvents({ upcomingEvents }) {
     const breadcrumbs = [

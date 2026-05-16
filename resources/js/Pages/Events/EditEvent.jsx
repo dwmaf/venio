@@ -1,10 +1,11 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import Breadcrumb from "@/Components/Breadcrumb";
 import { useForm, Head, Link } from "@inertiajs/react";
-import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup, IconDisketteBold } from '@/Components/Icons';
+import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup, IconDisketteBold, IconChevronDown, } from '@/Components/Icons';
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { route } from "ziggy-js";
 import { BackButton } from "@/Components/Buttons";
+
 
 const EditEvent = ({ event }) => {
     const today = new Date().toISOString().split("T")[0];
@@ -91,23 +92,27 @@ const EditEvent = ({ event }) => {
                     </div>
 
                     {/* Format Event + Tanggal Event */}
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="block text-base lg:text-xl leading-none">
                                 Format Event
                             </label>
-
-                            <select
-                                className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                value={data.tipe_event}
-                                onChange={(e) =>
-                                    setData("tipe_event", e.target.value)
-                                }
-                            >
-                                <option value="OFFLINE">Offline</option>
-                                <option value="ONLINE">Online</option>
-                                <option value="HYBRID">Hybrid</option>
-                            </select>
+                            <div className="relative flex items-center">
+                                <select
+                                    className="appearance-none border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                                    value={data.tipe_event}
+                                    onChange={(e) =>
+                                        setData("tipe_event", e.target.value)
+                                    }
+                                >
+                                    <option value="OFFLINE">Offline</option>
+                                    <option value="ONLINE">Online</option>
+                                    <option value="HYBRID">Hybrid</option>
+                                </select>
+                                <div className="pointer-events-none absolute right-4 text-neutral">
+                                    <IconChevronDown className="h-4 w-4" />
+                                </div>
+                            </div>
                         </div>
 
                         <div className="space-y-2">
@@ -140,7 +145,7 @@ const EditEvent = ({ event }) => {
                     </div>
 
                     {/* Jam Mulai + Jam Selesai */}
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="block text-base lg:text-xl leading-none">
                                 Jam Mulai
@@ -197,7 +202,7 @@ const EditEvent = ({ event }) => {
                     </div>
 
                     {/* Lokasi + Peserta */}
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="block text-base lg:text-xl leading-none">
                                 Lokasi

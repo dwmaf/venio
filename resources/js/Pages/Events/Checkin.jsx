@@ -7,8 +7,15 @@ import { Html5Qrcode } from 'html5-qrcode';
 import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone, IconPepHandshakePrint } from '@/Components/Icons';
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { BackButton } from "@/Components/Buttons";
+import Toast from '@/Components/Toast';
 
 export default function Checkin({ event }) {
+    const [toast, setToast] = useState(null);
+
+    const triggerToast = (message, type) => {
+        setToast({ message, type });
+    };
+
     const today = new Date().toISOString().split('T')[0];
     let eventCategoryLabel = '';
     let eventCategoryRoute = '';
@@ -95,14 +102,13 @@ export default function Checkin({ event }) {
 
             if (payload.status === 'VALID') {
                 showStatus('Scan valid dan berhasil dicatat.', 'ready');
-                // Ganti alert bawaan dengan UI/SweetAlert nanti di FE
-                alert(`SUCCESS: ${payload.participant_name}`);
+                triggerToast(`BERHASIL: ${payload.participant_name}`, 'success'); // Panggil toast
             } else if (payload.status === 'DUPLICATE') {
                 showStatus('Peserta sudah check-in sebelumnya.', 'warning');
-                alert(`DUPLIKAT: ${payload.participant_name}`);
+                triggerToast(`DUPLIKAT: ${payload.participant_name}`, 'error'); // Bisa pakai tipe error agar merah
             } else {
                 showStatus('Token tidak valid.', 'error');
-                alert(`INVALID: ${payload.message}`);
+                triggerToast(`INVALID: ${payload.message}`, 'error');
             }
         } catch (error) {
             showStatus('Koneksi ke server check-in gagal.', 'error');
@@ -127,6 +133,13 @@ export default function Checkin({ event }) {
 
     return (
         <AdminLayout title="Events">
+            {toast && (
+                <Toast
+                    message={toast.message}
+                    type={toast.type}
+                    onClose={() => setToast(null)}
+                />
+            )}
             <div className="flex flex-col gap-4">
                 <Head title={`Scan Page - ${event.nama_event}`} />
                 <div className="flex justify-between">
