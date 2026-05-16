@@ -1,5 +1,5 @@
 import { Link, usePage } from "@inertiajs/react";
-import Tooltip from "./Tooltip";
+import Tooltip from "@/Components/Tooltip";
 
 export default function NavItems({
     page,

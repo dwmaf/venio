@@ -7,6 +7,7 @@ import {
     IconCarbonLocation,
     IconUsersGroup,
     IconMaterialSymAddRounded,
+    IconChevronDown,
 } from "@/Components/Icons";
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { BackButton } from "@/Components/Buttons";
@@ -68,23 +69,28 @@ const AddEvents = () => {
                         )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Tipe Event */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
                                 Metode Hadir
                             </label>
-                            <select
-                                className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                value={data.tipe_event}
-                                onChange={(e) =>
-                                    setData("tipe_event", e.target.value)
-                                }
-                            >
-                                <option value="OFFLINE">Offline</option>
-                                <option value="ONLINE">Online</option>
-                                <option value="HYBRID">Hybrid</option>
-                            </select>
+                            <div className="relative flex items-center">
+                                <select
+                                    className="appearance-none border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
+                                    value={data.tipe_event}
+                                    onChange={(e) =>
+                                        setData("tipe_event", e.target.value)
+                                    }
+                                >
+                                    <option value="OFFLINE">Offline</option>
+                                    <option value="ONLINE">Online</option>
+                                    <option value="HYBRID">Hybrid</option>
+                                </select>
+                                <div className="pointer-events-none absolute right-4 text-neutral">
+                                    <IconChevronDown className="h-4 w-4" />
+                                </div>
+                            </div>
                         </div>
 
                         {/* Tanggal */}
@@ -114,7 +120,7 @@ const AddEvents = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Jam Mulai */}
                         <div className="space-y-2">
                             <label className="block text-base leading-none lg:text-xl">
@@ -170,37 +176,37 @@ const AddEvents = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Lokasi (Dinamis) */}
                         {(data.tipe_event === "OFFLINE" ||
                             data.tipe_event === "HYBRID") && (
-                            <div className="space-y-2">
-                                <label className="block text-base leading-none lg:text-xl">
-                                    Lokasi{" "}
-                                    <span className="text-red-400">*</span>
-                                </label>
-                                <div className="relative flex items-center">
-                                    <div className="text-neutral absolute left-4">
-                                        <IconCarbonLocation className="h-5 w-5" />
+                                <div className="space-y-2">
+                                    <label className="block text-base leading-none lg:text-xl">
+                                        Lokasi{" "}
+                                        <span className="text-red-400">*</span>
+                                    </label>
+                                    <div className="relative flex items-center">
+                                        <div className="text-neutral absolute left-4">
+                                            <IconCarbonLocation className="h-5 w-5" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
+                                            value={data.lokasi}
+                                            onChange={(e) =>
+                                                setData("lokasi", e.target.value)
+                                            }
+                                            placeholder="UPA PKK"
+                                        />
                                     </div>
-                                    <input
-                                        type="text"
-                                        className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                        value={data.lokasi}
-                                        onChange={(e) =>
-                                            setData("lokasi", e.target.value)
-                                        }
-                                        placeholder="UPA PKK"
-                                    />
-                                </div>
 
-                                {errors.lokasi && (
-                                    <p className="text-xs text-red-500">
-                                        {errors.lokasi}
-                                    </p>
-                                )}
-                            </div>
-                        )}
+                                    {errors.lokasi && (
+                                        <p className="text-xs text-red-500">
+                                            {errors.lokasi}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
 
                         {/* Jumlah Peserta */}
                         <div className="space-y-2">
