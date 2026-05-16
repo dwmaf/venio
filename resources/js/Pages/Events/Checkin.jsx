@@ -6,6 +6,7 @@ import Breadcrumb from '@/Components/Breadcrumb';
 import { Html5Qrcode } from 'html5-qrcode';
 import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone, IconPepHandshakePrint } from '@/Components/Icons';
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
+import { BackButton } from "@/Components/Buttons";
 
 export default function Checkin({ event }) {
     const today = new Date().toISOString().split('T')[0];
@@ -26,8 +27,8 @@ export default function Checkin({ event }) {
     }
     const breadcrumbs = [
         { label: 'Home', href: route('dashboard') },
-        { label: 'Events', href: route('all.events') },
-        { label: eventCategoryLabel, href: eventCategoryRoute },
+        { label: 'Events', href: route('all.events'), hideOnMobile: true },
+        { label: eventCategoryLabel, href: eventCategoryRoute, hideOnMobile: true },
         { label: event.nama_event || 'Detail Event', href: route('events.index', event.id) },
         { label: 'Scan QR', href: route('datang.index', event.id) },
     ];
@@ -109,7 +110,7 @@ export default function Checkin({ event }) {
         } finally {
             setTimeout(() => {
                 scanLockRef.current = false;
-                if (!isCameraBlocked) { 
+                if (!isCameraBlocked) {
                     showStatus('Siap scan berikutnya. Arahkan kamera ke QR.', 'ready');
                 } else {
                     showStatus('Izin kamera ditolak. Izinkan akses kamera pada browser, lalu refresh halaman. Gunakan input manual token.', 'error');
@@ -128,26 +129,29 @@ export default function Checkin({ event }) {
         <AdminLayout title="Events">
             <div className="flex flex-col gap-4">
                 <Head title={`Scan Page - ${event.nama_event}`} />
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+                    <BackButton text="Kembali" />
+                </div>
 
                 <h2 className="font-['Plus_Jakarta_Sans'] font-medium text-base sm:text-2xl leading-none">{event.nama_event}</h2>
 
                 <div className="flex flex-wrap gap-x-2 gap-y-2 sm:gap-4">
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoCalendar className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <IconDuoCalendar className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{formatTanggalSlash(event.tanggal_event)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoClock className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <IconDuoClock className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{formatJamMenit(event.jam_mulai)} - {formatJamMenit(event.jam_selesai)}</span>
                     </div>
                     <div className="flex gap-2.5 items-center">
-                        <IconDuoLocation className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                        <IconDuoLocation className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
                         <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">{event.lokasi}</span>
                     </div>
                     {event.partners && event.partners.length > 0 && (
                         <div className="flex gap-2.5 items-center">
-                            <IconPepHandshakePrint className='h-4 w-4 lg:h-6 lg:w-6 text-neutral'/>
+                            <IconPepHandshakePrint className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">
                                 {event.partners.map(partner => partner.nama).join(', ')}
                             </span>
@@ -172,13 +176,13 @@ export default function Checkin({ event }) {
                         )}
 
                     </div>
-                    
+
                     <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 lg:pr-12 lg:pl-8">
                         {/* kamera */}
                         <div className="w-full relative flex items-center justify-center bg-gray-100 min-h-75 overflow-hidden lg:w-2/3 aspect-square sm:aspect-video lg:aspect-auto">
                             {(statusTone === 'loading' || statusTone === 'error') && (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none gap-2 p-4">
-                                    <IconPhCameraSlashDuotone className='w-12.5 h-12.5 text-neutral'/>
+                                    <IconPhCameraSlashDuotone className='w-12.5 h-12.5 text-neutral' />
                                     {statusTone === 'error' && (
                                         <span className="font-['Plus_Jakarta_Sans'] text-sm text-red-600 font-medium mx-auto text-center leading-5">
                                             {statusText}

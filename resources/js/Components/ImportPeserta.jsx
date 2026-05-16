@@ -1,4 +1,5 @@
 import { useForm } from '@inertiajs/react';
+import { TemplateButton } from './Buttons';
 
 export default function ImportPeserta({ isOpen, onClose, eventId }) {
     const csvForm = useForm({
@@ -34,14 +35,14 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-default/50 px-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-default/50 sm:px-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl overflow-hidden">
                 <div className="px-6 py-4 border-b border-neutral/30 flex justify-between items-center">
                     <h2 className="text-xl font-body leading-none text-default font-medium">Import Data Peserta</h2>
                     <button onClick={onClose} className="text-xl leading-none cursor-pointer">✕</button>
                 </div>
 
-                <div className="p-6">
+                <div className="p-3 sm:p-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Area Upload CSV */}
                         <div className='space-y-4'>
@@ -71,8 +72,9 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                         </div>
 
                         {/* Area Import Google Sheet */}
-                        <div className='space-y-4'>
+                        <div className='border-t border-neutral/30 pt-6 md:border-none md:pt-0 space-y-4'>
                             <h3 className="text-lg font-semibold font-body leading-none">Import dari Spreadsheet</h3>
+                            <TemplateButton />
                             <form onSubmit={submitSheet} className="space-y-4">
                                 <div>
                                     <input
@@ -94,7 +96,8 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                                     </span>
                                 </button>
                             </form>
-                            <p className="font-body leading-none text-xs text-neutral">Jika dikosongkan, sistem memakai GOOGLE_SHEET_URL dari konfigurasi asli server (.env).</p>
+                            <p className="font-body leading-none text-xs text-neutral">Pastikan google sheet nya punya akses "Anyone with the link/Siapa saja yang memiliki link" dengan role "Pelihat".
+                                Jika dikosongkan, sistem memakai GOOGLE_SHEET_URL dari konfigurasi asli server (.env).</p>
                         </div>
                     </div>
                 </div>

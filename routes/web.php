@@ -49,6 +49,7 @@ Route::middleware('auth')->group(function () {
 	Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 	Route::get('/mail-logs', [MailLogController::class, 'index'])->name('mail.logs');
 
+	Route::get('/peserta/template', [ParticipantImportController::class, 'downloadTemplate'])->name('peserta.template');
 	Route::post('/peserta/import', [ParticipantImportController::class, 'store'])->name('peserta.import');
 	Route::post('/peserta/import-sheet', [ParticipantImportController::class, 'storeFromSheet'])->name('peserta.import-sheet');
 	Route::post('/event/{event}/send-qr-bulk', [SendEmailController::class, 'sendQrBulk'])->name('peserta.send-qr-bulk');

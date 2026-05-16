@@ -20,7 +20,8 @@ import {
     DeleteButton,
     DeleteSelectedButton,
     AddButton,
-    DocumentationButton
+    DocumentationButton,
+    BackButton
 } from "@/Components/Buttons";
 import { route } from "ziggy-js";
 import {
@@ -92,7 +93,7 @@ export default function Event({ event, participants, stats }) {
 
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
-        { label: "Events", href: route("all.events") },
+        { label: "Events", href: route("all.events"), hideOnMobile: true },
         { label: eventCategoryLabel, href: eventCategoryRoute },
         {
             label: event.nama_event || "Detail Event",
@@ -173,7 +174,10 @@ export default function Event({ event, participants, stats }) {
             <Head title={`Detail Acara - ${event.nama_event}`} />
 
             <div className="flex flex-col gap-4">
-                <Breadcrumb items={breadcrumbs} />
+                <div className="flex justify-between">
+                    <Breadcrumb items={breadcrumbs} />
+                    <BackButton text="Kembali" />
+                </div>
 
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-wrap items-start justify-between gap-3">

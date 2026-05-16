@@ -30,7 +30,7 @@ class ParticipantImportController extends Controller
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('events.index', $eventId)->with('error', 'Import gagal: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Import gagal: ' . $exception->getMessage());
         }
 
         fclose($handle);
@@ -59,11 +59,11 @@ class ParticipantImportController extends Controller
         try {
             $response = Http::timeout((int) config('services.google_sheet.timeout', 20))->get($csvUrl);
         } catch (\Throwable $exception) {
-            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil data spreadsheet: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil data spreadsheet: ' . $exception->getMessage());
         }
 
         if (! $response->successful()) {
-            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil spreadsheet. Status HTTP: '.$response->status());
+            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil spreadsheet. Status HTTP: ' . $response->status());
         }
 
         $content = $response->body();
@@ -85,7 +85,7 @@ class ParticipantImportController extends Controller
         } catch (\Throwable $exception) {
             fclose($handle);
 
-            return redirect()->route('events.index', $eventId)->with('error', 'Import dari spreadsheet gagal: '.$exception->getMessage());
+            return redirect()->route('events.index', $eventId)->with('error', 'Import dari spreadsheet gagal: ' . $exception->getMessage());
         }
 
         fclose($handle);
@@ -121,13 +121,13 @@ class ParticipantImportController extends Controller
             throw new \RuntimeException('Header CSV tidak ditemukan.');
         }
 
-        $normalizedHeaders = array_map(fn ($header) => $this->normalizeHeader((string) $header), $headers);
+        $normalizedHeaders = array_map(fn($header) => $this->normalizeHeader((string) $header), $headers);
 
         $inserted = 0;
         $updated = 0;
         $skipped = 0;
-        
-        
+
+
         while (($row = $this->readCsvRow($handle, $delimiter)) !== false) {
             $rowData = [];
             foreach ($normalizedHeaders as $index => $normalizedHeader) {
@@ -167,7 +167,7 @@ class ParticipantImportController extends Controller
         }
 
         if (preg_match('#/spreadsheets/d/([a-zA-Z0-9-_]+)#', $sourceUrl, $matches) === 1) {
-            return 'https://docs.google.com/spreadsheets/d/'.$matches[1].'/export?format=csv';
+            return 'https://docs.google.com/spreadsheets/d/' . $matches[1] . '/export?format=csv';
         }
 
         return $sourceUrl;
@@ -199,7 +199,7 @@ class ParticipantImportController extends Controller
         $consentRaw = Str::lower(trim((string) $this->value($row, ['saya menyatakan data yang diisi sudah benar'])));
         $persetujuanData = Str::contains($consentRaw, 'ya');
 
-        $dedupeKeyHash = hash('sha256', $eventId.'|'.Str::lower($namaLengkap).'|'.$emailPrimary);
+        $dedupeKeyHash = hash('sha256', $eventId . '|' . Str::lower($namaLengkap) . '|' . $emailPrimary);
 
         return [
             'event_id' => $eventId,
@@ -289,7 +289,7 @@ class ParticipantImportController extends Controller
         }
 
         if (Str::startsWith($digitsOnly, '0')) {
-            return '62'.substr($digitsOnly, 1);
+            return '62' . substr($digitsOnly, 1);
         }
 
         return $digitsOnly;
@@ -304,5 +304,33 @@ class ParticipantImportController extends Controller
         $trimmed = trim($value);
 
         return $trimmed === '' ? null : $trimmed;
+    }
+
+    public function downloadTemplate()
+    {
+        $headers = [
+            'Timestamp',
+            'Nama Lengkap',
+            'Email Address',
+            'No HP - Whatsapp aktif',
+            'Metode Kehadiran',
+            'Kategori Peserta',
+            'Instansi / Tempat Kerja',
+            'Jenis Kelamin',
+            'Spesialisasi (jika ada)',
+            'Alamat Instansi',
+            'Kategori Biaya'
+        ];
+
+        $filename = "template_import_peserta.csv";
+        $handle = fopen('php://output', 'w');
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        fputcsv($handle, $headers);
+        fclose($handle);
+
+        return exit;
     }
 }

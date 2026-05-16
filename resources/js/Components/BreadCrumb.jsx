@@ -8,7 +8,7 @@ export default function Breadcrumb({ items }) {
             aria-label="Breadcrumb"
         >
             {items.map((item, idx) => (
-                <span key={idx} className="flex items-center gap-0 md:gap-2">
+                <span key={idx} className={`flex items-center gap-0 md:gap-2 ${item.hideOnMobile ? 'hidden sm:flex' : ''}`}>
                     {item.href ? (
                         idx === 0 ? (
                             <Link

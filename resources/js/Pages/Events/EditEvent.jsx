@@ -4,6 +4,7 @@ import { useForm, Head, Link } from "@inertiajs/react";
 import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup, IconDisketteBold } from '@/Components/Icons';
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { route } from "ziggy-js";
+import { BackButton } from "@/Components/Buttons";
 
 const EditEvent = ({ event }) => {
     const today = new Date().toISOString().split("T")[0];
@@ -23,14 +24,14 @@ const EditEvent = ({ event }) => {
 
     const breadcrumbs = [
         { label: "Home", href: route("dashboard") },
-        { label: "Events", href: route("all.events") },
-        { label: eventCategoryLabel, href: eventCategoryRoute },
+        { label: "Events", href: route("all.events"), hideOnMobile: true },
+        { label: eventCategoryLabel, href: eventCategoryRoute, hideOnMobile: true },
         {
             label: event.nama_event || "Detail Event",
             href: route("events.index", event.id),
         },
         {
-            label: "Edit Event",
+            label: "Edit",
             href: route("events.edit", event.id),
         },
     ];
@@ -56,7 +57,10 @@ const EditEvent = ({ event }) => {
         <AdminLayout title="Events">
             <Head title={`Edit Event - ${event.nama_event}`} />
 
-            <Breadcrumb items={breadcrumbs} />
+            <div className="flex justify-between">
+                <Breadcrumb items={breadcrumbs} />
+                <BackButton text="Kembali" />
+            </div>
 
             <div className="min-h-[calc(100vh-180px)] w-full flex justify-center items-center py-20 font-body">
                 <form
@@ -113,7 +117,7 @@ const EditEvent = ({ event }) => {
 
                             <div className="relative flex items-center">
                                 <div className="absolute left-4 text-neutral pointer-events-none">
-                                    
+
                                     <IconMynauiCalender className="w-5 h-5 " />
                                 </div>
 
