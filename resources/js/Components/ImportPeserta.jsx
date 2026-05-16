@@ -1,13 +1,13 @@
 import { useForm } from '@inertiajs/react';
-import { TemplateButton } from './Buttons';
+import { TemplateButton } from '@/Components/Buttons';
+import { IconLoading } from '@/Components/Icons';
 
 export default function ImportPeserta({ isOpen, onClose, eventId }) {
     const csvForm = useForm({
         csv_file: null,
-        event_id: eventId, // ID event agar peserta masuk ke event yang tepat
+        event_id: eventId,
     });
 
-    // Form untuk URL Spreadsheet
     const sheetForm = useForm({
         sheet_url: '',
         event_id: eventId,
@@ -63,9 +63,14 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                                     disabled={csvForm.processing}
                                     className="w-full flex items-center justify-center rounded-lg bg-blue-50 p-3 gap-2 cursor-pointer"
                                 >
-                                    <span className="font-body font-normal text-base leading-none text-blue-700">
-                                        {csvForm.processing ? 'Mengimpor...' : 'Import CSV'}
-                                    </span>
+                                    {csvForm.processing ? (
+                                        <div className="flex items-center gap-2">
+                                            <IconLoading className="h-5 w-5 text-blue-700" />
+                                            <span className="font-body font-normal text-base leading-none text-blue-700">Mengimpor...</span>
+                                        </div>
+                                    ) : (
+                                        <span className="font-body font-normal text-base leading-none text-blue-700">Import CSV</span>
+                                    )}
                                 </button>
                             </form>
                             <p className="font-body leading-none text-xs text-neutral">Gunakan CSV hasil ekspor dari tab Form Responses.</p>
@@ -74,7 +79,8 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                         {/* Area Import Google Sheet */}
                         <div className='border-t border-neutral/30 pt-6 md:border-none md:pt-0 space-y-4'>
                             <h3 className="text-lg font-semibold font-body leading-none">Import dari Spreadsheet</h3>
-                            <TemplateButton />
+                            {/* tombol buat unduh template */}
+                            {/* <TemplateButton /> */}
                             <form onSubmit={submitSheet} className="space-y-4">
                                 <div>
                                     <input
@@ -83,6 +89,7 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                                         value={sheetForm.data.sheet_url}
                                         onChange={e => sheetForm.setData('sheet_url', e.target.value)}
                                         className="w-full font-body border border-neutral/30 rounded-lg p-2 text-sm"
+                                        required
                                     />
                                     {sheetForm.errors.sheet_url && <span className="text-red-600 text-xs mt-1">{sheetForm.errors.sheet_url}</span>}
                                 </div>
@@ -92,7 +99,14 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                                     className="w-full flex items-center justify-center rounded-lg border border-neutral/30 p-3 gap-2 cursor-pointer"
                                 >
                                     <span className="font-body font-normal text-base leading-none text-neutral">
-                                        {sheetForm.processing ? 'Mengimpor...' : 'Import Link Spreadsheet'}
+                                        {sheetForm.processing ? (
+                                            <div className="flex items-center gap-2">
+                                                <IconLoading className="h-5 w-5 text-blue-700" />
+                                                <span className="font-body font-normal text-base leading-none text-neutral">Sedang Menghubungkan...</span>
+                                            </div>
+                                        ) : (
+                                            <span className="font-body font-normal text-base leading-none text-neutral">Import Link Spreadsheet</span>
+                                        )}
                                     </span>
                                 </button>
                             </form>

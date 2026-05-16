@@ -11,6 +11,7 @@ export default function SelectOrAddTags({
     const [inputValue, setInputValue] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
     const wrapperRef = useRef(null);
 
     // Menutup dropdown jika klik di luar komponen
@@ -30,6 +31,7 @@ export default function SelectOrAddTags({
 
     // Memanggil API saat user mengetik
     const handleInputChange = async (e) => {
+        setActiveSuggestionIndex(-1); // Tambahkan ini
         const val = e.target.value;
         setInputValue(val);
 
@@ -63,7 +65,29 @@ export default function SelectOrAddTags({
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
-            addTag(inputValue);
+            // Jika ada saran yang sedang disorot, tambahkan saran tersebut
+            if (showSuggestions && activeSuggestionIndex >= 0 && suggestions[activeSuggestionIndex]) {
+                addTag(suggestions[activeSuggestionIndex]);
+            } else {
+                // Jika tidak ada yang disorot, tambahkan apa yang diketik user
+                addTag(inputValue);
+            }
+        }
+        else if (e.key === "ArrowDown") {
+            if (showSuggestions && activeSuggestionIndex < suggestions.length - 1) {
+                setActiveSuggestionIndex(activeSuggestionIndex + 1);
+            }
+        }
+        else if (e.key === "ArrowUp") {
+            if (showSuggestions && activeSuggestionIndex > 0) {
+                setActiveSuggestionIndex(activeSuggestionIndex - 1);
+            }
+        }
+
+        else if (e.key === "Backspace" && inputValue === "" && selectedTags.length > 0) {
+            const newTags = [...selectedTags];
+            newTags.pop(); // Menghapus elemen terakhir
+            onChange(newTags);
         }
     };
 
@@ -116,7 +140,10 @@ export default function SelectOrAddTags({
                     {suggestions.map((suggestion, index) => (
                         <li
                             key={index}
-                            className="px-4 py-2 hover:bg-neutral-100 cursor-pointer text-[16px]"
+                            className={`px-4 py-2 cursor-pointer text-[16px] transition-colors ${index === activeSuggestionIndex
+                                    ? "bg-blue-50 text-blue-700" // Warna saat disorot panah
+                                    : "hover:bg-neutral-100"    // Warna saat hover mouse
+                                }`}
                             onClick={() => addTag(suggestion)}
                         >
                             {suggestion}

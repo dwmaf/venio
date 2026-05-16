@@ -1040,7 +1040,18 @@ export const IconRiDriveFill = (props) => (
         <path fill="#ffba00" d="m215.242 77.71l-37.243-64.514c-2.345-4.106-5.718-7.331-9.677-9.677l-40.32 69.792l47.358 82.109h80.496c0-4.546-1.173-9.09-3.519-13.196z"></path>
     </svg>
 );
-// export const Icon = (props) => ();
+export const IconLoading = (props) => (
+    <svg
+        {...props}
+        className={`animate-spin ${props.className || ""}`}
+        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+        width="24px"
+        height="24px"
+    >
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+);
 // export const Icon = (props) => ();
 // export const Icon = (props) => ();
 // export const Icon = (props) => ();
