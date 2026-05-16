@@ -32,44 +32,54 @@ class DatabaseSeeder extends Seeder
         );
 
         foreach (range(1, 4) as $index) {
+            $tipeEvent = $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']);
+            $startHour = rand(7, 14); // Jam 07:00 - 14:00
+            $endHour = rand($startHour + 1, 17); // Minimal 1 jam setelah jam mulai, max 17:00
             Event::create([
                 'nama_event' => $faker->company() . ' Event ' . $index,
-                'lokasi' => 'Konferensi Untan',
+                'lokasi' => $tipeEvent === 'ONLINE' ? null : implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->format('Y-m-d'), // Hari Ini
-                'jam_mulai' => '08:00:00',
-                'jam_selesai' => '17:00:00',
-                'tipe_event' => 'HYBRID',
+                'jam_mulai' => sprintf('%02d:00:00', $startHour),
+                'jam_selesai' => sprintf('%02d:00:00', $endHour),
+                'tipe_event' => $tipeEvent,
             ]);
         }
 
         // 2. BUAT 3 UPCOMING EVENTS (MENDATANG)
         foreach (range(1, 3) as $index) {
+            $tipeEvent = $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']);
+            $startHour = rand(7, 14);
+            $endHour = rand($startHour + 1, 17);
             Event::create([
                 'nama_event' => $faker->company() . ' Event ' . $index,
-                'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
+                'lokasi' => $tipeEvent === 'ONLINE' ? null : implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->addDays(rand(2, 60))->format('Y-m-d'), // Masa Depan
                 // 'tanggal_event' => now(), // Masa Kini
-                'jam_mulai' => '09:00:00',
-                'jam_selesai' => '15:00:00',
-                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE']),
+                'jam_mulai' => sprintf('%02d:00:00', $startHour),
+                'jam_selesai' => sprintf('%02d:00:00', $endHour),
+                'tipe_event' => $tipeEvent,
             ]);
         }
 
         // 3. BUAT 30 PAST EVENTS (MASA LALU)
         foreach (range(1, 30) as $index) {
+            $tipeEvent = $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']);
+            $startHour = rand(7, 14);
+            $endHour = rand($startHour + 1, 17);
             Event::create([
                 'nama_event' => $faker->company() . ' Event ' . $index,
-                'lokasi' => implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
+                'lokasi' => $tipeEvent === 'ONLINE' ? null : implode(' ', array_slice(explode(' ', $faker->address), 0, 2)),
                 'tanggal_event' => now()->subDays(rand(5, 120))->format('Y-m-d'), // Masa Lalu
-                'jam_mulai' => '10:00:00',
-                'jam_selesai' => '16:00:00',
-                'tipe_event' => $faker->randomElement(['OFFLINE', 'ONLINE','HYBRID']),
+                'jam_mulai' => sprintf('%02d:00:00', $startHour),
+                'jam_selesai' => sprintf('%02d:00:00', $endHour),
+                'tipe_event' => $tipeEvent,
             ]);
         }
 
         $allEvents = Event::all();
         foreach ($allEvents as $event) {
-            for ($i = 0; $i < 20; $i++) {
+            $jumlahPeserta = rand(40, 100); 
+            for ($i = 0; $i < $jumlahPeserta; $i++) {
                 $nama = $faker->name();
                 $email = $faker->unique()->safeEmail();
 
@@ -121,7 +131,6 @@ class DatabaseSeeder extends Seeder
             'dinnereatc@gmail.com',
             'syariffullah0911@gmail.com',
             'd1041231018@student.untan.ac.id',
-            'rayhannuerjamman@icloud.com',
             'dawamaf11ipa2@gmail.com',
             'd1041211005@student.untan.ac.id'
         ];

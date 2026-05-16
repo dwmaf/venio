@@ -8,6 +8,7 @@ import {
     IconLsiFilterOutline,
     IconDuoTrash,
     IconRiDriveFill,
+    IconBasilDocOutline
 } from "@/Components/Icons";
 
 export function RouteButton({ text, href }) {
@@ -412,5 +413,17 @@ export function AddButton({ text, onClick, className = "" }) {
                 {text}
             </span>
         </button>
+    );
+}
+
+export function TemplateButton({ className = "" }) {
+    return (
+        <a
+            href={route("peserta.template")}
+            className={`inline-flex items-center gap-2 px-4 py-2 bg-white border border-blue-200 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-50 transition-all shadow-sm ${className}`}
+        >
+            <IconBasilDocOutline className="w-4 h-4" />
+            <span>Unduh Template CSV</span>
+        </a>
     );
 }
