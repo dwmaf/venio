@@ -63,7 +63,20 @@ class ParticipantImportController extends Controller
         }
 
         if (! $response->successful()) {
-            return redirect()->route('events.index', $eventId)->with('error', 'Gagal mengambil spreadsheet. Status HTTP: ' . $response->status());
+            $status = $response->status();
+            $errorMessage = "Gagal mengambil spreadsheet (Status: {$status}). ";
+
+            if ($status === 401 || $status === 403) {
+                $errorMessage .= "Akses ditolak. Pastikan Spreadsheet sudah diatur ke 'Anyone with the link' (Siapa saja yang memiliki link) dan bisa dilihat publik.";
+            } elseif ($status === 404) {
+                $errorMessage .= "File tidak ditemukan. Periksa kembali link spreadsheet Anda.";
+            } elseif ($status === 429) {
+                // Menangani limit dari Google
+                $errorMessage .= "Terlalu banyak permintaan (Rate Limit). Silakan tunggu beberapa menit sebelum mencoba lagi.";
+            } else {
+                $errorMessage .= "Terjadi kesalahan pada server Google.";
+            }
+            return redirect()->route('events.index', $eventId)->with('error', $errorMessage);
         }
 
         $content = $response->body();
