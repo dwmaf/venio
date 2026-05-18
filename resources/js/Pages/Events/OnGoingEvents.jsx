@@ -52,6 +52,7 @@ export default function OngoingEvents({ ongoingEvents }) {
                                         timeEnd={event.jam_selesai}
                                         href={route("events.index", event.id)}
                                         participantsCount={event.participants_count}
+                                        partners={event.partners}
                                         location={event.lokasi}
                                     />
                                 ))}

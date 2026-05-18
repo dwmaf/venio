@@ -77,6 +77,7 @@ export default function AllEvents({
                                             )}
                                             location={event.lokasi}
                                             participantsCount={event.participants_count}
+                                            partners={event.partners}
                                             col={true}
                                         />
                                     </div>
@@ -136,6 +137,7 @@ export default function AllEvents({
                                             )}
                                             location={event.lokasi}
                                             participantsCount={event.participants_count}
+                                            partners={event.partners}
                                             col={true}
                                         />
                                     </div>
@@ -195,6 +197,7 @@ export default function AllEvents({
                                             )}
                                             location={event.lokasi}
                                             participantsCount={event.participants_count}
+                                            partners={event.partners}
                                             col={true}
                                         />
                                     </div>

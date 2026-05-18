@@ -23,11 +23,13 @@ class DashboardController extends Controller
         // 2. FILTER EVENT BERDASARKAN WAKTU
         // Ongoing: Hari ini dan status belum selesai
         $ongoingEvents = Event::withCount('participants')->where('tanggal_event', $today)
+        ->with('partners')
             ->orderBy('jam_mulai', 'asc')
             ->get();
 
         // Upcoming: Belum hari ini (masa depan) dan status belum selesai
         $upcomingEvents = Event::withCount('participants')->where('tanggal_event', '>', $today)
+        ->with('partners')
             ->orderBy('tanggal_event', 'asc')
             // ->limit(2)
             ->get();

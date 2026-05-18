@@ -32,6 +32,7 @@ import {
     IconDuoClock,
     IconDuoLocation,
     IconPepHandshakePrint,
+    IconDuoHandshake,
     IconSolarPenBoldDuotone,
     IconSolarUsersGroupBoldDuotone,
     IconDuoApproved,
@@ -233,7 +234,7 @@ export default function Event({ event, participants, stats }) {
 
                         {event.partners && event.partners.length > 0 && (
                             <div className="flex items-center gap-1 sm:gap-2">
-                                <IconPepHandshakePrint className="text-neutral h-5 w-5 lg:h-6 lg:w-6" />
+                                <IconDuoHandshake className="text-neutral h-5 w-5 lg:h-6 lg:w-6" />
                                 <span className="text-neutral mt-1 text-sm leading-none lg:mt-0 lg:text-base">
                                     {event.partners
                                         .map((p) => p.nama)
