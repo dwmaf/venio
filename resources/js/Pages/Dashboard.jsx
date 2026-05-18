@@ -276,6 +276,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                             participantsCount={
                                                 event.participants_count
                                             }
+                                            partners={event.partners}
                                             snap={true}
                                         />
                                     </div>
@@ -355,6 +356,7 @@ export default function Dashboard({ ongoingEvents, upcomingEvents, stats }) {
                                         timeEnd={event.jam_selesai}
                                         location={event.lokasi}
                                         participantsCount={event.participants_count}
+                                        partners={event.partners}
                                         inner={true}
                                         col={isMobile}
                                     />

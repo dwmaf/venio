@@ -53,6 +53,7 @@ export default function UpcomingEvents({ upcomingEvents }) {
                                         href={route("events.index", event.id)}
                                         location={event.lokasi}
                                         participantsCount={event.participants_count}
+                                        partners={event.partners}
                                     />
                                 ))}
                                 {upcomingEvents.length === 1 && <NoEvent />}

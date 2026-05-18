@@ -4,7 +4,7 @@ import axios from 'axios';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Breadcrumb from '@/Components/Breadcrumb';
 import { Html5Qrcode } from 'html5-qrcode';
-import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone, IconPepHandshakePrint } from '@/Components/Icons';
+import { IconDuoCalendar, IconDuoClock, IconDuoLocation, IconPhCameraSlashDuotone, IconPepHandshakePrint, IconDuoHandshake } from '@/Components/Icons';
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { BackButton } from "@/Components/Buttons";
 import Toast from '@/Components/Toast';
@@ -164,7 +164,7 @@ export default function Checkin({ event }) {
                     </div>
                     {event.partners && event.partners.length > 0 && (
                         <div className="flex gap-2.5 items-center">
-                            <IconPepHandshakePrint className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
+                            <IconDuoHandshake className='h-4 w-4 lg:h-6 lg:w-6 text-neutral' />
                             <span className="font-['Plus_Jakarta_Sans'] font-normal text-xs sm:text-base leading-none text-neutral">
                                 {event.partners.map(partner => partner.nama).join(', ')}
                             </span>

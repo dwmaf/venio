@@ -4,6 +4,7 @@ import {
     IconDuoLocation,
     IconDuoAward,
     IconDuoUser,
+    IconDuoHandshake
 } from "@/Components/Icons";
 import { formatTanggalSlash, formatJamMenit } from "@/utils/format";
 import { Link } from "@inertiajs/react";
@@ -33,6 +34,7 @@ export function EventCard({
     timeEnd,
     location,
     participantsCount,
+    partners,
     href,
     snap = false,
     inner = false,
@@ -96,11 +98,20 @@ export function EventCard({
                         </div>
 
                         <div className="flex items-center gap-1 lg:gap-2">
-                            <IconDuoUser className="h-5 w-5 shrink-0" />
-                            <span className="text-default mt-1 text-sm leading-none lg:mt-0">
-                                {participantsCount ? participantsCount : "0"}{" "}
-                                Peserta
-                            </span>
+                            <div className="flex items-center gap-1 lg:gap-2">
+                                <IconDuoUser className="h-5 w-5 shrink-0" />
+                                <span className="text-default mt-1 text-sm leading-none lg:mt-0">
+                                    {participantsCount ? participantsCount : "0"}{" "}
+                                    Peserta
+                                </span>
+                            </div>
+
+                            {/* 2. Jika ada partner, munculkan Ikon di sisi kanan (ujung) */}
+                            {partners && partners.length > 0 && (
+                                <div className="text-purple-600/80 mr-2 flex items-center justify-center p-1" title={`${partners.length} Partner Terlibat`}>
+                                    <IconDuoHandshake className="h-5 w-5" />
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

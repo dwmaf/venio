@@ -105,6 +105,7 @@ class EventController extends Controller
                 return $query->where('tipe_event', $filter);
             })
             ->withCount('participants')
+            ->with('partners')
             ->orderBy('jam_mulai', 'asc')
             ->limit(3)
             ->get();
@@ -115,6 +116,7 @@ class EventController extends Controller
                 return $query->where('tipe_event', $filter);
             })
             ->withCount('participants')
+            ->with('partners')
             ->orderBy('tanggal_event', 'asc')
             ->limit(3)
             ->get();
@@ -124,6 +126,7 @@ class EventController extends Controller
                 return $query->where('tipe_event', $filter);
             })
             ->withCount('participants')
+            ->with('partners')
             ->orderBy('tanggal_event', 'desc')
             ->limit(3)
             ->get();
@@ -142,6 +145,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $upcomingEvents = Event::where('tanggal_event', '>', $today)
+            ->with('partners')
             ->withCount('participants')
             ->orderBy('tanggal_event', 'asc')
             ->get();
@@ -154,6 +158,7 @@ class EventController extends Controller
     {
         $today = Carbon::today()->format('Y-m-d');
         $ongoingEvents = Event::where('tanggal_event', $today)
+            ->with('partners')
             ->withCount('participants')
             ->orderBy('jam_mulai', 'asc')
             ->get();
@@ -176,6 +181,7 @@ class EventController extends Controller
         }
 
         $pastEvents = $query->with('partners')
+            ->with('partners')
             ->withCount('participants')
             ->orderBy('tanggal_event', 'desc')
             ->paginate(8)
