@@ -17,9 +17,10 @@ class PartnerController extends Controller
         }
 
         $partners = $query->withCount('events')
-                          ->orderBy('nama', 'asc')
-                          ->paginate(10)
-                          ->withQueryString();
+            ->with('events')
+            ->orderBy('nama', 'asc')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Partners/allPartners', [
             'partners' => $partners,
@@ -49,12 +50,10 @@ class PartnerController extends Controller
         return back()->with('success', 'Partner berhasil diperbarui.');
     }
 
-    // CATATAN: Untuk destroy API ini hanya menghapus partner, tidak event-nya.
+    // CATATAN: Untuk destroy ini hanya menghapus partner, tidak event-nya.
     public function destroy(Partner $partner)
     {
-        // Karena ada relasi event_partner pivot, pivot akan aman jika onDelete('cascade') ditaruh, 
-        // tapi Laravel otomatis melepas relasi pivot jika partner dihapus lewat sync/detach tergantung setup mu.
-        $partner->events()->detach(); 
+        $partner->events()->detach();
         $partner->delete();
 
         return back()->with('success', 'Partner berhasil dihapus.');
