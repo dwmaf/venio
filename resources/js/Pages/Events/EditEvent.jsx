@@ -5,6 +5,7 @@ import { IconMynauiCalender, IconClockLight, IconCarbonLocation, IconUsersGroup,
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { route } from "ziggy-js";
 import { BackButton } from "@/Components/Buttons";
+import { InputWithIcon, FormInput, SelectInput } from "@/Components/Inputs";
 
 
 const EditEvent = ({ event }) => {
@@ -68,191 +69,90 @@ const EditEvent = ({ event }) => {
                     onSubmit={submit}
                     className="w-full max-w-106 space-y-6"
                 >
-                    {/* Nama Event */}
-                    <div className="space-y-2">
-                        <label className="block text-base lg:text-xl leading-none">
-                            Nama Event
-                        </label>
-
-                        <input
-                            type="text"
-                            className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                            placeholder="Nama Event"
-                            value={data.nama_event}
-                            onChange={(e) =>
-                                setData("nama_event", e.target.value)
-                            }
-                        />
-
-                        {errors.nama_event && (
-                            <p className="text-red-500 text-xs">
-                                {errors.nama_event}
-                            </p>
-                        )}
-                    </div>
+                    <FormInput
+                        label="Nama Acara"
+                        id="nama_event"
+                        name="nama_event"
+                        placeholder="Nama Event"
+                        value={data.nama_event}
+                        onChange={(e) => setData("nama_event", e.target.value)}
+                        error={errors.nama_event}
+                        required={true}
+                    />
 
                     {/* Format Event + Tanggal Event */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Format Event
-                            </label>
-                            <div className="relative flex items-center">
-                                <select
-                                    className="appearance-none border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.tipe_event}
-                                    onChange={(e) =>
-                                        setData("tipe_event", e.target.value)
-                                    }
-                                >
-                                    <option value="OFFLINE">Offline</option>
-                                    <option value="ONLINE">Online</option>
-                                    <option value="HYBRID">Hybrid</option>
-                                </select>
-                                <div className="pointer-events-none absolute right-4 text-neutral">
-                                    <IconChevronDown className="h-4 w-4" />
-                                </div>
-                            </div>
-                        </div>
+                        <SelectInput
+                            label="Format Event"
+                            value={data.tipe_event}
+                            onChange={(e) => setData("tipe_event", e.target.value)}
+                            options={[
+                                { value: "OFFLINE", label: "Offline" },
+                                { value: "ONLINE", label: "Online" },
+                                { value: "HYBRID", label: "Hybrid" }
+                            ]}
+                            error={errors.tipe_event}
+                            required={true}
+                        />
 
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Tanggal Event
-                            </label>
-
-                            <div className="relative flex items-center">
-                                <div className="absolute left-4 text-neutral pointer-events-none">
-
-                                    <IconMynauiCalender className="w-5 h-5 " />
-                                </div>
-
-                                <input
-                                    type="date"
-                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.tanggal_event}
-                                    onChange={(e) =>
-                                        setData("tanggal_event", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.tanggal_event && (
-                                <p className="text-red-500 text-xs">
-                                    {errors.tanggal_event}
-                                </p>
-                            )}
-                        </div>
+                        <InputWithIcon
+                            label="Tanggal Event"
+                            type="date"
+                            icon={IconMynauiCalender}
+                            value={data.tanggal_event}
+                            onChange={(e) => setData("tanggal_event", e.target.value)}
+                            error={errors.tanggal_event}
+                            required={true}
+                        />
                     </div>
 
                     {/* Jam Mulai + Jam Selesai */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Jam Mulai
-                            </label>
+                        <InputWithIcon
+                            label="Jam Mulai"
+                            type="time"
+                            icon={IconClockLight}
+                            value={data.jam_mulai}
+                            onChange={(e) => setData("jam_mulai", e.target.value)}
+                            error={errors.jam_mulai}
+                            required={true}
+                        />
 
-                            <div className="relative flex items-center">
-                                <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <IconClockLight className="w-5 h-5" />
-                                </div>
-
-                                <input
-                                    type="time"
-                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.jam_mulai}
-                                    onChange={(e) =>
-                                        setData("jam_mulai", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.jam_mulai && (
-                                <p className="text-red-500 text-xs">
-                                    {errors.jam_mulai}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Jam Selesai
-                            </label>
-
-                            <div className="relative flex items-center">
-                                <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <IconClockLight className="w-5 h-5" />
-                                </div>
-
-                                <input
-                                    type="time"
-                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.jam_selesai}
-                                    onChange={(e) =>
-                                        setData("jam_selesai", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.jam_selesai && (
-                                <p className="text-red-500 text-xs">
-                                    {errors.jam_selesai}
-                                </p>
-                            )}
-                        </div>
+                        <InputWithIcon
+                            label="Jam Selesai"
+                            type="time"
+                            icon={IconClockLight}
+                            value={data.jam_selesai}
+                            onChange={(e) => setData("jam_selesai", e.target.value)}
+                            error={errors.jam_selesai}
+                            required={true}
+                        />
                     </div>
 
                     {/* Lokasi + Peserta */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Lokasi
-                            </label>
+                        {(data.tipe_event === "OFFLINE" || data.tipe_event === "HYBRID") && (
+                            <InputWithIcon
+                                label="Lokasi"
+                                type="text"
+                                icon={IconCarbonLocation}
+                                placeholder="UPA PKK"
+                                value={data.lokasi}
+                                onChange={(e) => setData("lokasi", e.target.value)}
+                                error={errors.lokasi}
+                            />
+                        )}
 
-                            <div className="relative flex items-center">
-                                <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <IconCarbonLocation className="w-5 h-5" />
-                                </div>
-
-                                <input
-                                    type="text"
-                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.lokasi}
-                                    onChange={(e) =>
-                                        setData("lokasi", e.target.value)
-                                    }
-                                    placeholder="UPA PKK"
-                                />
-                            </div>
-
-                            {errors.lokasi && (
-                                <p className="text-red-500 text-xs">
-                                    {errors.lokasi}
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="space-y-2">
-                            <label className="block text-base lg:text-xl leading-none">
-                                Peserta
-                            </label>
-
-                            <div className="relative flex items-center">
-                                <div className="absolute left-4 text-neutral pointer-events-none">
-                                    <IconUsersGroup className="w-5 h-5" />
-                                </div>
-
-                                <input
-                                    type="number"
-                                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
-                                    value={data.quota}
-                                    placeholder="100"
-                                    min="1"
-                                    onChange={(e) =>
-                                        setData("quota", e.target.value)
-                                    }
-                                />
-                            </div>
-                        </div>
+                        <InputWithIcon
+                            label="Peserta"
+                            type="number"
+                            icon={IconUsersGroup}
+                            placeholder="100"
+                            min="1"
+                            value={data.quota}
+                            onChange={(e) => setData("quota", e.target.value)}
+                            error={errors.quota}
+                        />
                     </div>
 
                     {/* Partner */}
@@ -270,6 +170,10 @@ const EditEvent = ({ event }) => {
                             placeholder="e.g. AIESEC"
                             apiEndpoint="/api/partners/search"
                         />
+
+                        <p className="text-neutral text-xs lg:text-sm">
+                            Tekan 'Enter' untuk menambahkan partner baru.
+                        </p>
 
                         {errors.partners && (
                             <p className="text-red-500 text-xs">

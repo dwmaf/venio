@@ -11,6 +11,7 @@ import {
 } from "@/Components/Icons";
 import SelectOrAddTags from "@/Components/SelectOrAddTags";
 import { BackButton } from "@/Components/Buttons";
+import { InputWithIcon, FormInput, SelectInput } from "@/Components/Inputs";
 
 const AddEvents = () => {
     const breadcrumbs = [
@@ -48,188 +49,92 @@ const AddEvents = () => {
             <div className="font-body m-auto mt-12 max-w-106">
                 <form onSubmit={submit} className="m space-y-4">
                     {/* Nama Event */}
-                    <div className="space-y-3">
-                        <label className="block text-base leading-none lg:text-xl">
-                            Nama Acara <span className="text-red-400">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                            placeholder="Nama Event"
-                            value={data.nama_event}
-                            onChange={(e) =>
-                                setData("nama_event", e.target.value)
-                            }
-                        />
-
-                        {errors.nama_event && (
-                            <p className="text-xs text-red-500">
-                                {errors.nama_event}
-                            </p>
-                        )}
-                    </div>
+                    <FormInput
+                        label="Nama Acara"
+                        placeholder="Nama Event"
+                        value={data.nama_event}
+                        onChange={(e) => setData("nama_event", e.target.value)}
+                        error={errors.nama_event}
+                        required={true}
+                    />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Tipe Event */}
-                        <div className="space-y-2">
-                            <label className="block text-base leading-none lg:text-xl">
-                                Metode Hadir
-                            </label>
-                            <div className="relative flex items-center">
-                                <select
-                                    className="appearance-none border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                    value={data.tipe_event}
-                                    onChange={(e) =>
-                                        setData("tipe_event", e.target.value)
-                                    }
-                                >
-                                    <option value="OFFLINE">Offline</option>
-                                    <option value="ONLINE">Online</option>
-                                    <option value="HYBRID">Hybrid</option>
-                                </select>
-                                <div className="pointer-events-none absolute right-4 text-neutral">
-                                    <IconChevronDown className="h-4 w-4" />
-                                </div>
-                            </div>
-                        </div>
+                        <SelectInput
+                            label="Metode Hadir"
+                            value={data.tipe_event}
+                            onChange={(e) => setData("tipe_event", e.target.value)}
+                            options={[
+                                { value: "OFFLINE", label: "Offline" },
+                                { value: "ONLINE", label: "Online" },
+                                { value: "HYBRID", label: "Hybrid" }
+                            ]}
+                            error={errors.tipe_event}
+                        />
 
                         {/* Tanggal */}
-                        <div className="space-y-2">
-                            <label className="block text-base leading-none lg:text-xl">
-                                Tanggal <span className="text-red-400">*</span>
-                            </label>
-                            <div className="relative flex items-center">
-                                <div className="text-neutral pointer-events-none absolute left-4">
-                                    <IconMynauiCalender className="h-5 w-5" />
-                                </div>
-                                <input
-                                    type="date"
-                                    className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                    value={data.tanggal_event}
-                                    onChange={(e) =>
-                                        setData("tanggal_event", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.tanggal_event && (
-                                <p className="text-xs text-red-500">
-                                    {errors.tanggal_event}
-                                </p>
-                            )}
-                        </div>
+                        <InputWithIcon
+                            label="Tanggal"
+                            type="date"
+                            icon={IconMynauiCalender}
+                            value={data.tanggal_event}
+                            onChange={(e) => setData("tanggal_event", e.target.value)}
+                            error={errors.tanggal_event}
+                            required={true}
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {/* Jam Mulai */}
-                        <div className="space-y-2">
-                            <label className="block text-base leading-none lg:text-xl">
-                                Jam Mulai{" "}
-                                <span className="text-red-400">*</span>
-                            </label>
-                            <div className="relative flex items-center">
-                                <div className="text-neutral pointer-events-none absolute left-4">
-                                    <IconClockLight className="h-5 w-5" />
-                                </div>
-                                <input
-                                    type="time"
-                                    className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                    value={data.jam_mulai}
-                                    onChange={(e) =>
-                                        setData("jam_mulai", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.jam_mulai && (
-                                <p className="text-xs text-red-500">
-                                    {errors.jam_mulai}
-                                </p>
-                            )}
-                        </div>
+                        <InputWithIcon
+                            label="Jam Mulai"
+                            type="time"
+                            icon={IconClockLight}
+                            value={data.jam_mulai}
+                            onChange={(e) => setData("jam_mulai", e.target.value)}
+                            error={errors.jam_mulai}
+                            required={true}
+                        />
 
                         {/* Jam Selesai */}
-                        <div className="space-y-2">
-                            <label className="block text-base leading-none lg:text-xl">
-                                Jam Selesai{" "}
-                                <span className="text-red-400">*</span>
-                            </label>
-                            <div className="relative flex items-center">
-                                <div className="text-neutral pointer-events-none absolute left-4">
-                                    <IconClockLight className="h-5 w-5" />
-                                </div>
-                                <input
-                                    type="time"
-                                    className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                    value={data.jam_selesai}
-                                    onChange={(e) =>
-                                        setData("jam_selesai", e.target.value)
-                                    }
-                                />
-                            </div>
-
-                            {errors.jam_selesai && (
-                                <p className="text-xs text-red-500">
-                                    {errors.jam_selesai}
-                                </p>
-                            )}
-                        </div>
+                        <InputWithIcon
+                            label="Jam Selesai"
+                            type="time"
+                            icon={IconClockLight}
+                            value={data.jam_selesai}
+                            onChange={(e) => setData("jam_selesai", e.target.value)}
+                            error={errors.jam_selesai}
+                            required={true}
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Lokasi (Dinamis) */}
                         {(data.tipe_event === "OFFLINE" ||
                             data.tipe_event === "HYBRID") && (
-                                <div className="space-y-2">
-                                    <label className="block text-base leading-none lg:text-xl">
-                                        Lokasi{" "}
-                                        <span className="text-red-400">*</span>
-                                    </label>
-                                    <div className="relative flex items-center">
-                                        <div className="text-neutral absolute left-4">
-                                            <IconCarbonLocation className="h-5 w-5" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                            value={data.lokasi}
-                                            onChange={(e) =>
-                                                setData("lokasi", e.target.value)
-                                            }
-                                            placeholder="UPA PKK"
-                                        />
-                                    </div>
-
-                                    {errors.lokasi && (
-                                        <p className="text-xs text-red-500">
-                                            {errors.lokasi}
-                                        </p>
-                                    )}
-                                </div>
+                                <InputWithIcon
+                                label="Lokasi"
+                                type="text"
+                                icon={IconCarbonLocation}
+                                placeholder="UPA PKK"
+                                value={data.lokasi}
+                                onChange={(e) => setData("lokasi", e.target.value)}
+                                error={errors.lokasi}
+                                required={true}
+                            />
                             )}
 
                         {/* Jumlah Peserta */}
-                        <div className="space-y-2">
-                            <label className="block text-base leading-none lg:text-xl">
-                                Peserta <span className="text-red-400">*</span>
-                            </label>
-                            <div className="relative flex items-center">
-                                <div className="text-neutral absolute left-4">
-                                    <IconUsersGroup className="h-5 w-5" />
-                                </div>
-
-                                <input
-                                    type="number"
-                                    className="border-default/30 placeholder:text-neutral font-body w-full rounded-lg border p-3 pl-11 text-sm focus:border-blue-500 focus:outline-blue-500 lg:text-base"
-                                    value={data.quota}
-                                    placeholder="100"
-                                    onChange={(e) =>
-                                        setData("quota", e.target.value)
-                                    }
-                                    min="1"
-                                />
-                            </div>
-                        </div>
+                        <InputWithIcon
+                            label="Peserta"
+                            type="number"
+                            icon={IconUsersGroup}
+                            placeholder="100"
+                            min="1"
+                            value={data.quota}
+                            onChange={(e) => setData("quota", e.target.value)}
+                            error={errors.quota}
+                        />
                     </div>
 
                     <div className="space-y-2">
