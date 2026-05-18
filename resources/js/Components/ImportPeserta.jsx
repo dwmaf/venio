@@ -80,7 +80,7 @@ export default function ImportPeserta({ isOpen, onClose, eventId }) {
                         <div className='border-t border-neutral/30 pt-6 md:border-none md:pt-0 space-y-4'>
                             <h3 className="text-lg font-semibold font-body leading-none">Import dari Spreadsheet</h3>
                             {/* tombol buat unduh template */}
-                            {/* <TemplateButton /> */}
+                            <TemplateButton />
                             <form onSubmit={submitSheet} className="space-y-4">
                                 <div>
                                     <input

@@ -330,9 +330,39 @@ class ParticipantImportController extends Controller
             'Kategori Peserta',
             'Instansi / Tempat Kerja',
             'Jenis Kelamin',
-            'Spesialisasi (jika ada)',
-            'Alamat Instansi',
-            'Kategori Biaya'
+        ];
+
+        $exampleData1 = [
+            '18/05/2026 10:00:00',      // Timestamp
+            'Syariffullah',             // Nama Lengkap
+            'd1041231018@student.untan.ac.id', // Email Address
+            '081234567890',             // No HP
+            'OFFLINE',                  // Metode Kehadiran (OFFLINE/ONLINE)
+            'Mahasiswa',              // Kategori Peserta
+            'Universitas Tanjungpura',     // Instansi
+            'Laki-laki',                // Jenis Kelamin
+        ];
+
+        $exampleData2 = [
+            '18/05/2026 11:30:00',
+            'Abimanyu Ridho',
+            'd1041231038@student.untan.ac.id',
+            '08987654321',
+            'ONLINE',
+            'Mahasiswa',
+            'Universitas Tanjungpura',
+            'Perempuan',
+        ];
+
+        $exampleData3 = [
+            '18/05/2026 11:30:00',
+            'Rayhan Nuerjamman',
+            'd1041231088@student.untan.ac.id',
+            '08987654321',
+            'ONLINE',
+            'Mahasiswa',
+            'Universitas Tanjungpura',
+            'Laki-laki',
         ];
 
         $filename = "template_import_peserta.csv";
@@ -342,6 +372,9 @@ class ParticipantImportController extends Controller
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         fputcsv($handle, $headers);
+        fputcsv($handle, $exampleData1);
+        fputcsv($handle, $exampleData2);
+        fputcsv($handle, $exampleData3);
         fclose($handle);
 
         return exit;

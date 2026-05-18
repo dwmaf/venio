@@ -1,4 +1,4 @@
-import { IconoirEyeClosed, IconoirEyeSolid, IconLetsSearchAlt } from "@/Components/Icons";
+import { IconoirEyeClosed, IconoirEyeSolid, IconLetsSearchAlt, IconChevronDown } from "@/Components/Icons";
 import { useState } from "react";
 
 export function TextInput({
@@ -117,6 +117,78 @@ export function SearchInput({
                 // Bebas dari autoFocus dan required
                 className="border border-default/30 placeholder:text-neutral font-body py-3 pl-11 pr-4 text-sm w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
             />
+        </div>
+    );
+}
+
+export function InputWithIcon({ label, type = "text", value, onChange, placeholder, icon: IconComponent, error, required = false, ...props }) {
+    return (
+        <div className="space-y-2">
+            <label className="block text-base lg:text-xl leading-none">
+                {label} {required && <span className="text-red-400">*</span>}
+            </label>
+            <div className="relative flex items-center">
+                <div className="absolute left-4 text-neutral pointer-events-none">
+                    <IconComponent className="w-5 h-5" />
+                </div>
+                <input
+                    type={type}
+                    value={value}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    required={required}
+                    className="border border-default/30 placeholder:text-neutral font-body p-3 pl-11 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                    {...props}
+                />
+            </div>
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        </div>
+    );
+}
+
+export function SelectInput({ label, value, onChange, options = [], error, required = false, ...props }) {
+    return (
+        <div className="space-y-2">
+            <label className="block text-base lg:text-xl leading-none">
+                {label} {required && <span className="text-red-400">*</span>}
+            </label>
+            <div className="relative flex items-center">
+                <select
+                    className="appearance-none border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg cursor-pointer"
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    {...props}
+                >
+                    {options.map((opt, idx) => (
+                        <option key={idx} value={opt.value}>{opt.label}</option>
+                    ))}
+                </select>
+                <div className="pointer-events-none absolute right-4 text-neutral">
+                    <IconChevronDown className="h-4 w-4" />
+                </div>
+            </div>
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+        </div>
+    );
+}
+
+export function FormInput({ label, type = "text", value, onChange, placeholder, error, required = false, ...props }) {
+    return (
+        <div className="space-y-2">
+            <label className="block text-base lg:text-xl leading-none">
+                {label} {required && <span className="text-red-400">*</span>}
+            </label>
+            <input
+                type={type}
+                value={value}
+                onChange={onChange}
+                placeholder={placeholder}
+                required={required}
+                className="border border-default/30 placeholder:text-neutral font-body p-3 text-sm lg:text-base w-full focus:border-blue-500 focus:outline-blue-500 rounded-lg"
+                {...props}
+            />
+            {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
         </div>
     );
 }
